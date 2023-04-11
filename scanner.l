@@ -1,8 +1,6 @@
 %option yylineno
 %{
     #include <stdio.h>
-    #include <string.h>
-    #include <stdlib.h>
 
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
