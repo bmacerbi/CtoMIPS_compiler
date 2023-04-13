@@ -1,5 +1,6 @@
+#line 2 "bin/lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "bin/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -612,8 +613,8 @@ char *yytext;
 
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
-#line 616 "lex.yy.c"
-#line 617 "lex.yy.c"
+#line 617 "bin/lex.yy.c"
+#line 618 "bin/lex.yy.c"
 
 #define INITIAL 0
 
@@ -832,7 +833,7 @@ YY_DECL
 	{
 #line 8 "scanner.l"
 
-#line 836 "lex.yy.c"
+#line 837 "bin/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1287,7 +1288,7 @@ YY_RULE_SETUP
 #line 95 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1291 "lex.yy.c"
+#line 1292 "bin/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
