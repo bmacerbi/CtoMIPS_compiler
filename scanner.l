@@ -47,26 +47,26 @@ restrict                { printToken(yytext, "RESTRICT") ;}
 _Complex                { printToken(yytext, "_COMPLEX") ;}
 inline                  { printToken(yytext, "INLINE") ;}
 
-"!"                     { printToken(yytext,"LOGICAL NOT") ;}
-"&&"                    { printToken(yytext,"LOGICAL AND") ;}
-"||"                    { printToken(yytext,"LOGICAL OR") ;}
+"!"                     { printToken(yytext,"L_NOT") ;}
+"&&"                    { printToken(yytext,"L_AND") ;}
+"||"                    { printToken(yytext,"L_OR") ;}
 
-"=="                    { printToken(yytext, "EQUALS");}
-"<="                    { printToken(yytext, "LESS THAN/EQUALS");}
-">="                    { printToken(yytext, "MORE THAN/EQUALS");}
-"!="                    { printToken(yytext, "NOT EQUALS");}
-">"                     { printToken(yytext, "MORE THAN");}
-"<"                     { printToken(yytext, "LESS THAN");}
+"=="                    { printToken(yytext, "EQ");}
+"<="                    { printToken(yytext, "LT_EQ");}
+">="                    { printToken(yytext, "MT_EQ");}
+"!="                    { printToken(yytext, "N_EQ");}
+">"                     { printToken(yytext, "MT");}
+"<"                     { printToken(yytext, "LT");}
 
-"--"                    { printToken(yytext, "INCREMENT");}
-"++"                    { printToken(yytext, "DECREMENT");}
+"--"                    { printToken(yytext, "INC");}
+"++"                    { printToken(yytext, "D");}
 
-"="                     { printToken(yytext, "ASSIGN") ;}  
-"+="                    { printToken(yytext, "PLUS ASSIGN") ;}
-"-="                    { printToken(yytext, "MINUS ASSIGN") ;}
-"*="                    { printToken(yytext, "TIMES ASSIGN") ;}
-"/="                    { printToken(yytext, "OVER ASSIGN") ;}
-"%="                    { printToken(yytext, "PERCENT ASSIGN") ;}
+"="                     { printToken(yytext, "ASGN") ;}  
+"+="                    { printToken(yytext, "PL_ASGN") ;}
+"-="                    { printToken(yytext, "M_ASGN") ;}
+"*="                    { printToken(yytext, "T_ASGN") ;}
+"/="                    { printToken(yytext, "O_ASGN") ;}
+"%="                    { printToken(yytext, "PC_ASGN") ;}
 
 "+"                     { printToken(yytext, "PLUS") ;}  
 "-"                     { printToken(yytext, "MINUS") ;}  
@@ -76,13 +76,13 @@ inline                  { printToken(yytext, "INLINE") ;}
 
 "("                     { printToken(yytext, "LPAR") ;}
 ")"                     { printToken(yytext, "RPAR") ;}
-"{"                     { printToken(yytext, "LCURLYBRACES") ;}
-"}"                     { printToken(yytext, "RCURLYBRACES") ;}
-"["                     { printToken(yytext, "LBRACKET") ;}
-"]"                     { printToken(yytext, "RBRACKET") ;}
+"{"                     { printToken(yytext, "LCURLY") ;}
+"}"                     { printToken(yytext, "RCURLY") ;}
+"["                     { printToken(yytext, "LBRAC") ;}
+"]"                     { printToken(yytext, "RBRAC") ;}
 ";"                     { printToken(yytext, "SEMI") ;}
 ","                     { printToken(yytext, "COMMA") ;}
-"&"                     { printToken(yytext, "AMPERSAND") ;}
+"&"                     { printToken(yytext, "AMPER") ;}
 
 [A-Za-z_][A-Za-z0-9_]*  { printToken(yytext, "ID") ;}                   
 [0-9]+\.[0-9]+          { printToken(yytext, "FLOAT_VAL") ;}              
