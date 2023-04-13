@@ -1,5 +1,5 @@
 int main() {
-    int 123var = 42; // Erro léxico: identificador começando com dígito
+    int var = #42; // Erro léxico: utilizando caracter nao reconhecido
     int x = 1;
     return 0;
 }
