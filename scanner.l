@@ -87,7 +87,9 @@ inline                  { printToken(yytext, "INLINE") ;}
 [A-Za-z_][A-Za-z0-9_]*  { printToken(yytext, "ID") ;}                   
 [0-9]+\.[0-9]+          { printToken(yytext, "FLOAT_VAL") ;}              
 [0-9]+                  { printToken(yytext, "INT_VAL") ;}      
-\"[^\"\"]*\"            { printToken(yytext, "STR_VAL") ;}              
+\"[^\"\"]*\"            { printToken(yytext, "STR_VAL") ;}
+\'[^\']\'               { printToken(yytext, "CHAR_VAL") ;}   
+
 [ \t\n]                 {}
 
 .                       { lexicalError(yytext) ;} 
