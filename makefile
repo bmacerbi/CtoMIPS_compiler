@@ -10,5 +10,5 @@ flex: scanner.l
 gcc: scanner.c parser.c
 	gcc -Wall -o compiler scanner.c parser.c
 
-clean:
+clear:
 	@rm -f *.o *.output scanner.c parser.h parser.c compiler

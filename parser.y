@@ -22,46 +22,62 @@ extern int yylineno;
 %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
 %token BOOL COMPLEX IMAGINARY
-%token STRUCT UNION ENUM
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 %token ID FLOAT_VAL INT_VAL STR_VAL CHAR_VAL SIZEOF
 %token PLUS MINUS TIMES OVER PERCENT LPAR RPAR 
 %token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER
 
+%start translation_unit
 %%
 
-primary_expression
+expression
 	: ID
 	| FLOAT_VAL
 	| INT_VAL
 	| STR_VAL
 	| CHAR_VAL
+	| expression
 	| LPAR expression RPAR
-	;
+	| expression LBRAC expression RBRAC
+	| expression LPAR RPAR
+	| expression LPAR argument_expression_list RPAR
 
-postfix_expression
-	: primary_expression
-	| postfix_expression LBRAC expression RBRAC
-	| postfix_expression LPAR RPAR
-	| postfix_expression LPAR argument_expression_list RPAR
-	| postfix_expression '.' ID
-	| postfix_expression PTR_OP ID
-	| postfix_expression INC
-	| postfix_expression DEC
+	| expression INC
+	| expression DEC
+	| INC expression
+	| DEC expression
+
+	| unary_operator expression
+	| SIZEOF expression
+	| SIZEOF LPAR type_name RPAR
+
+	| LPAR type_name RPAR expression
+
+	| expression TIMES expression
+	| expression OVER expression
+	| expression PERCENT expression
+	| expression PLUS expression
+	| expression MINUS expression
+
+	| expression LT expression
+	| expression GT expression
+	| expression LT_EQ expression
+	| expression GT_EQ expression
+	| expression EQ expression
+	| expression N_EQ expression
+	
+	| expression L_AND expression
+	| expression L_OR expression
+
+	| expression assignment_operator expression
+
+	| expression COMMA expression
+
 	;
 
 argument_expression_list
-	: assignment_expression
-	| argument_expression_list COMMA assignment_expression
-	;
-
-unary_expression
-	: postfix_expression
-	| INC unary_expression
-	| DEC unary_expression
-	| unary_operator cast_expression
-	| SIZEOF unary_expression
-	| SIZEOF LPAR type_name RPAR
+	: expression
+	| argument_expression_list COMMA expression
 	;
 
 unary_operator
@@ -72,74 +88,6 @@ unary_operator
 	| L_NOT
 	;
 
-cast_expression
-	: unary_expression
-	| LPAR type_name RPAR cast_expression
-	;
-
-multiplicative_expression
-	: cast_expression
-	| multiplicative_expression TIMES cast_expression
-	| multiplicative_expression OVER cast_expression
-	| multiplicative_expression PERCENT cast_expression
-	;
-
-additive_expression
-	: multiplicative_expression
-	| additive_expression PLUS multiplicative_expression
-	| additive_expression MINUS multiplicative_expression
-	;
-
-shift_expression
-    : additive_expression
-    ;
-
-relational_expression
-	: shift_expression
-	| relational_expression LT shift_expression
-	| relational_expression GT shift_expression
-	| relational_expression LT_EQ shift_expression
-	| relational_expression GT_EQ shift_expression
-	;
-
-equality_expression
-	: relational_expression
-	| equality_expression EQ relational_expression
-	| equality_expression N_EQ relational_expression
-	;
-
-and_expression
-	: equality_expression
-	;
-
-exclusive_or_expression
-	: and_expression
-	;
-
-inclusive_or_expression
-	: exclusive_or_expression
-	;
-
-logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression L_AND inclusive_or_expression
-	;
-
-logical_or_expression
-	: logical_and_expression
-	| logical_or_expression L_OR logical_and_expression
-	;
-
-conditional_expression
-	: logical_or_expression
-	| logical_or_expression '?' expression ':' conditional_expression
-	;
-
-assignment_expression
-	: conditional_expression
-	| unary_expression assignment_operator assignment_expression
-	;
-
 assignment_operator
 	: ASGN
 	| T_ASGN
@@ -147,15 +95,6 @@ assignment_operator
 	| MOD_ASGN
 	| PL_ASGN
 	| M_ASGN
-	;
-
-expression
-	: assignment_expression
-	| expression COMMA assignment_expression
-	;
-
-constant_expression
-	: conditional_expression
 	;
 
 declaration
@@ -200,28 +139,6 @@ type_specifier
 	| DOUBLE
 	| SIGNED
 	| UNSIGNED
-	| struct_or_union_specifier
-	| enum_specifier
-	;
-
-struct_or_union_specifier
-	: struct_or_union ID LCURLY struct_declaration_list RCURLY
-	| struct_or_union LCURLY struct_declaration_list RCURLY
-	| struct_or_union ID
-	;
-
-struct_or_union
-	: STRUCT
-	| UNION
-	;
-
-struct_declaration_list
-	: struct_declaration
-	| struct_declaration_list struct_declaration
-	;
-
-struct_declaration
-	: specifier_qualifier_list struct_declarator_list SEMI
 	;
 
 specifier_qualifier_list
@@ -229,33 +146,6 @@ specifier_qualifier_list
 	| type_specifier
 	| type_qualifier specifier_qualifier_list
 	| type_qualifier
-	;
-
-struct_declarator_list
-	: struct_declarator
-	| struct_declarator_list COMMA struct_declarator
-	;
-
-struct_declarator
-	: declarator
-	| ':' constant_expression
-	| declarator ':' constant_expression
-	;
-
-enum_specifier
-	: ENUM LCURLY enumerator_list RCURLY
-	| ENUM ID LCURLY enumerator_list RCURLY
-	| ENUM ID
-	;
-
-enumerator_list
-	: enumerator
-	| enumerator_list COMMA enumerator
-	;
-
-enumerator
-	: ID
-	| ID ASGN constant_expression
 	;
 
 type_qualifier
@@ -271,7 +161,7 @@ declarator
 direct_declarator
 	: ID
 	| LPAR declarator RPAR
-	| direct_declarator LBRAC constant_expression RBRAC
+	| direct_declarator LBRAC expression RBRAC
 	| direct_declarator LBRAC RBRAC
 	| direct_declarator LPAR parameter_type_list RPAR
 	| direct_declarator LPAR identifier_list RPAR
@@ -325,9 +215,9 @@ abstract_declarator
 direct_abstract_declarator
 	: LPAR abstract_declarator RPAR
 	| LBRAC RBRAC
-	| LBRAC constant_expression RBRAC
+	| LBRAC expression RBRAC
 	| direct_abstract_declarator LBRAC RBRAC
-	| direct_abstract_declarator LBRAC constant_expression RBRAC
+	| direct_abstract_declarator LBRAC expression RBRAC
 	| LPAR RPAR
 	| LPAR parameter_type_list RPAR
 	| direct_abstract_declarator LPAR RPAR
@@ -335,7 +225,7 @@ direct_abstract_declarator
 	;
 
 initializer
-	: assignment_expression
+	: expression
 	| LCURLY initializer_list RCURLY
 	| LCURLY initializer_list COMMA RCURLY
 	;
@@ -356,7 +246,7 @@ statement
 
 labeled_statement
 	: ID ':' statement
-	| CASE constant_expression ':' statement
+	| CASE expression ':' statement
 	| DEFAULT ':' statement
 	;
 
