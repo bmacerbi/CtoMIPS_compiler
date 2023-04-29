@@ -27,6 +27,16 @@ extern int yylineno;
 %token PLUS MINUS TIMES OVER PERCENT LPAR RPAR 
 %token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER
 
+%left L_OR
+%left L_AND
+%left EQ N_EQ
+%left LT GT LT_EQ GT_EQ
+%left PLUS MINUS
+%left TIMES OVER PERCENT
+%right L_NOT
+%right INC DEC
+%left AMPER
+
 %start translation_unit
 %%
 
@@ -36,44 +46,35 @@ expression
 	| INT_VAL
 	| STR_VAL
 	| CHAR_VAL
-	| expression
 	| LPAR expression RPAR
 	| expression LBRAC expression RBRAC
 	| expression LPAR RPAR
 	| expression LPAR argument_expression_list RPAR
-
-	| expression INC
-	| expression DEC
-	| INC expression
-	| DEC expression
-
+	| expression INC %prec AMPER
+	| expression DEC %prec AMPER
+	| INC expression %prec INC
+	| DEC expression %prec DEC
 	| unary_operator expression
 	| SIZEOF expression
 	| SIZEOF LPAR type_name RPAR
-
 	| LPAR type_name RPAR expression
-
 	| expression TIMES expression
 	| expression OVER expression
 	| expression PERCENT expression
 	| expression PLUS expression
 	| expression MINUS expression
-
 	| expression LT expression
 	| expression GT expression
 	| expression LT_EQ expression
 	| expression GT_EQ expression
 	| expression EQ expression
 	| expression N_EQ expression
-	
 	| expression L_AND expression
 	| expression L_OR expression
-
 	| expression assignment_operator expression
-
 	| expression COMMA expression
-
 	;
+
 
 argument_expression_list
 	: expression
@@ -308,11 +309,6 @@ function_definition
 	| declaration_specifiers declarator compound_statement
 	| declarator declaration_list compound_statement
 	| declarator compound_statement
-	;
-
-declaration_list
-	: declaration
-	| declaration_list declaration
 	;
 
 %%
