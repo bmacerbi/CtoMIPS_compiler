@@ -1,6 +1,15 @@
+/* Flex output */
+%option outfile="scanner.c"
+/* Unused functions */
+%option noyywrap
+%option nounput
+%option noinput
+/* Auto increment variable yylineno every time a '\n' is read. */
 %option yylineno
+
 %{
     #include <stdio.h>
+    #include "parser.h"
 
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
@@ -41,10 +50,10 @@ do                      { return DO ;}
 if                      { return IF ;}
 static                  { return STATIC ;}
 while                   { return WHILE ;}
-_Bool                   { return _BOOL ;}
-_Imaginary              { return _IMAGINARY ;}
+_Bool                   { return BOOL ;}
+_Imaginary              { return IMAGINARY ;}
 restrict                { return RESTRICT ;}
-_Complex                { return _COMPLEX ;}
+_Complex                { return COMPLEX ;}
 inline                  { return INLINE ;}
 
 "!"                     { return L_NOT ;}
@@ -52,9 +61,9 @@ inline                  { return INLINE ;}
 "||"                    { return L_OR ;}
 "=="                    { return EQ;}
 "<="                    { return LT_EQ;}
-">="                    { return MT_EQ;}
+">="                    { return GT_EQ;}
 "!="                    { return N_EQ;}
-">"                     { return MT;}
+">"                     { return GT;}
 "<"                     { return LT;}
 "--"                    { return DEC;}
 "++"                    { return INC;}
@@ -63,7 +72,7 @@ inline                  { return INLINE ;}
 "-="                    { return M_ASGN ;}
 "*="                    { return T_ASGN ;}
 "/="                    { return O_ASGN ;}
-"%="                    { return PC_ASGN ;}
+"%="                    { return MOD_ASGN ;}
 "+"                     { return PLUS ;}  
 "-"                     { return MINUS ;}  
 "*"                     { return TIMES ;}  
