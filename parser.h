@@ -124,7 +124,10 @@ extern int yydebug;
     RBRAC = 325,                   /* RBRAC  */
     SEMI = 326,                    /* SEMI  */
     COMMA = 327,                   /* COMMA  */
-    AMPER = 328                    /* AMPER  */
+    AMPER = 328,                   /* AMPER  */
+    UMINUS = 329,                  /* UMINUS  */
+    UPLUS = 330,                   /* UPLUS  */
+    UPTR = 331                     /* UPTR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

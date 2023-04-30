@@ -27,15 +27,18 @@ extern int yylineno;
 %token PLUS MINUS TIMES OVER PERCENT LPAR RPAR 
 %token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER
 
+
+%left COMMA
+%right ASGN PL_ASGN M_ASGN T_ASGN O_ASGN MOD_ASGN
 %left L_OR
 %left L_AND
 %left EQ N_EQ
 %left LT GT LT_EQ GT_EQ
 %left PLUS MINUS
+%right INC DEC L_NOT AMPER SIZEOF
 %left TIMES OVER PERCENT
-%right L_NOT
-%right INC DEC
-%left AMPER
+%left LBRAC RBRAC LPAR RPAR 
+%precedence UMINUS UPLUS UPTR
 
 %start translation_unit
 %%
@@ -50,11 +53,11 @@ expression
 	| expression LBRAC expression RBRAC
 	| expression LPAR RPAR
 	| expression LPAR argument_expression_list RPAR
-	| expression INC %prec AMPER
-	| expression DEC %prec AMPER
-	| INC expression %prec INC
-	| DEC expression %prec DEC
-	| unary_operator expression
+	| expression INC 
+	| expression DEC 
+	| INC expression 
+	| DEC expression 
+	| unary_operator expression %prec UMINUS
 	| SIZEOF expression
 	| SIZEOF LPAR type_name RPAR
 	| LPAR type_name RPAR expression

@@ -18,6 +18,7 @@ void insertionSort(int arr[], int n)
 
 int main()
 {
+    int c = +2;
     int arr[] = { 12, 11, 13, 5, 6 };
     int n = sizeof(arr) / sizeof(arr[0]);
  
