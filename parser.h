@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,9 +31,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_YY_PARSER_H_INCLUDED
 # define YY_YY_PARSER_H_INCLUDED
@@ -45,91 +44,71 @@
 extern int yydebug;
 #endif
 
-/* Token kinds.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    PTR_OP = 258,                  /* PTR_OP  */
-    INC = 259,                     /* INC  */
-    DEC = 260,                     /* DEC  */
-    LT_EQ = 261,                   /* LT_EQ  */
-    GT_EQ = 262,                   /* GT_EQ  */
-    LT = 263,                      /* LT  */
-    GT = 264,                      /* GT  */
-    EQ = 265,                      /* EQ  */
-    N_EQ = 266,                    /* N_EQ  */
-    L_NOT = 267,                   /* L_NOT  */
-    L_AND = 268,                   /* L_AND  */
-    L_OR = 269,                    /* L_OR  */
-    ASGN = 270,                    /* ASGN  */
-    T_ASGN = 271,                  /* T_ASGN  */
-    O_ASGN = 272,                  /* O_ASGN  */
-    MOD_ASGN = 273,                /* MOD_ASGN  */
-    PL_ASGN = 274,                 /* PL_ASGN  */
-    M_ASGN = 275,                  /* M_ASGN  */
-    TYPEDEF = 276,                 /* TYPEDEF  */
-    EXTERN = 277,                  /* EXTERN  */
-    STATIC = 278,                  /* STATIC  */
-    AUTO = 279,                    /* AUTO  */
-    REGISTER = 280,                /* REGISTER  */
-    INLINE = 281,                  /* INLINE  */
-    RESTRICT = 282,                /* RESTRICT  */
-    CHAR = 283,                    /* CHAR  */
-    SHORT = 284,                   /* SHORT  */
-    INT = 285,                     /* INT  */
-    LONG = 286,                    /* LONG  */
-    SIGNED = 287,                  /* SIGNED  */
-    UNSIGNED = 288,                /* UNSIGNED  */
-    FLOAT = 289,                   /* FLOAT  */
-    DOUBLE = 290,                  /* DOUBLE  */
-    CONST = 291,                   /* CONST  */
-    VOLATILE = 292,                /* VOLATILE  */
-    VOID = 293,                    /* VOID  */
-    BOOL = 294,                    /* BOOL  */
-    COMPLEX = 295,                 /* COMPLEX  */
-    IMAGINARY = 296,               /* IMAGINARY  */
-    CASE = 297,                    /* CASE  */
-    DEFAULT = 298,                 /* DEFAULT  */
-    IF = 299,                      /* IF  */
-    ELSE = 300,                    /* ELSE  */
-    SWITCH = 301,                  /* SWITCH  */
-    WHILE = 302,                   /* WHILE  */
-    DO = 303,                      /* DO  */
-    FOR = 304,                     /* FOR  */
-    GOTO = 305,                    /* GOTO  */
-    CONTINUE = 306,                /* CONTINUE  */
-    BREAK = 307,                   /* BREAK  */
-    RETURN = 308,                  /* RETURN  */
-    ID = 309,                      /* ID  */
-    FLOAT_VAL = 310,               /* FLOAT_VAL  */
-    INT_VAL = 311,                 /* INT_VAL  */
-    STR_VAL = 312,                 /* STR_VAL  */
-    CHAR_VAL = 313,                /* CHAR_VAL  */
-    SIZEOF = 314,                  /* SIZEOF  */
-    PLUS = 315,                    /* PLUS  */
-    MINUS = 316,                   /* MINUS  */
-    TIMES = 317,                   /* TIMES  */
-    OVER = 318,                    /* OVER  */
-    PERCENT = 319,                 /* PERCENT  */
-    LPAR = 320,                    /* LPAR  */
-    RPAR = 321,                    /* RPAR  */
-    LCURLY = 322,                  /* LCURLY  */
-    RCURLY = 323,                  /* RCURLY  */
-    LBRAC = 324,                   /* LBRAC  */
-    RBRAC = 325,                   /* RBRAC  */
-    SEMI = 326,                    /* SEMI  */
-    COMMA = 327,                   /* COMMA  */
-    AMPER = 328,                   /* AMPER  */
-    UMINUS = 329,                  /* UMINUS  */
-    UPLUS = 330,                   /* UPLUS  */
-    UPTR = 331                     /* UPTR  */
+    INC = 258,
+    DEC = 259,
+    LT_EQ = 260,
+    GT_EQ = 261,
+    LT = 262,
+    GT = 263,
+    EQ = 264,
+    N_EQ = 265,
+    L_NOT = 266,
+    L_AND = 267,
+    L_OR = 268,
+    ASGN = 269,
+    T_ASGN = 270,
+    O_ASGN = 271,
+    MOD_ASGN = 272,
+    PL_ASGN = 273,
+    M_ASGN = 274,
+    CHAR = 275,
+    SHORT = 276,
+    INT = 277,
+    LONG = 278,
+    SIGNED = 279,
+    UNSIGNED = 280,
+    FLOAT = 281,
+    DOUBLE = 282,
+    VOID = 283,
+    CASE = 284,
+    DEFAULT = 285,
+    IF = 286,
+    ELSE = 287,
+    SWITCH = 288,
+    WHILE = 289,
+    DO = 290,
+    FOR = 291,
+    GOTO = 292,
+    CONTINUE = 293,
+    BREAK = 294,
+    RETURN = 295,
+    ID = 296,
+    FLOAT_VAL = 297,
+    INT_VAL = 298,
+    STR_VAL = 299,
+    CHAR_VAL = 300,
+    SIZEOF = 301,
+    PLUS = 302,
+    MINUS = 303,
+    TIMES = 304,
+    OVER = 305,
+    PERCENT = 306,
+    LPAR = 307,
+    RPAR = 308,
+    LCURLY = 309,
+    RCURLY = 310,
+    LBRAC = 311,
+    RBRAC = 312,
+    SEMI = 313,
+    COMMA = 314,
+    AMPER = 315,
+    UMINUS = 316
   };
-  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -142,8 +121,6 @@ typedef int YYSTYPE;
 
 extern YYSTYPE yylval;
 
-
 int yyparse (void);
-
 
 #endif /* !YY_YY_PARSER_H_INCLUDED  */

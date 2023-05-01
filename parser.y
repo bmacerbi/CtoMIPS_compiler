@@ -17,16 +17,13 @@ extern char *yytext;
 extern int yylineno;
 %}
 
-%token PTR_OP INC DEC LT_EQ GT_EQ LT GT EQ N_EQ L_NOT
+%token INC DEC LT_EQ GT_EQ LT GT EQ N_EQ L_NOT
 %token L_AND L_OR ASGN T_ASGN O_ASGN MOD_ASGN PL_ASGN M_ASGN
-%token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token BOOL COMPLEX IMAGINARY
+%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE VOID
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 %token ID FLOAT_VAL INT_VAL STR_VAL CHAR_VAL SIZEOF
 %token PLUS MINUS TIMES OVER PERCENT LPAR RPAR 
 %token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER
-
 
 %left COMMA
 %right ASGN PL_ASGN M_ASGN T_ASGN O_ASGN MOD_ASGN
@@ -38,7 +35,7 @@ extern int yylineno;
 %right INC DEC L_NOT AMPER SIZEOF
 %left TIMES OVER PERCENT
 %left LBRAC RBRAC LPAR RPAR 
-%precedence UMINUS UPLUS UPTR
+%precedence UMINUS
 
 %start translation_unit
 %%
@@ -86,7 +83,6 @@ argument_expression_list
 
 unary_operator
 	: AMPER
-	| TIMES
 	| PLUS
 	| MINUS
 	| L_NOT
@@ -107,12 +103,8 @@ declaration
 	;
 
 declaration_specifiers
-	: storage_class_specifier
-	| storage_class_specifier declaration_specifiers
-	| type_specifier
+	: type_specifier
 	| type_specifier declaration_specifiers
-	| type_qualifier
-	| type_qualifier declaration_specifiers
 	;
 
 init_declarator_list
@@ -123,14 +115,6 @@ init_declarator_list
 init_declarator
 	: declarator
 	| declarator ASGN initializer
-	;
-
-storage_class_specifier
-	: TYPEDEF
-	| EXTERN
-	| STATIC
-	| AUTO
-	| REGISTER
 	;
 
 type_specifier
@@ -148,18 +132,10 @@ type_specifier
 specifier_qualifier_list
 	: type_specifier specifier_qualifier_list
 	| type_specifier
-	| type_qualifier specifier_qualifier_list
-	| type_qualifier
-	;
-
-type_qualifier
-	: CONST
-	| VOLATILE
 	;
 
 declarator
-	: pointer direct_declarator
-	| direct_declarator
+	: direct_declarator
 	;
 
 direct_declarator
@@ -167,26 +143,9 @@ direct_declarator
 	| LPAR declarator RPAR
 	| direct_declarator LBRAC expression RBRAC
 	| direct_declarator LBRAC RBRAC
-	| direct_declarator LPAR parameter_type_list RPAR
+	| direct_declarator LPAR parameter_list RPAR
 	| direct_declarator LPAR identifier_list RPAR
 	| direct_declarator LPAR RPAR
-	;
-
-pointer
-	: TIMES
-	| TIMES type_qualifier_list
-	| TIMES pointer
-	| TIMES type_qualifier_list pointer
-	;
-
-type_qualifier_list
-	: type_qualifier
-	| type_qualifier_list type_qualifier
-	;
-
-
-parameter_type_list
-	: parameter_list
 	;
 
 parameter_list
@@ -211,9 +170,7 @@ type_name
 	;
 
 abstract_declarator
-	: pointer
-	| direct_abstract_declarator
-	| pointer direct_abstract_declarator
+	: direct_abstract_declarator
 	;
 
 direct_abstract_declarator
@@ -223,9 +180,9 @@ direct_abstract_declarator
 	| direct_abstract_declarator LBRAC RBRAC
 	| direct_abstract_declarator LBRAC expression RBRAC
 	| LPAR RPAR
-	| LPAR parameter_type_list RPAR
+	| LPAR parameter_list RPAR
 	| direct_abstract_declarator LPAR RPAR
-	| direct_abstract_declarator LPAR parameter_type_list RPAR
+	| direct_abstract_declarator LPAR parameter_list RPAR
 	;
 
 initializer
