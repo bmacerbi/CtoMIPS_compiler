@@ -112,7 +112,8 @@ extern int yydebug;
     SEMI = 313,                    /* SEMI  */
     COMMA = 314,                   /* COMMA  */
     AMPER = 315,                   /* AMPER  */
-    UMINUS = 316                   /* UMINUS  */
+    COLON = 316,                   /* COLON  */
+    UMINUS = 317                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

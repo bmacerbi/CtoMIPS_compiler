@@ -1,7 +1,7 @@
 int main() {
-    float float_var = -12;
-    if(float_var || 1){
-        return 1;
+    if(a == 3){
+        int a;
     }
+    i = 3;
     return 0;
 }

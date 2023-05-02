@@ -6,5 +6,12 @@ float area_circulo(float raio) { // Função para calcular a área de um círcul
 int main() {
     float raio = 5.0;
     float area = area_circulo(raio);
+
+    if(raio == 5.0) {
+        raio = 3.0;
+    }
+
+    float raioo = 2.0;
+
     return 0;
 }

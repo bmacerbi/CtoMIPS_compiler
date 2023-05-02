@@ -70,6 +70,7 @@ while                   { return WHILE ;}
 "["                     { return LBRAC ;}
 "]"                     { return RBRAC ;}
 ";"                     { return SEMI ;}
+":"                     { return COLON ;}
 ","                     { return COMMA ;}
 "&"                     { return AMPER ;}
 

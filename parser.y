@@ -23,7 +23,7 @@ extern int yylineno;
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 %token ID FLOAT_VAL INT_VAL STR_VAL CHAR_VAL SIZEOF
 %token PLUS MINUS TIMES OVER PERCENT LPAR RPAR 
-%token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER
+%token LCURLY RCURLY LBRAC RBRAC SEMI COMMA AMPER COLON
 
 %left COMMA
 %right ASGN PL_ASGN M_ASGN T_ASGN O_ASGN MOD_ASGN
@@ -71,8 +71,12 @@ expression
 	| expression N_EQ expression
 	| expression L_AND expression
 	| expression L_OR expression
-	| expression assignment_operator expression
-	| expression COMMA expression
+	| expression ASGN expression
+	| expression T_ASGN expression 
+	| expression O_ASGN expression 
+	| expression MOD_ASGN expression 
+	| expression PL_ASGN expression
+	| expression M_ASGN expression
 	;
 
 
@@ -86,15 +90,6 @@ unary_operator
 	| PLUS
 	| MINUS
 	| L_NOT
-	;
-
-assignment_operator
-	: ASGN
-	| T_ASGN
-	| O_ASGN
-	| MOD_ASGN
-	| PL_ASGN
-	| M_ASGN
 	;
 
 declaration
@@ -135,17 +130,13 @@ specifier_qualifier_list
 	;
 
 declarator
-	: direct_declarator
-	;
-
-direct_declarator
 	: ID
 	| LPAR declarator RPAR
-	| direct_declarator LBRAC expression RBRAC
-	| direct_declarator LBRAC RBRAC
-	| direct_declarator LPAR parameter_list RPAR
-	| direct_declarator LPAR identifier_list RPAR
-	| direct_declarator LPAR RPAR
+	| declarator LBRAC expression RBRAC
+	| declarator LBRAC RBRAC
+	| declarator LPAR parameter_list RPAR
+	| declarator LPAR identifier_list RPAR
+	| declarator LPAR RPAR
 	;
 
 parameter_list
@@ -170,19 +161,15 @@ type_name
 	;
 
 abstract_declarator
-	: direct_abstract_declarator
-	;
-
-direct_abstract_declarator
 	: LPAR abstract_declarator RPAR
 	| LBRAC RBRAC
 	| LBRAC expression RBRAC
-	| direct_abstract_declarator LBRAC RBRAC
-	| direct_abstract_declarator LBRAC expression RBRAC
+	| abstract_declarator LBRAC RBRAC
+	| abstract_declarator LBRAC expression RBRAC
 	| LPAR RPAR
 	| LPAR parameter_list RPAR
-	| direct_abstract_declarator LPAR RPAR
-	| direct_abstract_declarator LPAR parameter_list RPAR
+	| abstract_declarator LPAR RPAR
+	| abstract_declarator LPAR parameter_list RPAR
 	;
 
 initializer
@@ -206,9 +193,9 @@ statement
 	;
 
 labeled_statement
-	: ID ':' statement
-	| CASE expression ':' statement
-	| DEFAULT ':' statement
+	: ID COLON statement
+	| CASE expression COLON statement
+	| DEFAULT COLON statement
 	;
 
 compound_statement
@@ -234,8 +221,8 @@ expression_statement
 	;
 
 selection_statement
-	: IF LPAR expression RPAR statement
-	| IF LPAR expression RPAR statement ELSE statement
+	: IF LPAR expression RPAR compound_statement
+	| IF LPAR expression RPAR compound_statement ELSE compound_statement
 	| SWITCH LPAR expression RPAR statement
 	;
 
