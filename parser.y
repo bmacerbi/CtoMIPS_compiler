@@ -115,13 +115,8 @@ init_declarator
 type_specifier
 	: VOID
 	| CHAR
-	| SHORT
 	| INT
-	| LONG
 	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
 	;
 
 specifier_qualifier_list
@@ -223,14 +218,10 @@ expression_statement
 selection_statement
 	: IF LPAR expression RPAR compound_statement
 	| IF LPAR expression RPAR compound_statement ELSE compound_statement
-	| SWITCH LPAR expression RPAR statement
 	;
 
 iteration_statement
 	: WHILE LPAR expression RPAR statement
-	| DO statement WHILE LPAR expression RPAR SEMI
-	| FOR LPAR expression_statement expression_statement RPAR statement
-	| FOR LPAR expression_statement expression_statement expression RPAR statement
 	;
 
 jump_statement
@@ -248,7 +239,6 @@ translation_unit
 
 external_declaration
 	: function_definition
-	| declaration
 	;
 
 function_definition
