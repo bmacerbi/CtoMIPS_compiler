@@ -7,11 +7,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
+#include "tables.h"
 
+StrTable* strTable;
+VarTable* varTable;
+Type type;
+int scopCount = 0;
 
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
+void newVar(char* str, int line);
+void verifyToken(char *str, int line);
 
 extern char *yytext;
 extern int yylineno;
@@ -44,7 +51,7 @@ expression
 	: ID
 	| FLOAT_VAL
 	| INT_VAL
-	| STR_VAL
+	| STR_VAL {add_string(strTable, yytext);}
 	| CHAR_VAL
 	| LPAR expression RPAR
 	| expression LBRAC expression RBRAC
@@ -113,10 +120,10 @@ init_declarator
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| INT
-	| FLOAT
+	: VOID  { type = VOID_TYPE; }
+	| CHAR  { type = CHAR_TYPE; }
+	| INT   { type = INT_TYPE;  }
+	| FLOAT { type = INT_TYPE;  }
 	;
 
 specifier_qualifier_list
@@ -125,7 +132,7 @@ specifier_qualifier_list
 	;
 
 declarator
-	: ID
+	: ID {newVar(yytext, yylineno);}
 	| LPAR declarator RPAR
 	| declarator LBRAC expression RBRAC
 	| declarator LBRAC RBRAC
@@ -238,7 +245,7 @@ translation_unit
 	;
 
 external_declaration
-	: function_definition
+	: function_definition { scopCount++;}
 	;
 
 function_definition
@@ -257,8 +264,35 @@ void yyerror (char const *s) {
 }
 
 int main() {
+	strTable = create_str_table();
+    varTable = create_var_table();
+
     yyparse();
     printf("PARSE SUCCESSFUL!\n");
+
+	print_str_table(strTable);
+	print_var_table(varTable);
     yylex_destroy();    // To avoid memory leaks within flex...
+	free_str_table(strTable);
+    free_var_table(varTable);
     return 0;
+}
+
+
+void newVar(char* str, int line){
+    int index = lookup_var(varTable, str);
+    if ( index == -1 ) {
+        add_var(varTable, str, line, type);
+    } else {
+        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(varTable, index));
+		exit(EXIT_FAILURE);
+    }
+}
+
+void verifyToken(char *str, int line){
+	int index = lookup_var(varTable, str);
+    if ( index == -1 ) {
+    	printf("SEMANTIC ERROR (%d): variable ’%s’ was not declared at line %d.\n", line, str, line);
+		exit(EXIT_FAILURE);
+    }
 }

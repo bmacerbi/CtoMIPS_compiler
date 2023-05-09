@@ -1,7 +1,9 @@
 
 int main() {
-int n = 2;
-    if(a == 3){
+int n;
+int n;
+char b = 'c';
+    if("aa" == "aa"){
         int a;
     }
     i = 3;

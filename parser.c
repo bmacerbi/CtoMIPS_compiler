@@ -72,16 +72,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
+#include "tables.h"
 
+StrTable* strTable;
+VarTable* varTable;
+Type type;
 
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
+void newVar(char* str, int line);
+void verifyToken(char *str, int line);
 
 extern char *yytext;
 extern int yylineno;
 
-#line 85 "parser.c"
+#line 91 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -570,19 +576,19 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    45,    46,    47,    48,    49,    50,    51,
-      52,    53,    54,    55,    56,    57,    58,    59,    60,    61,
-      62,    63,    64,    65,    66,    67,    68,    69,    70,    71,
-      72,    73,    74,    75,    76,    77,    78,    79,    84,    85,
-      89,    90,    91,    92,    96,    97,   101,   102,   106,   107,
-     111,   112,   116,   117,   118,   119,   123,   124,   128,   129,
-     130,   131,   132,   133,   134,   138,   139,   143,   144,   145,
-     149,   150,   154,   155,   159,   160,   161,   162,   163,   164,
-     165,   166,   167,   171,   172,   173,   177,   178,   182,   183,
-     184,   185,   186,   187,   191,   192,   193,   197,   198,   199,
-     200,   204,   205,   209,   210,   214,   215,   219,   220,   224,
-     228,   229,   230,   231,   232,   236,   237,   241,   245,   246,
-     247,   248
+       0,    50,    50,    51,    52,    53,    54,    55,    56,    57,
+      58,    59,    60,    61,    62,    63,    64,    65,    66,    67,
+      68,    69,    70,    71,    72,    73,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,    83,    84,    85,    90,    91,
+      95,    96,    97,    98,   102,   103,   107,   108,   112,   113,
+     117,   118,   122,   123,   124,   125,   129,   130,   134,   135,
+     136,   137,   138,   139,   140,   144,   145,   149,   150,   151,
+     155,   156,   160,   161,   165,   166,   167,   168,   169,   170,
+     171,   172,   173,   177,   178,   179,   183,   184,   188,   189,
+     190,   191,   192,   193,   197,   198,   199,   203,   204,   205,
+     206,   210,   211,   215,   216,   220,   221,   225,   226,   230,
+     234,   235,   236,   237,   238,   242,   243,   247,   251,   252,
+     253,   254
 };
 #endif
 
@@ -1985,8 +1991,44 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
+  case 5: /* expression: STR_VAL  */
+#line 53 "parser.y"
+                  {add_string(strTable, yytext);}
+#line 1998 "parser.c"
+    break;
 
-#line 1990 "parser.c"
+  case 52: /* type_specifier: VOID  */
+#line 122 "parser.y"
+                { type = VOID_TYPE; }
+#line 2004 "parser.c"
+    break;
+
+  case 53: /* type_specifier: CHAR  */
+#line 123 "parser.y"
+                { type = CHAR_TYPE; }
+#line 2010 "parser.c"
+    break;
+
+  case 54: /* type_specifier: INT  */
+#line 124 "parser.y"
+                { type = INT_TYPE;  }
+#line 2016 "parser.c"
+    break;
+
+  case 55: /* type_specifier: FLOAT  */
+#line 125 "parser.y"
+                { type = INT_TYPE;  }
+#line 2022 "parser.c"
+    break;
+
+  case 58: /* declarator: ID  */
+#line 134 "parser.y"
+             {newVar(yytext, yylineno);}
+#line 2028 "parser.c"
+    break;
+
+
+#line 2032 "parser.c"
 
         default: break;
       }
@@ -2221,7 +2263,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 251 "parser.y"
+#line 257 "parser.y"
 
 
 // Primitive error handling.
@@ -2231,8 +2273,34 @@ void yyerror (char const *s) {
 }
 
 int main() {
+	strTable = create_str_table();
+    varTable = create_var_table();
+
     yyparse();
     printf("PARSE SUCCESSFUL!\n");
+
+	print_str_table(strTable);
+	print_var_table(varTable);
     yylex_destroy();    // To avoid memory leaks within flex...
+	free_str_table(strTable);
+    free_var_table(varTable);
     return 0;
+}
+
+
+void newVar(char* str, int line){
+    int index = lookup_var(varTable, str);
+    if ( index == -1 ) {
+        add_var(varTable, str, line, type);
+    } else {
+        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(varTable, index));
+    }
+}
+
+void verifyToken(char *str, int line){
+	int index = lookup_var(varTable, str);
+    if ( index == -1 ) {
+    	printf("SEMANTIC ERROR (%d): variable ’%s’ was not declared at line %d.\n", line, str, line);
+		exit(EXIT_FAILURE);
+    }
 }
