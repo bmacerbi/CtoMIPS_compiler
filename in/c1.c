@@ -1,8 +1,6 @@
-
-int main() {
-int n;
-int n;
-char b = 'c';
+int main(){
+    int n;
+    char b = 'c';
     if("aa" == "aa"){
         int a;
     }

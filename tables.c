@@ -119,42 +119,79 @@ void free_var_table(VarTable* vt) {
 
 
 #define FUNCTION_MAX_SIZE 128
-#define FUNCTION_TABLE_MAX_SIZE 100
+#define FUNCTIONS_TABLE_MAX_SIZE 100
 
-struct function_table {
-    char t[FUNCTION_TABLE_MAX_SIZE][FUNCTION_MAX_SIZE];
+typedef struct {
+  char name[FUNCTION_MAX_SIZE];
+  int line;
+  int args;
+  VarTable* localVarTable;
+  Type type;
+} Entry2;
+
+struct func_table {
+    Entry2 t[FUNCTIONS_TABLE_MAX_SIZE];
     int size;
 };
 
 FunctionTable* create_func_table() {
     FunctionTable *ft = malloc(sizeof * ft);
+    ft->t->localVarTable = create_var_table();
     ft->size = 0;
     return ft;
 }
 
-int add_function(FunctionTable* ft, char* s) {
+int lookup_func(FunctionTable* ft, char* s) {
     for (int i = 0; i < ft->size; i++) {
-        if (strcmp(ft->t[i], s) == 0) {
+        if (strcmp(ft->t[i].name, s) == 0)  {
             return i;
         }
     }
-    strcpy(ft->t[ft->size], s);
+    return -1;
+}
+
+int add_func(FunctionTable* ft, char* s, int line, int args, Type type) {
+    strcpy(ft->t[ft->size].name, s);
+    ft->t[ft->size].line = line;
+    ft->t[ft->size].type = type;
+    ft->t[ft->size].args = args;
     int idx_added = ft->size;
     ft->size++;
     return idx_added;
 }
 
-char* get_function(FunctionTable* ft, int i) {
-    return ft->t[i];
+int add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope){
+    add_var(ft->t[ft->size].localVarTable, s, line, type);
+}
+
+char* get_name_func(FunctionTable* ft, int i) {
+    return ft->t[i].name;
+}
+
+int get_line_func(FunctionTable* ft, int i) {
+    return ft->t[i].line;
+}
+
+Type get_type_func(FunctionTable* ft, int i) {
+    return ft->t[i].type;
+}
+
+VarTable* get_var_table_func(FunctionTable* ft, int scope) {
+    return ft->t[scope].localVarTable;
 }
 
 void print_func_table(FunctionTable* ft) {
     printf("Functions table:\n");
     for (int i = 0; i < ft->size; i++) {
-        printf("Entry %d -- %s\n", i, get_function(ft, i));
+        printf("Entry %d -- name: %s, line: %d, type: %s\n", i,
+        get_name_func(ft, i), get_line_func(ft, i), get_text(get_type_func(ft, i)));
+        print_var_table(ft->t[i].localVarTable);
     }
 }
 
 void free_func_table(FunctionTable* ft) {
-    free(st);
+    for(int i = 0; i < ft->size;i++){
+        free_func_table(ft->t[i].localVarTable);
+    }
+    free(ft);
 }

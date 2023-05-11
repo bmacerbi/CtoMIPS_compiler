@@ -11,14 +11,18 @@
 
 StrTable* strTable;
 VarTable* varTable;
+FunctionTable* funcTable;
 Type type;
-int scopCount = 0;
+int scopeCount = 0;
+int isFunction = 1;
 
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
 void verifyToken(char *str, int line);
+void newId(char* str, int line);
+void newFunc(char* str, int line);
 
 extern char *yytext;
 extern int yylineno;
@@ -141,6 +145,16 @@ declarator
 	| declarator LPAR RPAR
 	;
 
+function_declarator
+	: ID {newFunc(yytext, yylineno);}
+	| LPAR function_declarator RPAR
+	| function_declarator LBRAC expression RBRAC
+	| function_declarator LBRAC RBRAC
+	| function_declarator LPAR parameter_list RPAR
+	| function_declarator LPAR identifier_list RPAR
+	| function_declarator LPAR RPAR
+	;
+
 parameter_list
 	: parameter_declaration
 	| parameter_list COMMA parameter_declaration
@@ -245,14 +259,11 @@ translation_unit
 	;
 
 external_declaration
-	: function_definition { scopCount++;}
+	: function_definition { scopeCount++;}
 	;
 
 function_definition
-	: declaration_specifiers declarator declaration_list compound_statement
-	| declaration_specifiers declarator compound_statement
-	| declarator declaration_list compound_statement
-	| declarator compound_statement
+	: declaration_specifiers function_declarator compound_statement
 	;
 
 %%
@@ -265,26 +276,36 @@ void yyerror (char const *s) {
 
 int main() {
 	strTable = create_str_table();
-    varTable = create_var_table();
+	funcTable = create_func_table();
 
     yyparse();
     printf("PARSE SUCCESSFUL!\n");
-
 	print_str_table(strTable);
-	print_var_table(varTable);
+	print_func_table(funcTable);
+
     yylex_destroy();    // To avoid memory leaks within flex...
 	free_str_table(strTable);
-    free_var_table(varTable);
+	free_func_table(funcTable);
     return 0;
 }
 
 
 void newVar(char* str, int line){
-    int index = lookup_var(varTable, str);
+    int index = lookup_var(get_var_table_func(funcTable,scopeCount), str);
     if ( index == -1 ) {
-        add_var(varTable, str, line, type);
+        add_func_var(funcTable, str, line, type, scopeCount);
     } else {
         printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(varTable, index));
+		exit(EXIT_FAILURE);
+    }
+}
+
+void newFunc(char* str, int line){
+    int index = lookup_func(funcTable, str);
+    if ( index == -1 ) {
+        add_func(funcTable, str, line, 2, type);
+    } else {
+        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
 		exit(EXIT_FAILURE);
     }
 }

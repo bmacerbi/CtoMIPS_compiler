@@ -69,45 +69,46 @@ void print_var_table(VarTable* vt);
 void free_var_table(VarTable* vt);
 
 
-
-
 // Function Table
 // ----------------------------------------------------------------------------
 
 // Opaque structure.
 // For simplicity, the table is implemented as a sequential list.
-// This table only stores the variable name and type, and its declaration line.
-struct function_table;
-typedef struct function_table FunctionTable;
+struct func_table;
+typedef struct func_table FunctionTable;
 
 // Creates an empty variables table.
-VarTable* create_var_table();
+FunctionTable* create_func_table();
 
 // Adds a fresh var to the table.
 // No check is made by this function, so make sure to call 'lookup_var' first.
 // Returns the index where the variable was inserted.
-int add_var(VarTable* vt, char* s, int line, Type type);
+int add_func(FunctionTable* ft, char* s, int line, int args, Type type);
 
-// Returns the index where the given variable is stored or -1 otherwise.
-int lookup_var(VarTable* vt, char* s);
+int add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope);
 
-// Returns the variable name stored at the given index.
+// Returns the index where the given funciable is stored or -1 otherwise.
+int lookup_func(FunctionTable* ft, char* s);
+
+// Returns the funciable name stored at the given index.
 // No check is made by this function, so make sure that the index is valid first.
-char* get_name(VarTable* vt, int i);
+char* get_name_func(FunctionTable* ft, int i);
 
-// Returns the declaration line of the variable stored at the given index.
+// Returns the declaration line of the funciable stored at the given index.
 // No check is made by this function, so make sure that the index is valid first.
-int get_line(VarTable* vt, int i);
+int get_line_func(FunctionTable* ft, int i);
 
-// Returns the variable type stored at the given index.
+VarTable* get_var_table_func(FunctionTable* ft, int scope);
+
+// Returns the funciable type stored at the given index.
 // No check is made by this function, so make sure that the index is valid first.
-Type get_type(VarTable* vt, int i);
+Type get_type_func(FunctionTable* ft, int i);
 
 // Prints the given table to stdout.
-void print_var_table(VarTable* vt);
+void print_func_table(FunctionTable* ft);
 
 // Clears the allocated structure.
-void free_var_table(VarTable* vt);
+void free_func_table(FunctionTable* ft);
 
 #endif // TABLES_H
 
