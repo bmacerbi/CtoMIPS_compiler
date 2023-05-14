@@ -127,7 +127,7 @@ type_specifier
 	: VOID  { type = VOID_TYPE; }
 	| CHAR  { type = CHAR_TYPE; }
 	| INT   { type = INT_TYPE;  }
-	| FLOAT { type = INT_TYPE;  }
+	| FLOAT { type = FLOAT_TYPE;  }
 	;
 
 specifier_qualifier_list
@@ -136,7 +136,7 @@ specifier_qualifier_list
 	;
 
 declarator
-	: ID {newVar(yytext, yylineno);}
+	: ID { newVar(yytext, yylineno); }
 	| LPAR declarator RPAR
 	| declarator LBRAC expression RBRAC
 	| declarator LBRAC RBRAC
@@ -146,7 +146,7 @@ declarator
 	;
 
 function_declarator
-	: ID {newFunc(yytext, yylineno);}
+	: ID { newFunc(yytext, yylineno); }
 	| LPAR function_declarator RPAR
 	| function_declarator LBRAC expression RBRAC
 	| function_declarator LBRAC RBRAC
@@ -291,13 +291,17 @@ int main() {
 
 
 void newVar(char* str, int line){
+	
     int index = lookup_var(get_var_table_func(funcTable,scopeCount), str);
+
     if ( index == -1 ) {
         add_func_var(funcTable, str, line, type, scopeCount);
-    } else {
+    } 
+	else {
         printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(varTable, index));
 		exit(EXIT_FAILURE);
     }
+	
 }
 
 void newFunc(char* str, int line){

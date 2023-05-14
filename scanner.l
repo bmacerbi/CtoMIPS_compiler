@@ -18,27 +18,17 @@
 "//".* {}
 "/*"((\*+[^/*])|([^*]))*\**"*/" {}
 
-double                  { return DOUBLE ;}
-int                     { return INT ;}
-break                   { return BREAK ;}
-else                    { return ELSE ;}
-long                    { return LONG ;}
-switch                  { return SWITCH ;}
-case                    { return CASE ;}
-char                    { return CHAR ;}
-return                  { return RETURN ;}
-float                   { return FLOAT ;}
-short                   { return SHORT ;}
-unsigned                { return UNSIGNED ;}
-continue                { return CONTINUE ;}
-for                     { return FOR ;}
-signed                  { return SIGNED ;}
 void                    { return VOID ;}
-default                 { return DEFAULT ;}
+int                     { return INT ;}
+float                   { return FLOAT ;}
+char                    { return CHAR ;}
+break                   { return BREAK ;}
+continue                { return CONTINUE ;}
 goto                    { return GOTO ;}
-sizeof                  { return SIZEOF ;}
-do                      { return DO ;}
+return                  { return RETURN ;}
 if                      { return IF ;}
+else                    { return ELSE ;}
+sizeof                  { return SIZEOF ;}
 while                   { return WHILE ;}
 
 "!"                     { return L_NOT ;}
@@ -78,7 +68,7 @@ while                   { return WHILE ;}
 [0-9]+\.[0-9]+          { return FLOAT_VAL ;}              
 [0-9]+                  { return INT_VAL ;}      
 \"[^"]*\"               { return STR_VAL ;}
-\'[^']\'                { return CHAR_VAL ;}   
+\'[^']*\'                { return CHAR_VAL ;}   
 
 [ \t\n]                 {}
 

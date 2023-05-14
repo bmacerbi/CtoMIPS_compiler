@@ -1,9 +1,14 @@
+void teste(){
+    int a;
+    char letra = 'a';
+    float dec = 1.34;
+
+    a = 1 + 2;
+}
+
 int main(){
-    int n;
-    char b = 'c';
-    if("aa" == "aa"){
-        int a;
-    }
-    i = 3;
+    char test[10] = "testando";
+    int ppp;
+
     return 0;
 }

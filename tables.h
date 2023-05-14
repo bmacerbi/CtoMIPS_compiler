@@ -85,7 +85,7 @@ FunctionTable* create_func_table();
 // Returns the index where the variable was inserted.
 int add_func(FunctionTable* ft, char* s, int line, int args, Type type);
 
-int add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope);
+void add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope);
 
 // Returns the index where the given funciable is stored or -1 otherwise.
 int lookup_func(FunctionTable* ft, char* s);

@@ -8,10 +8,9 @@ int main() {
     float area = area_circulo(raio);
 
     if(raio == 5.0) {
+        int i;
         raio = 3.0;
     }
-
-    float raioo = 2.0;
 
     return 0;
 }

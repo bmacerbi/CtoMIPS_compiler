@@ -1,7 +1,6 @@
-void insertionSort(int arr[], int n)
-{
-    int i, key, j;
-    for (i = 1; i < n; i++) {
+void insertionSort(int arr[], int n){
+    int i = 1, key, j;
+    while(i < n) {
         key = arr[i];
         j = i - 1;
  
@@ -13,6 +12,7 @@ void insertionSort(int arr[], int n)
             j = j - 1;
         }
         arr[j + 1] = key;
+        i++;
     }
 }
 
@@ -22,23 +22,15 @@ int soma(int a, int b) { // Função para somar dois números inteiros
 
 int main(){
     float float_var = -12;
-    
-    if(float_var || 1){
-        return 1;
-    }
-       
+    int result;
     int c = +2;
     int arr[] = { 12, 11, 13, 5, 6 };
     int n = sizeof(arr) / sizeof(arr[0]);
  
     insertionSort(arr, n);
 
-    int num1 = 123;
-    int num2 = -45;
-    float num3 = +3.14;
-    float num4 = -0.5;
 
-    int result = soma(num1, num2);
+    result = soma(num1, num2);
 
 
 
