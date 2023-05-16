@@ -298,7 +298,7 @@ void newVar(char* str, int line){
         add_func_var(funcTable, str, line, type, scopeCount);
     } 
 	else {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(varTable, index));
+        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(get_var_table_func(funcTable,scopeCount), index));
 		exit(EXIT_FAILURE);
     }
 	
@@ -309,7 +309,7 @@ void newFunc(char* str, int line){
     if ( index == -1 ) {
         add_func(funcTable, str, line, 2, type);
     } else {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
+        printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
 		exit(EXIT_FAILURE);
     }
 }
@@ -317,7 +317,7 @@ void newFunc(char* str, int line){
 void verifyToken(char *str, int line){
 	int index = lookup_var(varTable, str);
     if ( index == -1 ) {
-    	printf("SEMANTIC ERROR (%d): variable ’%s’ was not declared at line %d.\n", line, str, line);
+    	printf("SEMANTIC ERROR (%d): token ’%s’ was not declared at line %d.\n", line, str, line);
 		exit(EXIT_FAILURE);
     }
 }
