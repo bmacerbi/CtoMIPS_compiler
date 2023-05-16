@@ -20,7 +20,6 @@ int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
-void verifyToken(char *str, int line);
 void newId(char* str, int line);
 void newFunc(char* str, int line);
 
@@ -310,14 +309,6 @@ void newFunc(char* str, int line){
         add_func(funcTable, str, line, 2, type);
     } else {
         printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
-		exit(EXIT_FAILURE);
-    }
-}
-
-void verifyToken(char *str, int line){
-	int index = lookup_var(varTable, str);
-    if ( index == -1 ) {
-    	printf("SEMANTIC ERROR (%d): token ’%s’ was not declared at line %d.\n", line, str, line);
 		exit(EXIT_FAILURE);
     }
 }

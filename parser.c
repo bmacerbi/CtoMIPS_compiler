@@ -85,14 +85,13 @@ int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
-void verifyToken(char *str, int line);
 void newId(char* str, int line);
 void newFunc(char* str, int line);
 
 extern char *yytext;
 extern int yylineno;
 
-#line 96 "parser.c"
+#line 95 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -582,19 +581,19 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    55,    55,    56,    57,    58,    59,    60,    61,    62,
-      63,    64,    65,    66,    67,    68,    69,    70,    71,    72,
-      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    95,    96,
-     100,   101,   102,   103,   107,   108,   112,   113,   117,   118,
-     122,   123,   127,   128,   129,   130,   134,   135,   139,   140,
-     141,   142,   143,   144,   145,   149,   150,   151,   152,   153,
-     154,   155,   159,   160,   164,   165,   166,   170,   171,   175,
-     176,   180,   181,   182,   183,   184,   185,   186,   187,   188,
-     192,   193,   194,   198,   199,   203,   204,   205,   206,   207,
-     208,   212,   213,   214,   218,   219,   220,   221,   225,   226,
-     230,   231,   235,   236,   240,   241,   245,   249,   250,   251,
-     252,   253,   257,   258,   262,   266
+       0,    54,    54,    55,    56,    57,    58,    59,    60,    61,
+      62,    63,    64,    65,    66,    67,    68,    69,    70,    71,
+      72,    73,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,    83,    84,    85,    86,    87,    88,    89,    94,    95,
+      99,   100,   101,   102,   106,   107,   111,   112,   116,   117,
+     121,   122,   126,   127,   128,   129,   133,   134,   138,   139,
+     140,   141,   142,   143,   144,   148,   149,   150,   151,   152,
+     153,   154,   158,   159,   163,   164,   165,   169,   170,   174,
+     175,   179,   180,   181,   182,   183,   184,   185,   186,   187,
+     191,   192,   193,   197,   198,   202,   203,   204,   205,   206,
+     207,   211,   212,   213,   217,   218,   219,   220,   224,   225,
+     229,   230,   234,   235,   239,   240,   244,   248,   249,   250,
+     251,   252,   256,   257,   261,   265
 };
 #endif
 
@@ -2008,55 +2007,55 @@ yyreduce:
     switch (yyn)
       {
   case 5: /* expression: STR_VAL  */
-#line 58 "parser.y"
+#line 57 "parser.y"
                   {add_string(strTable, yytext);}
-#line 2014 "parser.c"
+#line 2013 "parser.c"
     break;
 
   case 52: /* type_specifier: VOID  */
-#line 127 "parser.y"
+#line 126 "parser.y"
                 { type = VOID_TYPE; }
-#line 2020 "parser.c"
+#line 2019 "parser.c"
     break;
 
   case 53: /* type_specifier: CHAR  */
-#line 128 "parser.y"
+#line 127 "parser.y"
                 { type = CHAR_TYPE; }
-#line 2026 "parser.c"
+#line 2025 "parser.c"
     break;
 
   case 54: /* type_specifier: INT  */
-#line 129 "parser.y"
+#line 128 "parser.y"
                 { type = INT_TYPE;  }
-#line 2032 "parser.c"
+#line 2031 "parser.c"
     break;
 
   case 55: /* type_specifier: FLOAT  */
-#line 130 "parser.y"
+#line 129 "parser.y"
                 { type = FLOAT_TYPE;  }
-#line 2038 "parser.c"
+#line 2037 "parser.c"
     break;
 
   case 58: /* declarator: ID  */
-#line 139 "parser.y"
+#line 138 "parser.y"
              { newVar(yytext, yylineno); }
-#line 2044 "parser.c"
+#line 2043 "parser.c"
     break;
 
   case 65: /* function_declarator: ID  */
-#line 149 "parser.y"
+#line 148 "parser.y"
              { newFunc(yytext, yylineno); }
-#line 2050 "parser.c"
+#line 2049 "parser.c"
     break;
 
   case 124: /* external_declaration: function_definition  */
-#line 262 "parser.y"
+#line 261 "parser.y"
                               { scopeCount++;}
-#line 2056 "parser.c"
+#line 2055 "parser.c"
     break;
 
 
-#line 2060 "parser.c"
+#line 2059 "parser.c"
 
         default: break;
       }
@@ -2291,7 +2290,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 269 "parser.y"
+#line 268 "parser.y"
 
 
 // Primitive error handling.
@@ -2336,14 +2335,6 @@ void newFunc(char* str, int line){
         add_func(funcTable, str, line, 2, type);
     } else {
         printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
-		exit(EXIT_FAILURE);
-    }
-}
-
-void verifyToken(char *str, int line){
-	int index = lookup_var(varTable, str);
-    if ( index == -1 ) {
-    	printf("SEMANTIC ERROR (%d): token ’%s’ was not declared at line %d.\n", line, str, line);
 		exit(EXIT_FAILURE);
     }
 }
