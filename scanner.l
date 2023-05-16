@@ -11,8 +11,10 @@
     #include <stdio.h>
     #include "parser.h"
 
+    
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
+    char* idCopy;   
 %}
 %%
 "//".* {}
@@ -64,7 +66,7 @@ while                   { return WHILE ;}
 ","                     { return COMMA ;}
 "&"                     { return AMPER ;}
 
-[A-Za-z_][A-Za-z0-9_]*  { return ID ;}                   
+[A-Za-z_][A-Za-z0-9_]*  {  idCopy = yytext; return ID;}                   
 [0-9]+\.[0-9]+          { return FLOAT_VAL ;}              
 [0-9]+                  { return INT_VAL ;}      
 \"[^"]*\"               { return STR_VAL ;}

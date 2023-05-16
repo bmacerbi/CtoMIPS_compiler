@@ -20,11 +20,12 @@ int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
-void newId(char* str, int line);
+void checkVar(char* str, int line);
 void newFunc(char* str, int line);
 
 extern char *yytext;
 extern int yylineno;
+extern char *idCopy;
 %}
 
 %token INC DEC LT_EQ GT_EQ LT GT EQ N_EQ L_NOT
@@ -51,7 +52,7 @@ extern int yylineno;
 %%
 
 expression
-	: ID
+	: ID { checkVar(idCopy, yylineno); }
 	| FLOAT_VAL
 	| INT_VAL
 	| STR_VAL {add_string(strTable, yytext);}
@@ -65,8 +66,6 @@ expression
 	| INC expression 
 	| DEC expression 
 	| unary_operator expression %prec UMINUS
-	| SIZEOF expression
-	| SIZEOF LPAR type_name RPAR
 	| LPAR type_name RPAR expression
 	| expression TIMES expression
 	| expression OVER expression
@@ -140,7 +139,6 @@ declarator
 	| declarator LBRAC expression RBRAC
 	| declarator LBRAC RBRAC
 	| declarator LPAR parameter_list RPAR
-	| declarator LPAR identifier_list RPAR
 	| declarator LPAR RPAR
 	;
 
@@ -150,7 +148,6 @@ function_declarator
 	| function_declarator LBRAC expression RBRAC
 	| function_declarator LBRAC RBRAC
 	| function_declarator LPAR parameter_list RPAR
-	| function_declarator LPAR identifier_list RPAR
 	| function_declarator LPAR RPAR
 	;
 
@@ -163,11 +160,6 @@ parameter_declaration
 	: declaration_specifiers declarator
 	| declaration_specifiers abstract_declarator
 	| declaration_specifiers
-	;
-
-identifier_list
-	: ID
-	| identifier_list COMMA ID
 	;
 
 type_name
@@ -199,18 +191,11 @@ initializer_list
 	;
 
 statement
-	: labeled_statement
-	| compound_statement
+	: compound_statement
 	| expression_statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
-	;
-
-labeled_statement
-	: ID COLON statement
-	| CASE expression COLON statement
-	| DEFAULT COLON statement
 	;
 
 compound_statement
@@ -245,8 +230,7 @@ iteration_statement
 	;
 
 jump_statement
-	: GOTO ID SEMI
-	| CONTINUE SEMI
+	: CONTINUE SEMI
 	| BREAK SEMI
 	| RETURN SEMI
 	| RETURN expression SEMI
@@ -290,17 +274,28 @@ int main() {
 
 
 void newVar(char* str, int line){
-	
-    int index = lookup_var(get_var_table_func(funcTable,scopeCount), str);
+	VarTable* vt = get_var_table_func(funcTable,scopeCount);
+    int index = lookup_var(vt, str);
 
     if ( index == -1 ) {
         add_func_var(funcTable, str, line, type, scopeCount);
     } 
 	else {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(get_var_table_func(funcTable,scopeCount), index));
+        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(vt, index));
 		exit(EXIT_FAILURE);
     }
 	
+}
+
+void checkVar(char* str, int line){
+	VarTable* vt = get_var_table_func(funcTable,scopeCount);
+    int indexVar = lookup_var(vt, str);
+	int indexFunc = lookup_func(funcTable, str);
+
+	if ( indexVar == -1 && indexFunc == -1) {
+        printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", line, str);
+		exit(EXIT_FAILURE);
+    }
 }
 
 void newFunc(char* str, int line){
