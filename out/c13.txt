@@ -10,13 +10,13 @@ Entry 5 -- "cat"
 Entry 6 -- "cow"
 
 Functions table:
-Entry 0 -- name: dog, line: 1, returnType: char
+Entry 0 -- name: dog, line: 1, argumentsCount: 0,  returnType: char
 	Variables table:
-Entry 1 -- name: cat, line: 5, returnType: char
+Entry 1 -- name: cat, line: 5, argumentsCount: 0,  returnType: char
 	Variables table:
-Entry 2 -- name: cow, line: 9, returnType: char
+Entry 2 -- name: cow, line: 9, argumentsCount: 0,  returnType: char
 	Variables table:
-Entry 3 -- name: main, line: 13, returnType: int
+Entry 3 -- name: main, line: 13, argumentsCount: 0,  returnType: int
 	Variables table:
 	Entry 0 -- name: animal, line: 14, type: char
 	Entry 1 -- name: text, line: 15, type: char

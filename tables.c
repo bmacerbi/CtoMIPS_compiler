@@ -184,11 +184,15 @@ VarTable* get_var_table_func(FunctionTable* ft, int scope) {
     return ft->t[scope].localVarTable;
 }
 
+void set_args_count_func(FunctionTable* ft, int scope, int argsCount) {
+    ft->t[scope].args = argsCount;
+}
+
 void print_func_table(FunctionTable* ft) {
     printf("\nFunctions table:\n");
     for (int i = 0; i < ft->size; i++) {
-        printf("Entry %d -- name: %s, line: %d, returnType: %s\n", i,
-            get_name_func(ft, i), get_line_func(ft, i), get_text(get_type_func(ft, i)));
+        printf("Entry %d -- name: %s, line: %d, argumentsCount: %d,  returnType: %s\n", i,
+            get_name_func(ft, i), get_line_func(ft, i), ft->t[i].args, get_text(get_type_func(ft, i)));
 
         print_var_table(ft->t[i].localVarTable);
     }

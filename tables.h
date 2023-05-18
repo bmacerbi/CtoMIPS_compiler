@@ -104,6 +104,8 @@ VarTable* get_var_table_func(FunctionTable* ft, int scope);
 // No check is made by this function, so make sure that the index is valid first.
 Type get_type_func(FunctionTable* ft, int i);
 
+void set_args_count_func(FunctionTable* ft, int scope, int argsCount);
+
 // Prints the given table to stdout.
 void print_func_table(FunctionTable* ft);
 

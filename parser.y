@@ -15,6 +15,7 @@ FunctionTable* funcTable;
 Type type;
 int scopeCount = 0;
 int isFunction = 1;
+int argsCount =  0;
 
 int yylex(void);
 int yylex_destroy(void);
@@ -142,8 +143,8 @@ function_declarator
 	;
 
 parameter_list
-	: parameter_declaration
-	| parameter_list COMMA parameter_declaration
+	: parameter_declaration {argsCount++;}	
+	| parameter_list COMMA parameter_declaration {argsCount++;}
 	;
 
 parameter_declaration
@@ -236,7 +237,7 @@ external_declaration
 	;
 
 function_definition
-	: type_specifier function_declarator compound_statement
+	: type_specifier function_declarator compound_statement { set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
 	;
 
 %%
@@ -291,7 +292,7 @@ void checkVar(char* str, int line){
 void newFunc(char* str, int line){
     int index = lookup_func(funcTable, str);
     if ( index == -1 ) {
-        add_func(funcTable, str, line, 2, type);
+        add_func(funcTable, str, line, argsCount, type);
     } else {
         printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
 		exit(EXIT_FAILURE);

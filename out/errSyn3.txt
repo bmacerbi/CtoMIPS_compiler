@@ -1,1 +1,1 @@
-SYNTAX ERROR (7): syntax error, unexpected $end
+SYNTAX ERROR (7): syntax error, unexpected end of file
