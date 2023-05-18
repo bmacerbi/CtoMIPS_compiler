@@ -97,8 +97,7 @@ extern int yydebug;
     COMMA = 303,
     AMPER = 304,
     COLON = 305,
-    SIZEOF = 306,
-    UMINUS = 307
+    UMINUS = 306
   };
 #endif
 

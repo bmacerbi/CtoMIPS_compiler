@@ -43,7 +43,7 @@ extern char *idCopy;
 %left EQ N_EQ
 %left LT GT LT_EQ GT_EQ
 %left PLUS MINUS
-%right INC DEC L_NOT AMPER SIZEOF
+%right INC DEC L_NOT AMPER
 %left TIMES OVER PERCENT
 %left LBRAC RBRAC LPAR RPAR 
 %precedence UMINUS
@@ -102,13 +102,8 @@ unary_operator
 	;
 
 declaration
-	: declaration_specifiers SEMI
-	| declaration_specifiers init_declarator_list SEMI
-	;
-
-declaration_specifiers
-	: type_specifier
-	| type_specifier declaration_specifiers
+	: type_specifier SEMI
+	| type_specifier init_declarator_list SEMI
 	;
 
 init_declarator_list
@@ -126,11 +121,6 @@ type_specifier
 	| CHAR  { type = CHAR_TYPE; }
 	| INT   { type = INT_TYPE;  }
 	| FLOAT { type = FLOAT_TYPE;  }
-	;
-
-specifier_qualifier_list
-	: type_specifier specifier_qualifier_list
-	| type_specifier
 	;
 
 declarator
@@ -157,14 +147,14 @@ parameter_list
 	;
 
 parameter_declaration
-	: declaration_specifiers declarator
-	| declaration_specifiers abstract_declarator
-	| declaration_specifiers
+	: type_specifier declarator
+	| type_specifier abstract_declarator
+	| type_specifier
 	;
 
 type_name
-	: specifier_qualifier_list
-	| specifier_qualifier_list abstract_declarator
+	: type_specifier
+	| type_specifier abstract_declarator
 	;
 
 abstract_declarator
@@ -246,7 +236,7 @@ external_declaration
 	;
 
 function_definition
-	: declaration_specifiers function_declarator compound_statement
+	: type_specifier function_declarator compound_statement
 	;
 
 %%
