@@ -30,7 +30,6 @@ goto                    { return GOTO ;}
 return                  { return RETURN ;}
 if                      { return IF ;}
 else                    { return ELSE ;}
-sizeof                  { return SIZEOF ;}
 while                   { return WHILE ;}
 
 "!"                     { return L_NOT ;}

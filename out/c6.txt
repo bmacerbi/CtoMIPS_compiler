@@ -1,0 +1,18 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: sub, line: 1, returnType: int
+	Variables table:
+	Entry 0 -- name: a, line: 1, type: int
+	Entry 1 -- name: b, line: 1, type: int
+Entry 1 -- name: add, line: 5, returnType: int
+	Variables table:
+	Entry 0 -- name: a, line: 5, type: int
+	Entry 1 -- name: b, line: 5, type: int
+Entry 2 -- name: main, line: 9, returnType: int
+	Variables table:
+	Entry 0 -- name: x, line: 10, type: int
+	Entry 1 -- name: y, line: 11, type: int
+	Entry 2 -- name: z, line: 12, type: int

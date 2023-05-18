@@ -1,0 +1,22 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+Entry 0 -- "wofwof"
+Entry 1 -- "miaw"
+Entry 2 -- "muuu"
+Entry 3 -- "lion"
+Entry 4 -- "dog"
+Entry 5 -- "cat"
+Entry 6 -- "cow"
+
+Functions table:
+Entry 0 -- name: dog, line: 1, returnType: char
+	Variables table:
+Entry 1 -- name: cat, line: 5, returnType: char
+	Variables table:
+Entry 2 -- name: cow, line: 9, returnType: char
+	Variables table:
+Entry 3 -- name: main, line: 13, returnType: int
+	Variables table:
+	Entry 0 -- name: animal, line: 14, type: char
+	Entry 1 -- name: text, line: 15, type: char

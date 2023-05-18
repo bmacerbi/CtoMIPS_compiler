@@ -1,9 +1,0 @@
-1: int -> INT
-1: main -> ID
-1: ( -> LPAR
-1: ) -> RPAR
-1: { -> LCURLYBRACES
-2: int -> INT
-2: var -> ID
-2: = -> ASSIGN
-LEXICAL ERROR (2): Unknown symbol #

@@ -1,0 +1,29 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: soma, line: 1, returnType: int
+	Variables table:
+	Entry 0 -- name: a, line: 1, type: int
+	Entry 1 -- name: b, line: 1, type: int
+Entry 1 -- name: soma1, line: 5, returnType: int
+	Variables table:
+	Entry 0 -- name: a1, line: 5, type: int
+	Entry 1 -- name: b1, line: 5, type: int
+	Entry 2 -- name: a, line: 6, type: int
+Entry 2 -- name: soma2, line: 10, returnType: int
+	Variables table:
+	Entry 0 -- name: a2, line: 10, type: int
+	Entry 1 -- name: b2, line: 10, type: int
+	Entry 2 -- name: a, line: 11, type: int
+Entry 3 -- name: soma3, line: 15, returnType: int
+	Variables table:
+	Entry 0 -- name: a3, line: 15, type: int
+	Entry 1 -- name: b3, line: 15, type: int
+	Entry 2 -- name: a, line: 16, type: int
+Entry 4 -- name: main, line: 20, returnType: int
+	Variables table:
+	Entry 0 -- name: num1, line: 21, type: int
+	Entry 1 -- name: num2, line: 22, type: int
+	Entry 2 -- name: result, line: 23, type: int

@@ -1,7 +1,6 @@
 int main() {
-    int var = 42;
     int x = 1;
+    int *y = 2;
 
-    int var & = 2;
     return 0;
 }

@@ -1,0 +1,1 @@
+SEMANTIC ERROR (7): variable ’num8’ was never declared.

@@ -24,6 +24,6 @@ int main() {
     result = soma1(num1, num2);
     result = soma2(num1, num2);
     result = soma3(num1, num2);
-    result = soma6(num1, num2);
+  
     return 0;
 }

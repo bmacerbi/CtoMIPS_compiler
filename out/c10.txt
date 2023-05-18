@@ -1,0 +1,16 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: factorial, line: 1, returnType: int
+	Variables table:
+	Entry 0 -- name: n, line: 1, type: int
+Entry 1 -- name: fib, line: 9, returnType: int
+	Variables table:
+	Entry 0 -- name: n, line: 9, type: int
+Entry 2 -- name: main, line: 17, returnType: int
+	Variables table:
+	Entry 0 -- name: x, line: 18, type: int
+	Entry 1 -- name: y, line: 19, type: int
+	Entry 2 -- name: z, line: 20, type: int

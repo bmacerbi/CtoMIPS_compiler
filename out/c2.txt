@@ -1,0 +1,11 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: main, line: 1, returnType: int
+	Variables table:
+	Entry 0 -- name: num1, line: 2, type: int
+	Entry 1 -- name: num2, line: 3, type: int
+	Entry 2 -- name: num3, line: 4, type: float
+	Entry 3 -- name: num4, line: 5, type: float

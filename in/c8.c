@@ -16,21 +16,16 @@ void insertionSort(int arr[], int n){
     }
 }
 
-int soma(int a, int b) { // Função para somar dois números inteiros
-    return a + b;
-}
 
 int main(){
     float float_var = -12;
     int result;
     int c = +2;
     int arr[] = { 12, 11, 13, 5, 6 };
-    int n = sizeof(arr) / sizeof(arr[0]);
- 
+    int n = 5;
+    
     insertionSort(arr, n);
 
-
-    result = soma(num1, num2);
 
 
 

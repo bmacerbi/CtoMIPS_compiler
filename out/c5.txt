@@ -1,0 +1,16 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: insertionSort, line: 1, returnType: void
+	Variables table:
+	Entry 0 -- name: arr, line: 1, type: int
+	Entry 1 -- name: n2, line: 1, type: int
+	Entry 2 -- name: i, line: 3, type: int
+	Entry 3 -- name: key, line: 3, type: int
+	Entry 4 -- name: j, line: 3, type: int
+Entry 1 -- name: main, line: 7, returnType: int
+	Variables table:
+	Entry 0 -- name: c, line: 9, type: int
+	Entry 1 -- name: arr, line: 10, type: int

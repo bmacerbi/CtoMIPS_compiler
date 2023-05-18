@@ -1,0 +1,9 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: main, line: 1, returnType: int
+	Variables table:
+	Entry 0 -- name: a, line: 2, type: int
+	Entry 1 -- name: b, line: 3, type: int
