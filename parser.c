@@ -71,6 +71,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "types.h"
 #include "parser.h"
 #include "tables.h"
 
@@ -88,12 +89,14 @@ void yyerror(char const *s);
 void newVar(char* str, int line);
 void checkVar(char* str, int line);
 void newFunc(char* str, int line);
+Type unifyPlusMinusType(Type t1, Type t2);
+Type unifyMultDivideType(Type t1, Type t2);
 
 extern char *yytext;
 extern int yylineno;
 extern char *idCopy;
 
-#line 97 "parser.c"
+#line 100 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -567,18 +570,18 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    56,    56,    57,    58,    59,    60,    61,    62,    63,
-      64,    65,    66,    67,    68,    69,    70,    71,    72,    73,
-      74,    75,    76,    77,    78,    79,    80,    81,    82,    83,
-      84,    85,    86,    87,    88,    89,    94,    95,    99,   100,
-     101,   102,   106,   107,   111,   112,   116,   117,   121,   122,
-     123,   124,   128,   129,   130,   131,   132,   133,   137,   138,
-     139,   140,   141,   142,   146,   147,   151,   152,   153,   157,
-     158,   162,   163,   164,   165,   166,   167,   168,   169,   170,
-     174,   175,   176,   180,   181,   185,   186,   187,   188,   189,
-     193,   194,   195,   196,   200,   201,   205,   206,   210,   211,
-     215,   216,   220,   224,   225,   226,   227,   231,   232,   236,
-     240
+       0,    60,    60,    61,    62,    63,    64,    65,    66,    67,
+      68,    69,    70,    71,    72,    73,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    98,    99,   103,   104,
+     105,   106,   110,   111,   115,   116,   120,   121,   125,   126,
+     127,   128,   132,   133,   134,   135,   136,   137,   141,   142,
+     143,   144,   145,   146,   150,   151,   155,   156,   157,   161,
+     162,   166,   167,   168,   169,   170,   171,   172,   173,   174,
+     178,   179,   180,   184,   185,   189,   190,   191,   192,   193,
+     197,   198,   199,   200,   204,   205,   209,   210,   214,   215,
+     219,   220,   224,   228,   229,   230,   231,   235,   236,   240,
+     244
 };
 #endif
 
@@ -1989,79 +1992,157 @@ yyreduce:
     switch (yyn)
       {
   case 2: /* expression: ID  */
-#line 56 "parser.y"
+#line 60 "parser.y"
              { checkVar(idCopy, yylineno); }
-#line 1995 "parser.c"
+#line 1998 "parser.c"
+    break;
+
+  case 3: /* expression: FLOAT_VAL  */
+#line 61 "parser.y"
+                    { yyval = FLOAT_TYPE; }
+#line 2004 "parser.c"
+    break;
+
+  case 4: /* expression: INT_VAL  */
+#line 62 "parser.y"
+                  { yyval = INT_TYPE; }
+#line 2010 "parser.c"
     break;
 
   case 5: /* expression: STR_VAL  */
-#line 59 "parser.y"
-                  {add_string(strTable, yytext);}
-#line 2001 "parser.c"
+#line 63 "parser.y"
+                  { add_string(strTable, yytext); yyval = CHAR_TYPE; }
+#line 2016 "parser.c"
+    break;
+
+  case 6: /* expression: CHAR_VAL  */
+#line 64 "parser.y"
+                   { yyval = CHAR_TYPE; }
+#line 2022 "parser.c"
+    break;
+
+  case 7: /* expression: LPAR expression RPAR  */
+#line 65 "parser.y"
+                               { yyval = yyvsp[-1]; }
+#line 2028 "parser.c"
+    break;
+
+  case 11: /* expression: expression INC  */
+#line 69 "parser.y"
+                         { yyval = yyvsp[-1]; }
+#line 2034 "parser.c"
+    break;
+
+  case 12: /* expression: expression DEC  */
+#line 70 "parser.y"
+                         { yyval = yyvsp[-1]; }
+#line 2040 "parser.c"
+    break;
+
+  case 13: /* expression: INC expression  */
+#line 71 "parser.y"
+                         { yyval = yyvsp[0]; }
+#line 2046 "parser.c"
+    break;
+
+  case 14: /* expression: DEC expression  */
+#line 72 "parser.y"
+                         { yyval = yyvsp[0]; }
+#line 2052 "parser.c"
+    break;
+
+  case 17: /* expression: expression TIMES expression  */
+#line 75 "parser.y"
+                                      { yyval = unifyMultDivideType(yyvsp[-2], yyvsp[0]); }
+#line 2058 "parser.c"
+    break;
+
+  case 18: /* expression: expression OVER expression  */
+#line 76 "parser.y"
+                                     { yyval = unifyMultDivideType(yyvsp[-2], yyvsp[0]); }
+#line 2064 "parser.c"
+    break;
+
+  case 19: /* expression: expression PERCENT expression  */
+#line 77 "parser.y"
+                                        { yyval = unifyMultDivideType(yyvsp[-2], yyvsp[0]); }
+#line 2070 "parser.c"
+    break;
+
+  case 20: /* expression: expression PLUS expression  */
+#line 78 "parser.y"
+                                     { yyval = unifyPlusMinusType(yyvsp[-2], yyvsp[0]); }
+#line 2076 "parser.c"
+    break;
+
+  case 21: /* expression: expression MINUS expression  */
+#line 79 "parser.y"
+                                      { yyval = unifyPlusMinusType(yyvsp[-2], yyvsp[0]); }
+#line 2082 "parser.c"
     break;
 
   case 48: /* type_specifier: VOID  */
-#line 121 "parser.y"
+#line 125 "parser.y"
                 { type = VOID_TYPE; }
-#line 2007 "parser.c"
+#line 2088 "parser.c"
     break;
 
   case 49: /* type_specifier: CHAR  */
-#line 122 "parser.y"
+#line 126 "parser.y"
                 { type = CHAR_TYPE; }
-#line 2013 "parser.c"
+#line 2094 "parser.c"
     break;
 
   case 50: /* type_specifier: INT  */
-#line 123 "parser.y"
+#line 127 "parser.y"
                 { type = INT_TYPE;  }
-#line 2019 "parser.c"
+#line 2100 "parser.c"
     break;
 
   case 51: /* type_specifier: FLOAT  */
-#line 124 "parser.y"
+#line 128 "parser.y"
                 { type = FLOAT_TYPE;  }
-#line 2025 "parser.c"
+#line 2106 "parser.c"
     break;
 
   case 52: /* declarator: ID  */
-#line 128 "parser.y"
+#line 132 "parser.y"
              { newVar(yytext, yylineno); }
-#line 2031 "parser.c"
+#line 2112 "parser.c"
     break;
 
   case 58: /* function_declarator: ID  */
-#line 137 "parser.y"
+#line 141 "parser.y"
              { newFunc(yytext, yylineno); }
-#line 2037 "parser.c"
+#line 2118 "parser.c"
     break;
 
   case 64: /* parameter_list: parameter_declaration  */
-#line 146 "parser.y"
+#line 150 "parser.y"
                                 {argsCount++;}
-#line 2043 "parser.c"
+#line 2124 "parser.c"
     break;
 
   case 65: /* parameter_list: parameter_list COMMA parameter_declaration  */
-#line 147 "parser.y"
+#line 151 "parser.y"
                                                      {argsCount++;}
-#line 2049 "parser.c"
+#line 2130 "parser.c"
     break;
 
   case 109: /* external_declaration: function_definition  */
-#line 236 "parser.y"
+#line 240 "parser.y"
                               { scopeCount++;}
-#line 2055 "parser.c"
+#line 2136 "parser.c"
     break;
 
   case 110: /* function_definition: type_specifier function_declarator compound_statement  */
-#line 240 "parser.y"
+#line 244 "parser.y"
                                                                 { set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 2061 "parser.c"
+#line 2142 "parser.c"
     break;
 
 
-#line 2065 "parser.c"
+#line 2146 "parser.c"
 
         default: break;
       }
@@ -2296,7 +2377,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 243 "parser.y"
+#line 247 "parser.y"
 
 
 // Primitive error handling.
@@ -2354,4 +2435,26 @@ void newFunc(char* str, int line){
         printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
 		exit(EXIT_FAILURE);
     }
+}
+
+Type unifyPlusMinusType(Type t1, Type t2){
+	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, CHAR_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{CHAR_TYPE, NO_TYPE, CHAR_TYPE}};
+
+	if (typeMatrix[t1][t2] == NO_TYPE){
+		printf("SEMANTIC ERROR: incompatible types.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	return typeMatrix[t1][t2];
+}
+
+Type unifyMultDivideType(Type t1, Type t2){
+	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, NO_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{NO_TYPE, NO_TYPE, NO_TYPE}};
+
+	if (typeMatrix[t1][t2] == NO_TYPE){
+		printf("SEMANTIC ERROR: incompatible types.\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	return typeMatrix[t1][t2];
 }

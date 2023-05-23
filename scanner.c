@@ -548,9 +548,9 @@ char *yytext;
 /* Auto increment variable yylineno every time a '\n' is read. */
 #line 11 "scanner.l"
     #include <stdio.h>
+    #include "types.h"
     #include "parser.h"
 
-    
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
     char* idCopy;   
@@ -1068,7 +1068,7 @@ YY_RULE_SETUP
 case 46:
 YY_RULE_SETUP
 #line 68 "scanner.l"
-{  idCopy = yytext; return ID;}                   
+{ idCopy = yytext; return ID;}                   
 	YY_BREAK
 case 47:
 YY_RULE_SETUP

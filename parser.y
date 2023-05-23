@@ -6,6 +6,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "types.h"
 #include "parser.h"
 #include "tables.h"
 
@@ -23,11 +24,14 @@ void yyerror(char const *s);
 void newVar(char* str, int line);
 void checkVar(char* str, int line);
 void newFunc(char* str, int line);
+Type unifyPlusMinusType(Type t1, Type t2);
+Type unifyMultDivideType(Type t1, Type t2);
 
 extern char *yytext;
 extern int yylineno;
 extern char *idCopy;
 %}
+%define api.value.type {Type}
 
 %token INC DEC LT_EQ GT_EQ LT GT EQ N_EQ L_NOT
 %token L_AND L_OR ASGN T_ASGN O_ASGN MOD_ASGN PL_ASGN M_ASGN
@@ -41,9 +45,7 @@ extern char *idCopy;
 %right ASGN PL_ASGN M_ASGN T_ASGN O_ASGN MOD_ASGN
 %left L_OR
 %left L_AND
-%left EQ N_EQ
-%left LT GT LT_EQ GT_EQ
-%left PLUS MINUS
+%left Eargument_expression_listft PLUS MINUS
 %right INC DEC L_NOT AMPER
 %left TIMES OVER PERCENT
 %left LBRAC RBRAC LPAR RPAR 
@@ -54,39 +56,39 @@ extern char *idCopy;
 
 expression
 	: ID { checkVar(idCopy, yylineno); }
-	| FLOAT_VAL
-	| INT_VAL
-	| STR_VAL {add_string(strTable, yytext);}
-	| CHAR_VAL
-	| LPAR expression RPAR
+	| FLOAT_VAL { $$ = FLOAT_TYPE; }
+	| INT_VAL { $$ = INT_TYPE; }
+	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_TYPE; }
+	| CHAR_VAL { $$ = CHAR_TYPE; }
+	| LPAR expression RPAR { $$ = $2; }
 	| expression LBRAC expression RBRAC
 	| expression LPAR RPAR
 	| expression LPAR argument_expression_list RPAR
-	| expression INC 
-	| expression DEC 
-	| INC expression 
-	| DEC expression 
+	| expression INC { $$ = $1; }
+	| expression DEC { $$ = $1; }
+	| INC expression { $$ = $2; }
+	| DEC expression { $$ = $2; }
 	| unary_operator expression %prec UMINUS
 	| LPAR type_name RPAR expression
-	| expression TIMES expression
-	| expression OVER expression
-	| expression PERCENT expression
-	| expression PLUS expression
-	| expression MINUS expression
-	| expression LT expression
-	| expression GT expression
-	| expression LT_EQ expression
-	| expression GT_EQ expression
+	| expression TIMES expression { $$ = unifyMultDivideType($1, $3); }
+	| expression OVER expression { $$ = unifyMultDivideType($1, $3); }
+	| expression PERCENT expression { $$ = unifyMultDivideType($1, $3); }
+	| expression PLUS expression { $$ = unifyPlusMinusType($1, $3); }
+	| expression MINUS expression { $$ = unifyPlusMinusType($1, $3); }
+	| expression LT expression 
+	| expression GT expression 
+	| expression LT_EQ expression 
+	| expression GT_EQ expression 
 	| expression EQ expression
-	| expression N_EQ expression
-	| expression L_AND expression
-	| expression L_OR expression
-	| expression ASGN expression
+	| expression N_EQ expression 
+	| expression L_AND expression 
+	| expression L_OR expression 
+	| expression ASGN expression 
 	| expression T_ASGN expression 
 	| expression O_ASGN expression 
 	| expression MOD_ASGN expression 
-	| expression PL_ASGN expression
-	| expression M_ASGN expression
+	| expression PL_ASGN expression 
+	| expression M_ASGN expression 
 	;
 
 
@@ -297,4 +299,26 @@ void newFunc(char* str, int line){
         printf("SEMANTIC ERROR (%d): function ’%s’ already declared at line %d.\n", line, str, get_line_func(funcTable, index));
 		exit(EXIT_FAILURE);
     }
+}
+
+Type unifyPlusMinusType(Type t1, Type t2){
+	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, CHAR_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{CHAR_TYPE, NO_TYPE, CHAR_TYPE}};
+
+	if (typeMatrix[t1][t2] == NO_TYPE){
+		printf("SEMANTIC ERROR: incompatible types.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	return typeMatrix[t1][t2];
+}
+
+Type unifyMultDivideType(Type t1, Type t2){
+	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, NO_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{NO_TYPE, NO_TYPE, NO_TYPE}};
+
+	if (typeMatrix[t1][t2] == NO_TYPE){
+		printf("SEMANTIC ERROR: incompatible types.\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	return typeMatrix[t1][t2];
 }
