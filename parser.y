@@ -22,10 +22,14 @@ int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
-void checkVar(char* str, int line);
+Type checkVar(char* str, int line);
 void newFunc(char* str, int line);
-Type unifyPlusMinusType(Type t1, Type t2);
-Type unifyMultDivideType(Type t1, Type t2);
+Type check_number(Type t);
+Type check_assign(Type l, Type r);
+Type check_int(Type l, Type r);
+
+Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
+void type_error(const char* op, Type t1, Type t2);
 
 extern char *yytext;
 extern int yylineno;
@@ -45,7 +49,9 @@ extern char *idCopy;
 %right ASGN PL_ASGN M_ASGN T_ASGN O_ASGN MOD_ASGN
 %left L_OR
 %left L_AND
-%left Eargument_expression_listft PLUS MINUS
+%left EQ N_EQ
+%left LT GT LT_EQ GT_EQ
+%left PLUS MINUS
 %right INC DEC L_NOT AMPER
 %left TIMES OVER PERCENT
 %left LBRAC RBRAC LPAR RPAR 
@@ -55,40 +61,39 @@ extern char *idCopy;
 %%
 
 expression
-	: ID { checkVar(idCopy, yylineno); }
+	: ID { $$ = checkVar(idCopy, yylineno); }
 	| FLOAT_VAL { $$ = FLOAT_TYPE; }
 	| INT_VAL { $$ = INT_TYPE; }
 	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_TYPE; }
 	| CHAR_VAL { $$ = CHAR_TYPE; }
 	| LPAR expression RPAR { $$ = $2; }
-	| expression LBRAC expression RBRAC
-	| expression LPAR RPAR
-	| expression LPAR argument_expression_list RPAR
-	| expression INC { $$ = $1; }
-	| expression DEC { $$ = $1; }
-	| INC expression { $$ = $2; }
-	| DEC expression { $$ = $2; }
-	| unary_operator expression %prec UMINUS
-	| LPAR type_name RPAR expression
-	| expression TIMES expression { $$ = unifyMultDivideType($1, $3); }
-	| expression OVER expression { $$ = unifyMultDivideType($1, $3); }
-	| expression PERCENT expression { $$ = unifyMultDivideType($1, $3); }
-	| expression PLUS expression { $$ = unifyPlusMinusType($1, $3); }
-	| expression MINUS expression { $$ = unifyPlusMinusType($1, $3); }
-	| expression LT expression 
-	| expression GT expression 
-	| expression LT_EQ expression 
-	| expression GT_EQ expression 
-	| expression EQ expression
-	| expression N_EQ expression 
-	| expression L_AND expression 
-	| expression L_OR expression 
-	| expression ASGN expression 
-	| expression T_ASGN expression 
-	| expression O_ASGN expression 
-	| expression MOD_ASGN expression 
-	| expression PL_ASGN expression 
-	| expression M_ASGN expression 
+	| expression LBRAC expression RBRAC { $$ = $1; }
+	| expression LPAR RPAR { $$ = $1; }
+	| expression LPAR argument_expression_list RPAR { $$ = $1; }
+	| expression INC { $$ = check_number($1); }
+	| expression DEC { $$ = check_number($1); }
+	| INC expression { $$ = check_number($2); }
+	| DEC expression { $$ = check_number($2); }
+	| unary_operator expression %prec UMINUS { $$ = check_number($2); }
+	| expression TIMES expression 		{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
+	| expression OVER expression 		{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
+	| expression PERCENT expression		{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
+	| expression PLUS expression 		{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
+	| expression MINUS expression		{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
+	| expression LT expression 			{ $$ = unify_bin_op($1, $3, "<", unify_comp); }
+	| expression GT expression 			{ $$ = unify_bin_op($1, $3, ">", unify_comp); }	
+	| expression LT_EQ expression 		{ $$ = unify_bin_op($1, $3, "<=", unify_comp); }			
+	| expression GT_EQ expression 		{ $$ = unify_bin_op($1, $3, ">=", unify_comp); }	
+	| expression EQ expression			{ $$ = unify_bin_op($1, $3, "==", unify_comp); }		
+	| expression N_EQ expression 		{ $$ = unify_bin_op($1, $3, "!=", unify_comp); }			
+	| expression L_AND expression 		{ $$ = check_int($1, $3); }
+	| expression L_OR expression 		{ $$ = check_int($1, $3); }
+	| expression ASGN expression        { $$ = check_assign($1, $3); }
+	| expression T_ASGN expression 		{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
+	| expression O_ASGN expression 		{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
+	| expression MOD_ASGN expression 	{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
+	| expression PL_ASGN expression		{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
+	| expression M_ASGN expression 		{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
 	;
 
 
@@ -153,11 +158,6 @@ parameter_declaration
 	: type_specifier declarator
 	| type_specifier abstract_declarator
 	| type_specifier
-	;
-
-type_name
-	: type_specifier
-	| type_specifier abstract_declarator
 	;
 
 abstract_declarator
@@ -280,7 +280,7 @@ void newVar(char* str, int line){
 	
 }
 
-void checkVar(char* str, int line){
+Type checkVar(char* str, int line){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
     int indexVar = lookup_var(vt, str);
 	int indexFunc = lookup_func(funcTable, str);
@@ -289,6 +289,12 @@ void checkVar(char* str, int line){
         printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", line, str);
 		exit(EXIT_FAILURE);
     }
+
+	if(indexFunc != -1){
+		return get_type_func(funcTable, indexFunc);
+	} else {
+		return get_type(vt,indexVar);
+	}
 }
 
 void newFunc(char* str, int line){
@@ -301,24 +307,43 @@ void newFunc(char* str, int line){
     }
 }
 
-Type unifyPlusMinusType(Type t1, Type t2){
-	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, CHAR_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{CHAR_TYPE, NO_TYPE, CHAR_TYPE}};
+// ----------------------------------------------------------------------------
 
-	if (typeMatrix[t1][t2] == NO_TYPE){
-		printf("SEMANTIC ERROR: incompatible types.\n");
-		exit(EXIT_FAILURE);
-	}
+// Type checking and inference.
 
-	return typeMatrix[t1][t2];
+void type_error(const char* op, Type t1, Type t2) {
+    printf("SEMANTIC ERROR (%d): incompatible types for operator '%s', LHS is '%s' and RHS is '%s'.\n",
+           yylineno, op, get_text(t1), get_text(t2));
+    exit(EXIT_FAILURE);
 }
 
-Type unifyMultDivideType(Type t1, Type t2){
-	Type typeMatrix[3][3] = {{INT_TYPE, FLOAT_TYPE, NO_TYPE},{FLOAT_TYPE, FLOAT_TYPE, NO_TYPE},{NO_TYPE, NO_TYPE, NO_TYPE}};
+Type unify_bin_op(Type l, Type r,
+                  const char* op, Type (*unify)(Type,Type)) {
+    Type unif = unify(l, r);
+    if (unif == NO_TYPE) {
+        type_error(op, l, r);
+    }
+    return unif;
+}
 
-	if (typeMatrix[t1][t2] == NO_TYPE){
-		printf("SEMANTIC ERROR: incompatible types.\n");
-		exit(EXIT_FAILURE);
+Type check_number(Type t){
+	if(t != INT_TYPE && t != FLOAT_TYPE){
+		printf("SEMANTIC ERROR (%d): not a number.\n", yylineno);
+    	exit(EXIT_FAILURE);
 	}
-	
-	return typeMatrix[t1][t2];
+
+	return t;
+}
+
+Type check_assign(Type l, Type r) {
+    if (l == VOID_TYPE  || r == VOID_TYPE)  type_error("=", l, r);
+    if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
+    if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
+    if (l == FLOAT_TYPE && !(r == INT_TYPE || r == FLOAT_TYPE)) type_error("=", l, r);
+	return l;
+}
+
+Type check_int(Type l, Type r) {
+	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
+	return INT_TYPE;
 }

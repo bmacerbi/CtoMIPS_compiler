@@ -1,0 +1,1 @@
+SEMANTIC ERROR (6): incompatible types for operator 'not int', LHS is 'int' and RHS is 'char'.

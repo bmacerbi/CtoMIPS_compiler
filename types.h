@@ -12,5 +12,9 @@ typedef enum {
 
 const char* get_text(Type type);
 
+Type unify_arith(Type lt, Type rt);
+Type unify_comp(Type lt, Type rt);
+
+
 #endif // TYPES_H
 
