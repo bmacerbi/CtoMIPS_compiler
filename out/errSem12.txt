@@ -1,0 +1,1 @@
+SEMANTIC ERROR (4): cannot assign an 'int_array' type.

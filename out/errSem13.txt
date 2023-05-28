@@ -1,0 +1,1 @@
+SEMANTIC ERROR (5): incompatible types for operator '==', LHS is 'int_array' and RHS is 'int_array'.

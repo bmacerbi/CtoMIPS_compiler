@@ -11,5 +11,5 @@ Entry 0 -- name: teste, line: 1, argumentsCount: 0,  returnType: void
 	Entry 2 -- name: dec, line: 4, type: float
 Entry 1 -- name: main, line: 9, argumentsCount: 0,  returnType: int
 	Variables table:
-	Entry 0 -- name: test, line: 10, type: char
+	Entry 0 -- name: test, line: 10, type: char_array
 	Entry 1 -- name: ppp, line: 11, type: int

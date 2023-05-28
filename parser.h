@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,9 +31,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_YY_PARSER_H_INCLUDED
 # define YY_YY_PARSER_H_INCLUDED
@@ -45,66 +44,61 @@
 extern int yydebug;
 #endif
 
-/* Token kinds.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    INC = 258,                     /* INC  */
-    DEC = 259,                     /* DEC  */
-    LT_EQ = 260,                   /* LT_EQ  */
-    GT_EQ = 261,                   /* GT_EQ  */
-    LT = 262,                      /* LT  */
-    GT = 263,                      /* GT  */
-    EQ = 264,                      /* EQ  */
-    N_EQ = 265,                    /* N_EQ  */
-    L_NOT = 266,                   /* L_NOT  */
-    L_AND = 267,                   /* L_AND  */
-    L_OR = 268,                    /* L_OR  */
-    ASGN = 269,                    /* ASGN  */
-    T_ASGN = 270,                  /* T_ASGN  */
-    O_ASGN = 271,                  /* O_ASGN  */
-    MOD_ASGN = 272,                /* MOD_ASGN  */
-    PL_ASGN = 273,                 /* PL_ASGN  */
-    M_ASGN = 274,                  /* M_ASGN  */
-    CHAR = 275,                    /* CHAR  */
-    INT = 276,                     /* INT  */
-    FLOAT = 277,                   /* FLOAT  */
-    VOID = 278,                    /* VOID  */
-    IF = 279,                      /* IF  */
-    ELSE = 280,                    /* ELSE  */
-    WHILE = 281,                   /* WHILE  */
-    GOTO = 282,                    /* GOTO  */
-    CONTINUE = 283,                /* CONTINUE  */
-    BREAK = 284,                   /* BREAK  */
-    RETURN = 285,                  /* RETURN  */
-    ID = 286,                      /* ID  */
-    FLOAT_VAL = 287,               /* FLOAT_VAL  */
-    INT_VAL = 288,                 /* INT_VAL  */
-    STR_VAL = 289,                 /* STR_VAL  */
-    CHAR_VAL = 290,                /* CHAR_VAL  */
-    PLUS = 291,                    /* PLUS  */
-    MINUS = 292,                   /* MINUS  */
-    TIMES = 293,                   /* TIMES  */
-    OVER = 294,                    /* OVER  */
-    PERCENT = 295,                 /* PERCENT  */
-    LPAR = 296,                    /* LPAR  */
-    RPAR = 297,                    /* RPAR  */
-    LCURLY = 298,                  /* LCURLY  */
-    RCURLY = 299,                  /* RCURLY  */
-    LBRAC = 300,                   /* LBRAC  */
-    RBRAC = 301,                   /* RBRAC  */
-    SEMI = 302,                    /* SEMI  */
-    COMMA = 303,                   /* COMMA  */
-    AMPER = 304,                   /* AMPER  */
-    COLON = 305,                   /* COLON  */
-    UMINUS = 306                   /* UMINUS  */
+    INC = 258,
+    DEC = 259,
+    LT_EQ = 260,
+    GT_EQ = 261,
+    LT = 262,
+    GT = 263,
+    EQ = 264,
+    N_EQ = 265,
+    L_NOT = 266,
+    L_AND = 267,
+    L_OR = 268,
+    ASGN = 269,
+    T_ASGN = 270,
+    O_ASGN = 271,
+    MOD_ASGN = 272,
+    PL_ASGN = 273,
+    M_ASGN = 274,
+    CHAR = 275,
+    INT = 276,
+    FLOAT = 277,
+    VOID = 278,
+    IF = 279,
+    ELSE = 280,
+    WHILE = 281,
+    GOTO = 282,
+    CONTINUE = 283,
+    BREAK = 284,
+    RETURN = 285,
+    ID = 286,
+    FLOAT_VAL = 287,
+    INT_VAL = 288,
+    STR_VAL = 289,
+    CHAR_VAL = 290,
+    PLUS = 291,
+    MINUS = 292,
+    TIMES = 293,
+    OVER = 294,
+    PERCENT = 295,
+    LPAR = 296,
+    RPAR = 297,
+    LCURLY = 298,
+    RCURLY = 299,
+    LBRAC = 300,
+    RBRAC = 301,
+    SEMI = 302,
+    COMMA = 303,
+    AMPER = 304,
+    COLON = 305,
+    UMINUS = 306
   };
-  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -117,8 +111,6 @@ typedef Type YYSTYPE;
 
 extern YYSTYPE yylval;
 
-
 int yyparse (void);
-
 
 #endif /* !YY_YY_PARSER_H_INCLUDED  */

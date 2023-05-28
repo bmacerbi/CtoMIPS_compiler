@@ -103,13 +103,13 @@ Type get_type(VarTable* vt, int i) {
 }
 
 void set_last_var_type(VarTable* vt) {
-    Type type = vt->t[vt->size].type;
+    Type type = vt->t[vt->size-1].type;
 
     if(type == INT_TYPE) type = INT_ARRAY_TYPE;
     if(type == FLOAT_TYPE) type = FLOAT_ARRAY_TYPE;
     if(type == CHAR_TYPE) type = CHAR_ARRAY_TYPE;
-
-    vt->t[vt->size].type = type;
+    
+    vt->t[vt->size-1].type = type;
 }
 
 void print_var_table(VarTable* vt) {

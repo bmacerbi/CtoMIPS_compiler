@@ -122,7 +122,7 @@ init_declarator_list
 
 init_declarator
 	: declarator
-	| declarator ASGN initializer
+	| declarator ASGN initializer { }
 	;
 
 type_specifier
@@ -133,19 +133,15 @@ type_specifier
 	;
 
 declarator
-	: ID { printf("Entrei0");newVar(yytext, yylineno); }
+	: ID { newVar(yytext, yylineno); }
 	| LPAR declarator RPAR
-	| declarator LBRAC expression RBRAC { printf("Entrei1");newArrayVar(); }
-	| declarator LBRAC RBRAC { printf("Entrei2");newArrayVar(); }
-	| declarator LPAR parameter_list RPAR
-	| declarator LPAR RPAR
+	| declarator LBRAC expression RBRAC { newArrayVar(); }
+	| declarator LBRAC RBRAC { newArrayVar(); }
 	;
 
 function_declarator
 	: ID { newFunc(yytext, yylineno); }
 	| LPAR function_declarator RPAR
-	| function_declarator LBRAC expression RBRAC
-	| function_declarator LBRAC RBRAC
 	| function_declarator LPAR parameter_list RPAR
 	| function_declarator LPAR RPAR
 	;
@@ -256,7 +252,7 @@ int main() {
 	funcTable = create_func_table();
 
     yyparse();
-    printf("PARSE SUCCESSFULsdfds!\n");
+    printf("PARSE SUCCESSFUL!\n");
 	print_str_table(strTable);
 	print_func_table(funcTable);
 
@@ -323,8 +319,13 @@ void type_error(const char* op, Type t1, Type t2) {
     exit(EXIT_FAILURE);
 }
 
-Type unify_bin_op(Type l, Type r,
-                  const char* op, Type (*unify)(Type,Type)) {
+void assign_array_error(Type t) {
+	printf("SEMANTIC ERROR (%d): cannot assign an '%s' type.\n",
+           yylineno, get_text(t));
+    exit(EXIT_FAILURE);
+}
+
+Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type)) {
     Type unif = unify(l, r);
     if (unif == NO_TYPE) {
         type_error(op, l, r);
@@ -342,10 +343,15 @@ Type check_number(Type t){
 }
 
 Type check_assign(Type l, Type r) {
-    if (l == VOID_TYPE  || r == VOID_TYPE)  type_error("=", l, r);
+	if (l == INT_ARRAY_TYPE  || r == INT_ARRAY_TYPE)  assign_array_error(l);
+	if (l == FLOAT_ARRAY_TYPE  || r == FLOAT_ARRAY_TYPE)  assign_array_error(l);
+	if (l == CHAR_ARRAY_TYPE  || r == CHAR_ARRAY_TYPE)  assign_array_error(l);
+
+	if (l == VOID_TYPE  || r == VOID_TYPE)  type_error("=", l, r);
+	if (l == FLOAT_TYPE && !(r == INT_TYPE || r == FLOAT_TYPE)) type_error("=", l, r);
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
-    if (l == FLOAT_TYPE && !(r == INT_TYPE || r == FLOAT_TYPE)) type_error("=", l, r);
+    
 	return l;
 }
 
@@ -353,3 +359,4 @@ Type check_int(Type l, Type r) {
 	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
 	return INT_TYPE;
 }
+

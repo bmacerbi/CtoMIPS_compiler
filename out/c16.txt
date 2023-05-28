@@ -1,0 +1,16 @@
+PARSE SUCCESSFUL!
+
+Strings table:
+Entry 0 -- "teste"
+
+Functions table:
+Entry 0 -- name: main, line: 1, argumentsCount: 0,  returnType: int
+	Variables table:
+	Entry 0 -- name: x, line: 2, type: char
+	Entry 1 -- name: y, line: 3, type: float_array
+	Entry 2 -- name: z, line: 4, type: char_array
+	Entry 3 -- name: array, line: 5, type: int_array
+	Entry 4 -- name: xasd, line: 6, type: int
+	Entry 5 -- name: xdsd, line: 7, type: float
+	Entry 6 -- name: sds, line: 8, type: float_array
+	Entry 7 -- name: dsdrf, line: 9, type: float
