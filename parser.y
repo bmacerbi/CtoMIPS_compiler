@@ -23,6 +23,7 @@ int yylex_destroy(void);
 void yyerror(char const *s);
 void newVar(char* str, int line);
 Type checkVar(char* str, int line);
+void newArrayVar();
 void newFunc(char* str, int line);
 Type check_number(Type t);
 Type check_assign(Type l, Type r);
@@ -132,10 +133,10 @@ type_specifier
 	;
 
 declarator
-	: ID { newVar(yytext, yylineno); }
+	: ID { printf("Entrei0");newVar(yytext, yylineno); }
 	| LPAR declarator RPAR
-	| declarator LBRAC expression RBRAC
-	| declarator LBRAC RBRAC
+	| declarator LBRAC expression RBRAC { printf("Entrei1");newArrayVar(); }
+	| declarator LBRAC RBRAC { printf("Entrei2");newArrayVar(); }
 	| declarator LPAR parameter_list RPAR
 	| declarator LPAR RPAR
 	;
@@ -255,7 +256,7 @@ int main() {
 	funcTable = create_func_table();
 
     yyparse();
-    printf("PARSE SUCCESSFUL!\n");
+    printf("PARSE SUCCESSFULsdfds!\n");
 	print_str_table(strTable);
 	print_func_table(funcTable);
 
@@ -279,6 +280,11 @@ void newVar(char* str, int line){
     }
 	
 }
+
+void newArrayVar(){
+	set_func_last_var_type(funcTable, scopeCount);
+}
+
 
 Type checkVar(char* str, int line){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);

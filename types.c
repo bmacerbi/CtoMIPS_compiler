@@ -5,7 +5,10 @@ static const char *TYPE_STRING[] = {
     "int",
     "float",
     "char",
-    "void"
+    "void",
+    "int_array",
+    "float_array",
+    "char_array"
 };
 
 const char* get_text(Type type) {

@@ -102,6 +102,16 @@ Type get_type(VarTable* vt, int i) {
     return vt->t[i].type;
 }
 
+void set_last_var_type(VarTable* vt) {
+    Type type = vt->t[vt->size].type;
+
+    if(type == INT_TYPE) type = INT_ARRAY_TYPE;
+    if(type == FLOAT_TYPE) type = FLOAT_ARRAY_TYPE;
+    if(type == CHAR_TYPE) type = CHAR_ARRAY_TYPE;
+
+    vt->t[vt->size].type = type;
+}
+
 void print_var_table(VarTable* vt) {
     printf("\tVariables table:\n");
     for (int i = 0; i < vt->size; i++) {
@@ -166,6 +176,10 @@ int add_func(FunctionTable* ft, char* s, int line, int args, Type type) {
 
 void add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope){
     add_var(ft->t[scope].localVarTable, s, line, type);
+}
+
+void set_func_last_var_type(FunctionTable* ft, int scope) {
+    set_last_var_type(ft->t[scope].localVarTable);
 }
 
 char* get_name_func(FunctionTable* ft, int i) {

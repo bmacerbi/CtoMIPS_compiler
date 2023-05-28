@@ -7,6 +7,9 @@ typedef enum {
     FLOAT_TYPE,
     CHAR_TYPE,
     VOID_TYPE,
+    INT_ARRAY_TYPE,
+    FLOAT_ARRAY_TYPE,
+    CHAR_ARRAY_TYPE,
     NO_TYPE
 } Type;
 

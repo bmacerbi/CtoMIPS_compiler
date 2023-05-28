@@ -62,6 +62,8 @@ int get_line(VarTable* vt, int i);
 // No check is made by this function, so make sure that the index is valid first.
 Type get_type(VarTable* vt, int i);
 
+void set_last_var_type(VarTable* vt);
+
 // Prints the given table to stdout.
 void print_var_table(VarTable* vt);
 
@@ -86,6 +88,8 @@ FunctionTable* create_func_table();
 int add_func(FunctionTable* ft, char* s, int line, int args, Type type);
 
 void add_func_var(FunctionTable* ft, char* s, int line, Type type, int scope);
+
+void set_func_last_var_type(FunctionTable* ft, int scope);
 
 // Returns the index where the given funciable is stored or -1 otherwise.
 int lookup_func(FunctionTable* ft, char* s);
