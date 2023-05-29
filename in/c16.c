@@ -1,5 +1,5 @@
 int main(){
-    char x = 1;
+    char x = 'a';
     float y[5] = {1,2,3,4,5};
     char z[10] = "teste";
     int array[] = {1,2,3};

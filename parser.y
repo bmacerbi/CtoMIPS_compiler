@@ -28,6 +28,7 @@ void newFunc(char* str, int line);
 Type check_number(Type t);
 Type check_assign(Type l, Type r);
 Type check_int(Type l, Type r);
+Type toPrimitive(Type t);
 
 Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
@@ -68,7 +69,7 @@ expression
 	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_TYPE; }
 	| CHAR_VAL { $$ = CHAR_TYPE; }
 	| LPAR expression RPAR { $$ = $2; }
-	| expression LBRAC expression RBRAC { $$ = $1; }
+	| expression LBRAC expression RBRAC { $$ = toPrimitive($1); }
 	| expression LPAR RPAR { $$ = $1; }
 	| expression LPAR argument_expression_list RPAR { $$ = $1; }
 	| expression INC { $$ = check_number($1); }
@@ -358,5 +359,15 @@ Type check_assign(Type l, Type r) {
 Type check_int(Type l, Type r) {
 	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
 	return INT_TYPE;
+}
+
+
+Type toPrimitive(Type t) {
+	if (t == INT_ARRAY_TYPE) return INT_TYPE;  
+	if (t == FLOAT_ARRAY_TYPE) return FLOAT_TYPE;
+	if (t == CHAR_ARRAY_TYPE) return CHAR_TYPE; 
+
+	printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
+    exit(EXIT_FAILURE);
 }
 
