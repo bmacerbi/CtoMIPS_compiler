@@ -1,11 +1,9 @@
 PARSE SUCCESSFUL!
 
 Strings table:
-Entry 0 -- "Leonardo!!"
 
 Functions table:
 Entry 0 -- name: main, line: 1, argumentsCount: 0,  returnType: int
 	Variables table:
 	Entry 0 -- name: array, line: 2, type: int_array
-	Entry 1 -- name: name, line: 3, type: char_array
-	Entry 2 -- name: decimals, line: 4, type: float_array
+	Entry 1 -- name: x, line: 3, type: int

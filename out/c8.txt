@@ -1,1 +1,19 @@
-SEMANTIC ERROR (4): cannot assign an 'int' type.
+PARSE SUCCESSFUL!
+
+Strings table:
+
+Functions table:
+Entry 0 -- name: insertionSort, line: 1, argumentsCount: 2,  returnType: void
+	Variables table:
+	Entry 0 -- name: arr, line: 1, type: int_array
+	Entry 1 -- name: n, line: 1, type: int
+	Entry 2 -- name: i, line: 2, type: int
+	Entry 3 -- name: key, line: 2, type: int
+	Entry 4 -- name: j, line: 2, type: int
+Entry 1 -- name: main, line: 20, argumentsCount: 0,  returnType: int
+	Variables table:
+	Entry 0 -- name: float_var, line: 21, type: float
+	Entry 1 -- name: result, line: 22, type: int
+	Entry 2 -- name: c, line: 23, type: int
+	Entry 3 -- name: arr, line: 24, type: int_array
+	Entry 4 -- name: n, line: 25, type: int

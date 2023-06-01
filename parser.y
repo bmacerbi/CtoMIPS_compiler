@@ -27,8 +27,10 @@ void newArrayVar();
 void newFunc(char* str, int line);
 Type check_number(Type t);
 Type check_assign(Type l, Type r);
+Type check_declarator_assign(Type l, Type r);
 Type check_int(Type l, Type r);
 Type toPrimitive(Type t);
+Type toArray(Type t);
 
 Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
@@ -66,10 +68,10 @@ expression
 	: ID { $$ = checkVar(idCopy, yylineno); }
 	| FLOAT_VAL { $$ = FLOAT_TYPE; }
 	| INT_VAL { $$ = INT_TYPE; }
-	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_TYPE; }
+	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_ARRAY_TYPE; }
 	| CHAR_VAL { $$ = CHAR_TYPE; }
 	| LPAR expression RPAR { $$ = $2; }
-	| expression LBRAC expression RBRAC { $$ = toPrimitive($1); }
+	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
 	| expression LPAR RPAR { $$ = $1; }
 	| expression LPAR argument_expression_list RPAR { $$ = $1; }
 	| expression INC { $$ = check_number($1); }
@@ -123,7 +125,7 @@ init_declarator_list
 
 init_declarator
 	: declarator
-	| declarator ASGN initializer { }
+	| declarator ASGN initializer { $$ = check_declarator_assign(type, $3); }
 	;
 
 type_specifier
@@ -135,14 +137,12 @@ type_specifier
 
 declarator
 	: ID { newVar(yytext, yylineno); }
-	| LPAR declarator RPAR
-	| declarator LBRAC expression RBRAC { newArrayVar(); }
-	| declarator LBRAC RBRAC { newArrayVar(); }
+	| declarator LBRAC expression RBRAC { newArrayVar(); type = toArray(type); }
+	| declarator LBRAC RBRAC { newArrayVar(); type = toArray(type); }
 	;
 
 function_declarator
 	: ID { newFunc(yytext, yylineno); }
-	| LPAR function_declarator RPAR
 	| function_declarator LPAR parameter_list RPAR
 	| function_declarator LPAR RPAR
 	;
@@ -171,14 +171,14 @@ abstract_declarator
 	;
 
 initializer
-	: expression
-	| LCURLY initializer_list RCURLY
-	| LCURLY initializer_list COMMA RCURLY
+	: expression { $$ = $1; }
+	| LCURLY initializer_list RCURLY  { $$ = toArray($2); }
+	| LCURLY initializer_list COMMA RCURLY  { $$ = toArray($2); }
 	;
 
 initializer_list
-	: initializer
-	| initializer_list COMMA initializer
+	: initializer { $$ = $1; }
+	| initializer_list COMMA initializer { $$ = $1; }
 	;
 
 statement
@@ -356,6 +356,19 @@ Type check_assign(Type l, Type r) {
 	return l;
 }
 
+Type check_declarator_assign(Type l, Type r) {
+	if (l == INT_ARRAY_TYPE  && r != INT_ARRAY_TYPE)  assign_array_error(l);
+	if (l == FLOAT_ARRAY_TYPE  && !(r == INT_ARRAY_TYPE || r == FLOAT_ARRAY_TYPE))  assign_array_error(l);
+	if (l == CHAR_ARRAY_TYPE  && r != CHAR_ARRAY_TYPE)  assign_array_error(l);
+
+	if (l == VOID_TYPE  || r == VOID_TYPE)  type_error("=", l, r);
+	if (l == FLOAT_TYPE && !(r == INT_TYPE || r == FLOAT_TYPE)) type_error("=", l, r);
+    if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
+    if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
+    
+	return l;
+}
+
 Type check_int(Type l, Type r) {
 	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
 	return INT_TYPE;
@@ -369,5 +382,13 @@ Type toPrimitive(Type t) {
 
 	printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
     exit(EXIT_FAILURE);
+}
+
+Type toArray(Type t) {
+	if (t == INT_TYPE) return INT_ARRAY_TYPE;  
+	if (t == FLOAT_TYPE) return FLOAT_ARRAY_TYPE;
+	if (t == CHAR_TYPE) return CHAR_ARRAY_TYPE; 
+
+	return t;
 }
 

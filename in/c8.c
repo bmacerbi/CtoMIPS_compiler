@@ -26,16 +26,5 @@ int main(){
     
     insertionSort(arr, n);
 
-
-
-
-
-
-
-
-
-
-
-
     return 0;
 }
