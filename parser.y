@@ -9,6 +9,7 @@
 #include "types.h"
 #include "parser.h"
 #include "tables.h"
+#include "ast.h"
 
 StrTable* strTable;
 VarTable* varTable;
@@ -17,6 +18,7 @@ Type type;
 int scopeCount = 0;
 int isFunction = 1;
 int argsCount =  0;
+AST *root;
 
 int yylex(void);
 int yylex_destroy(void);
@@ -39,7 +41,8 @@ extern char *yytext;
 extern int yylineno;
 extern char *idCopy;
 %}
-%define api.value.type {Type}
+
+%define api.value.type {AST*}
 
 %token INC DEC LT_EQ GT_EQ LT GT EQ N_EQ L_NOT
 %token L_AND L_OR ASGN T_ASGN O_ASGN MOD_ASGN PL_ASGN M_ASGN
@@ -190,10 +193,10 @@ statement
 	;
 
 compound_statement
-	: LCURLY RCURLY
-	| LCURLY statement_list RCURLY
-	| LCURLY declaration_list RCURLY
-	| LCURLY declaration_list statement_list RCURLY
+	: LCURLY RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+	| LCURLY statement_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+	| LCURLY declaration_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
 	;
 
 declaration_list
@@ -237,7 +240,7 @@ external_declaration
 	;
 
 function_definition
-	: type_specifier function_declarator compound_statement { set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
+	: type_specifier function_declarator compound_statement { root = new_subtree(FUNCTION_NODE, NO_TYPE, 1, $3);set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
 	;
 
 %%
@@ -257,9 +260,12 @@ int main() {
 	print_str_table(strTable);
 	print_func_table(funcTable);
 
-    yylex_destroy();    // To avoid memory leaks within flex...
+	print_dot(root);
+
 	free_str_table(strTable);
 	free_func_table(funcTable);
+    free_tree(root);
+    yylex_destroy();    // To avoid memory leaks within flex...
     return 0;
 }
 

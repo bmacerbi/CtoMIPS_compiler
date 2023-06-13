@@ -72,8 +72,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
-#include "parser.h"
 #include "tables.h"
+#include "ast.h"
+#include "parser.h"
 
 StrTable* strTable;
 VarTable* varTable;
@@ -82,6 +83,7 @@ Type type;
 int scopeCount = 0;
 int isFunction = 1;
 int argsCount =  0;
+AST *root;
 
 int yylex(void);
 int yylex_destroy(void);
@@ -104,7 +106,7 @@ extern char *yytext;
 extern int yylineno;
 extern char *idCopy;
 
-#line 108 "parser.c"
+#line 110 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -577,17 +579,17 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    68,    68,    69,    70,    71,    72,    73,    74,    75,
-      76,    77,    78,    79,    80,    81,    82,    83,    84,    85,
-      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
-      96,    97,    98,    99,   100,   105,   106,   110,   111,   112,
-     113,   117,   118,   122,   123,   127,   128,   132,   133,   134,
-     135,   139,   140,   141,   145,   146,   147,   151,   152,   156,
-     157,   158,   162,   163,   164,   165,   166,   167,   168,   169,
-     170,   174,   175,   176,   180,   181,   185,   186,   187,   188,
-     189,   193,   194,   195,   196,   200,   201,   205,   206,   210,
-     211,   215,   216,   220,   224,   225,   226,   227,   231,   232,
-     236,   240
+       0,    71,    71,    72,    73,    74,    75,    76,    77,    78,
+      79,    80,    81,    82,    83,    84,    85,    86,    87,    88,
+      89,    90,    91,    92,    93,    94,    95,    96,    97,    98,
+      99,   100,   101,   102,   103,   108,   109,   113,   114,   115,
+     116,   120,   121,   125,   126,   130,   131,   135,   136,   137,
+     138,   142,   143,   144,   148,   149,   150,   154,   155,   159,
+     160,   161,   165,   166,   167,   168,   169,   170,   171,   172,
+     173,   177,   178,   179,   183,   184,   188,   189,   190,   191,
+     192,   196,   197,   198,   199,   203,   204,   208,   209,   213,
+     214,   218,   219,   223,   227,   228,   229,   230,   234,   235,
+     239,   243
 };
 #endif
 
@@ -1961,314 +1963,38 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
-  case 2: /* expression: ID  */
-#line 68 "parser.y"
-             { yyval = checkVar(idCopy, yylineno); }
-#line 1968 "parser.c"
+  case 81: /* compound_statement: LCURLY RCURLY  */
+#line 196 "parser.y"
+                        { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+#line 1970 "parser.c"
     break;
 
-  case 3: /* expression: FLOAT_VAL  */
-#line 69 "parser.y"
-                    { yyval = FLOAT_TYPE; }
-#line 1974 "parser.c"
+  case 82: /* compound_statement: LCURLY statement_list RCURLY  */
+#line 197 "parser.y"
+                                       { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+#line 1976 "parser.c"
     break;
 
-  case 4: /* expression: INT_VAL  */
-#line 70 "parser.y"
-                  { yyval = INT_TYPE; }
-#line 1980 "parser.c"
+  case 83: /* compound_statement: LCURLY declaration_list RCURLY  */
+#line 198 "parser.y"
+                                         { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+#line 1982 "parser.c"
     break;
 
-  case 5: /* expression: STR_VAL  */
-#line 71 "parser.y"
-                  { add_string(strTable, yytext); yyval = CHAR_ARRAY_TYPE; }
-#line 1986 "parser.c"
-    break;
-
-  case 6: /* expression: CHAR_VAL  */
-#line 72 "parser.y"
-                   { yyval = CHAR_TYPE; }
-#line 1992 "parser.c"
-    break;
-
-  case 7: /* expression: LPAR expression RPAR  */
-#line 73 "parser.y"
-                               { yyval = yyvsp[-1]; }
-#line 1998 "parser.c"
-    break;
-
-  case 8: /* expression: expression LBRAC expression RBRAC  */
-#line 74 "parser.y"
-                                            { yyval = toPrimitive(yyvsp[-3]);}
-#line 2004 "parser.c"
-    break;
-
-  case 9: /* expression: expression LPAR RPAR  */
-#line 75 "parser.y"
-                               { yyval = yyvsp[-2]; }
-#line 2010 "parser.c"
-    break;
-
-  case 10: /* expression: expression LPAR argument_expression_list RPAR  */
-#line 76 "parser.y"
-                                                        { yyval = yyvsp[-3]; }
-#line 2016 "parser.c"
-    break;
-
-  case 11: /* expression: expression INC  */
-#line 77 "parser.y"
-                         { yyval = check_number(yyvsp[-1]); }
-#line 2022 "parser.c"
-    break;
-
-  case 12: /* expression: expression DEC  */
-#line 78 "parser.y"
-                         { yyval = check_number(yyvsp[-1]); }
-#line 2028 "parser.c"
-    break;
-
-  case 13: /* expression: INC expression  */
-#line 79 "parser.y"
-                         { yyval = check_number(yyvsp[0]); }
-#line 2034 "parser.c"
-    break;
-
-  case 14: /* expression: DEC expression  */
-#line 80 "parser.y"
-                         { yyval = check_number(yyvsp[0]); }
-#line 2040 "parser.c"
-    break;
-
-  case 15: /* expression: unary_operator expression  */
-#line 81 "parser.y"
-                                                 { yyval = check_number(yyvsp[0]); }
-#line 2046 "parser.c"
-    break;
-
-  case 16: /* expression: expression TIMES expression  */
-#line 82 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "*", unify_arith); }
-#line 2052 "parser.c"
-    break;
-
-  case 17: /* expression: expression OVER expression  */
-#line 83 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "/", unify_arith); }
-#line 2058 "parser.c"
-    break;
-
-  case 18: /* expression: expression PERCENT expression  */
-#line 84 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "%%", unify_arith); }
-#line 2064 "parser.c"
-    break;
-
-  case 19: /* expression: expression PLUS expression  */
-#line 85 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "+", unify_arith); }
-#line 2070 "parser.c"
-    break;
-
-  case 20: /* expression: expression MINUS expression  */
-#line 86 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "-", unify_arith); }
-#line 2076 "parser.c"
-    break;
-
-  case 21: /* expression: expression LT expression  */
-#line 87 "parser.y"
-                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "<", unify_comp); }
-#line 2082 "parser.c"
-    break;
-
-  case 22: /* expression: expression GT expression  */
-#line 88 "parser.y"
-                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], ">", unify_comp); }
-#line 2088 "parser.c"
-    break;
-
-  case 23: /* expression: expression LT_EQ expression  */
-#line 89 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "<=", unify_comp); }
-#line 2094 "parser.c"
-    break;
-
-  case 24: /* expression: expression GT_EQ expression  */
-#line 90 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], ">=", unify_comp); }
-#line 2100 "parser.c"
-    break;
-
-  case 25: /* expression: expression EQ expression  */
-#line 91 "parser.y"
-                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "==", unify_comp); }
-#line 2106 "parser.c"
-    break;
-
-  case 26: /* expression: expression N_EQ expression  */
-#line 92 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "!=", unify_comp); }
-#line 2112 "parser.c"
-    break;
-
-  case 27: /* expression: expression L_AND expression  */
-#line 93 "parser.y"
-                                                { yyval = check_int(yyvsp[-2], yyvsp[0]); }
-#line 2118 "parser.c"
-    break;
-
-  case 28: /* expression: expression L_OR expression  */
-#line 94 "parser.y"
-                                                { yyval = check_int(yyvsp[-2], yyvsp[0]); }
-#line 2124 "parser.c"
-    break;
-
-  case 29: /* expression: expression ASGN expression  */
-#line 95 "parser.y"
-                                            { yyval = check_assign(yyvsp[-2], yyvsp[0]); }
-#line 2130 "parser.c"
-    break;
-
-  case 30: /* expression: expression T_ASGN expression  */
-#line 96 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "*", unify_arith); }
-#line 2136 "parser.c"
-    break;
-
-  case 31: /* expression: expression O_ASGN expression  */
-#line 97 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "/", unify_arith); }
-#line 2142 "parser.c"
-    break;
-
-  case 32: /* expression: expression MOD_ASGN expression  */
-#line 98 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "%%", unify_arith); }
-#line 2148 "parser.c"
-    break;
-
-  case 33: /* expression: expression PL_ASGN expression  */
-#line 99 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "+", unify_arith); }
-#line 2154 "parser.c"
-    break;
-
-  case 34: /* expression: expression M_ASGN expression  */
-#line 100 "parser.y"
-                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], "-", unify_arith); }
-#line 2160 "parser.c"
-    break;
-
-  case 46: /* init_declarator: declarator ASGN initializer  */
-#line 128 "parser.y"
-                                      { yyval = check_declarator_assign(type, yyvsp[0]); }
-#line 2166 "parser.c"
-    break;
-
-  case 47: /* type_specifier: VOID  */
-#line 132 "parser.y"
-                { type = VOID_TYPE; }
-#line 2172 "parser.c"
-    break;
-
-  case 48: /* type_specifier: CHAR  */
-#line 133 "parser.y"
-                { type = CHAR_TYPE; }
-#line 2178 "parser.c"
-    break;
-
-  case 49: /* type_specifier: INT  */
-#line 134 "parser.y"
-                { type = INT_TYPE;  }
-#line 2184 "parser.c"
-    break;
-
-  case 50: /* type_specifier: FLOAT  */
-#line 135 "parser.y"
-                { type = FLOAT_TYPE;  }
-#line 2190 "parser.c"
-    break;
-
-  case 51: /* declarator: ID  */
-#line 139 "parser.y"
-             { newVar(yytext, yylineno); }
-#line 2196 "parser.c"
-    break;
-
-  case 52: /* declarator: declarator LBRAC expression RBRAC  */
-#line 140 "parser.y"
-                                            { newArrayVar(); type = toArray(type); }
-#line 2202 "parser.c"
-    break;
-
-  case 53: /* declarator: declarator LBRAC RBRAC  */
-#line 141 "parser.y"
-                                 { newArrayVar(); type = toArray(type); }
-#line 2208 "parser.c"
-    break;
-
-  case 54: /* function_declarator: ID  */
-#line 145 "parser.y"
-             { newFunc(yytext, yylineno); }
-#line 2214 "parser.c"
-    break;
-
-  case 57: /* parameter_list: parameter_declaration  */
-#line 151 "parser.y"
-                                {argsCount++;}
-#line 2220 "parser.c"
-    break;
-
-  case 58: /* parameter_list: parameter_list COMMA parameter_declaration  */
-#line 152 "parser.y"
-                                                     {argsCount++;}
-#line 2226 "parser.c"
-    break;
-
-  case 71: /* initializer: expression  */
-#line 174 "parser.y"
-                     { yyval = yyvsp[0]; }
-#line 2232 "parser.c"
-    break;
-
-  case 72: /* initializer: LCURLY initializer_list RCURLY  */
-#line 175 "parser.y"
-                                          { yyval = toArray(yyvsp[-1]); }
-#line 2238 "parser.c"
-    break;
-
-  case 73: /* initializer: LCURLY initializer_list COMMA RCURLY  */
-#line 176 "parser.y"
-                                                { yyval = toArray(yyvsp[-2]); }
-#line 2244 "parser.c"
-    break;
-
-  case 74: /* initializer_list: initializer  */
-#line 180 "parser.y"
-                      { yyval = yyvsp[0]; }
-#line 2250 "parser.c"
-    break;
-
-  case 75: /* initializer_list: initializer_list COMMA initializer  */
-#line 181 "parser.y"
-                                             { yyval = yyvsp[-2]; }
-#line 2256 "parser.c"
-    break;
-
-  case 100: /* external_declaration: function_definition  */
-#line 236 "parser.y"
-                              { scopeCount++;}
-#line 2262 "parser.c"
+  case 84: /* compound_statement: LCURLY declaration_list statement_list RCURLY  */
+#line 199 "parser.y"
+                                                        { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+#line 1988 "parser.c"
     break;
 
   case 101: /* function_definition: type_specifier function_declarator compound_statement  */
-#line 240 "parser.y"
-                                                                { set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 2268 "parser.c"
+#line 243 "parser.y"
+                                                                { root = new_subtree(FUNCTION_NODE, NO_TYPE, 1, yyvsp[0]);set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
+#line 1994 "parser.c"
     break;
 
 
-#line 2272 "parser.c"
+#line 1998 "parser.c"
 
         default: break;
       }
@@ -2503,7 +2229,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 243 "parser.y"
+#line 246 "parser.y"
 
 
 // Primitive error handling.
@@ -2521,9 +2247,12 @@ int main() {
 	print_str_table(strTable);
 	print_func_table(funcTable);
 
-    yylex_destroy();    // To avoid memory leaks within flex...
+	print_dot(root);
+
 	free_str_table(strTable);
 	free_func_table(funcTable);
+    free_tree(root);
+    yylex_destroy();    // To avoid memory leaks within flex...
     return 0;
 }
 

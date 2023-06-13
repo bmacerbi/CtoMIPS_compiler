@@ -10,6 +10,8 @@
 %{
     #include <stdio.h>
     #include "types.h"
+    #include "tables.h"
+    #include "ast.h"
     #include "parser.h"
 
     void printToken(char *token, char *msg);
