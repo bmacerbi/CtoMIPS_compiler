@@ -97,13 +97,11 @@ void free_tree(AST *tree) {
 
 int nr;
 
-extern VarTable* vt;
 extern FunctionTable *ft;
 
 char* kind2str(NodeKind kind) {
     switch(kind) {
         case ASSIGN_NODE:          return "=";
-        case BLOCK_NODE:           return "block";
         case IF_NODE:              return "if";
         case ELSE_NODE:            return "else";
         case INT_VAL_NODE:         return "";
@@ -123,13 +121,15 @@ char* kind2str(NodeKind kind) {
         case TIMES_NODE:           return "*";
         case PERCENT_NODE:         return "%";
         case PROGRAM_NODE:         return "program";
+        case COMPOUND_NODE:        return "compound";
+        case STMT_LIST_NODE:       return "stmt_list";
         case FUNCTION_NODE:        return "function";
-        case WHILE_NODE:   return "while";
-        case VAR_DECL_NODE: return "var_decl";
-        case VAR_LIST_NODE: return "var_list";
-        case VAR_USE_NODE:  return "var_use";
-        case I2F_NODE:      return "I2F";
-        default:            return "ERROR!!";
+        case WHILE_NODE:           return "while";
+        case VAR_DECL_NODE:        return "var_decl";
+        case VAR_LIST_NODE:        return "var_list";
+        case VAR_USE_NODE:         return "var_use";
+        case I2F_NODE:             return "I2F";
+        default:                   return "ERROR!!";
     }
 }
 
@@ -157,14 +157,14 @@ int print_node_dot(AST *node) {
         fprintf(stderr, "(%s) ", get_text(node->type));
     }
     if (node->kind == VAR_DECL_NODE || node->kind == VAR_USE_NODE) {
-        fprintf(stderr, "%s@", get_name(vt, node->data.as_int));
+        // fprintf(stderr, "%s@", get_name(vt, node->data.as_int));
     } else {
         fprintf(stderr, "%s", kind2str(node->kind));
     }
     if (has_data(node->kind)) {
-        if (node->kind == REAL_VAL_NODE) {
+        if (node->kind == FLOAT_VAL_NODE) {
             fprintf(stderr, "%.2f", node->data.as_float);
-        } else if (node->kind == STR_VAL_NODE) {
+        } else if (node->kind == CHAR_ARRAY_VAL_NODE) {
             fprintf(stderr, "@%d", node->data.as_int);
         } else {
             fprintf(stderr, "%d", node->data.as_int);

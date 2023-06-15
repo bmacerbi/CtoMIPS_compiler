@@ -1,9 +1,10 @@
-void teste(){
+float teste(){
     int a;
     char letra = 'a';
     float dec = 1.34;
 
     a = 1 + 2;
+    return dec;
 }
 
 int main(){

@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
-#include "parser.h"
 #include "tables.h"
 #include "ast.h"
+#include "parser.h"
 
 StrTable* strTable;
 VarTable* varTable;
@@ -68,39 +68,39 @@ extern char *idCopy;
 %%
 
 expression
-	: ID { $$ = checkVar(idCopy, yylineno); }
-	| FLOAT_VAL { $$ = FLOAT_TYPE; }
-	| INT_VAL { $$ = INT_TYPE; }
-	| STR_VAL { add_string(strTable, yytext); $$ = CHAR_ARRAY_TYPE; }
-	| CHAR_VAL { $$ = CHAR_TYPE; }
-	| LPAR expression RPAR { $$ = $2; }
-	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
-	| expression LPAR RPAR { $$ = $1; }
-	| expression LPAR argument_expression_list RPAR { $$ = $1; }
-	| expression INC { $$ = check_number($1); }
-	| expression DEC { $$ = check_number($1); }
-	| INC expression { $$ = check_number($2); }
-	| DEC expression { $$ = check_number($2); }
-	| unary_operator expression %prec UMINUS { $$ = check_number($2); }
-	| expression TIMES expression 		{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
-	| expression OVER expression 		{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
-	| expression PERCENT expression		{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
-	| expression PLUS expression 		{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
-	| expression MINUS expression		{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
-	| expression LT expression 			{ $$ = unify_bin_op($1, $3, "<", unify_comp); }
-	| expression GT expression 			{ $$ = unify_bin_op($1, $3, ">", unify_comp); }	
-	| expression LT_EQ expression 		{ $$ = unify_bin_op($1, $3, "<=", unify_comp); }			
-	| expression GT_EQ expression 		{ $$ = unify_bin_op($1, $3, ">=", unify_comp); }	
-	| expression EQ expression			{ $$ = unify_bin_op($1, $3, "==", unify_comp); }		
-	| expression N_EQ expression 		{ $$ = unify_bin_op($1, $3, "!=", unify_comp); }			
-	| expression L_AND expression 		{ $$ = check_int($1, $3); }
-	| expression L_OR expression 		{ $$ = check_int($1, $3); }
-	| expression ASGN expression        { $$ = check_assign($1, $3); }
-	| expression T_ASGN expression 		{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
-	| expression O_ASGN expression 		{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
-	| expression MOD_ASGN expression 	{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
-	| expression PL_ASGN expression		{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
-	| expression M_ASGN expression 		{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
+	: ID //{ $$ = checkVar(idCopy, yylineno); }
+	| FLOAT_VAL //{ $$ = FLOAT_TYPE; }
+	| INT_VAL //{ $$ = INT_TYPE; }
+	| STR_VAL //{ add_string(strTable, yytext); $$ = CHAR_ARRAY_TYPE; }
+	| CHAR_VAL //{ $$ = CHAR_TYPE; }
+	| LPAR expression RPAR //{ $$ = $2; }
+	| expression LBRAC expression RBRAC //{ $$ = toPrimitive($1);}
+	| expression LPAR RPAR //{ $$ = $1; }
+	| expression LPAR argument_expression_list RPAR //{ $$ = $1; }
+	| expression INC //{ $$ = check_number($1); }
+	| expression DEC //{ $$ = check_number($1); }
+	| INC expression //{ $$ = check_number($2); }
+	| DEC expression //{ $$ = check_number($2); }
+	| unary_operator expression %prec UMINUS //{ $$ = check_number($2); }
+	| expression TIMES expression 		//{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
+	| expression OVER expression 		//{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
+	| expression PERCENT expression		//{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
+	| expression PLUS expression 		//{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
+	| expression MINUS expression		//{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
+	| expression LT expression 			//{ $$ = unify_bin_op($1, $3, "<", unify_comp); }
+	| expression GT expression 			//{ $$ = unify_bin_op($1, $3, ">", unify_comp); }	
+	| expression LT_EQ expression 		//{ $$ = unify_bin_op($1, $3, "<=", unify_comp); }			
+	| expression GT_EQ expression 		//{ $$ = unify_bin_op($1, $3, ">=", unify_comp); }	
+	| expression EQ expression			//{ $$ = unify_bin_op($1, $3, "==", unify_comp); }		
+	| expression N_EQ expression 		//{ $$ = unify_bin_op($1, $3, "!=", unify_comp); }			
+	| expression L_AND expression 		//{ $$ = check_int($1, $3); }
+	| expression L_OR expression 		//{ $$ = check_int($1, $3); }
+	| expression ASGN expression        //{ $$ = check_assign($1, $3); }
+	| expression T_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
+	| expression O_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
+	| expression MOD_ASGN expression 	//{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
+	| expression PL_ASGN expression		//{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
+	| expression M_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
 	;
 
 
@@ -117,8 +117,8 @@ unary_operator
 	;
 
 declaration
-	: type_specifier SEMI
-	| type_specifier init_declarator_list SEMI
+	// : type_specifier SEMI
+	: type_specifier init_declarator_list SEMI
 	;
 
 init_declarator_list
@@ -128,31 +128,31 @@ init_declarator_list
 
 init_declarator
 	: declarator
-	| declarator ASGN initializer { $$ = check_declarator_assign(type, $3); }
+	| declarator ASGN initializer //{ $$ = check_declarator_assign(type, $3); }
 	;
 
 type_specifier
-	: VOID  { type = VOID_TYPE; }
-	| CHAR  { type = CHAR_TYPE; }
-	| INT   { type = INT_TYPE;  }
-	| FLOAT { type = FLOAT_TYPE;  }
+	: VOID  //{ type = VOID_TYPE; }
+	| CHAR  //{ type = CHAR_TYPE; }
+	| INT   //{ type = INT_TYPE;  }
+	| FLOAT //{ type = FLOAT_TYPE;  }
 	;
 
 declarator
-	: ID { newVar(yytext, yylineno); }
-	| declarator LBRAC expression RBRAC { newArrayVar(); type = toArray(type); }
-	| declarator LBRAC RBRAC { newArrayVar(); type = toArray(type); }
+	: ID //{ newVar(yytext, yylineno); }
+	| declarator LBRAC expression RBRAC //{ newArrayVar(); type = toArray(type); }
+	| declarator LBRAC RBRAC //{ newArrayVar(); type = toArray(type); }
 	;
 
 function_declarator
-	: ID { newFunc(yytext, yylineno); }
+	: ID //{ newFunc(yytext, yylineno); }
 	| function_declarator LPAR parameter_list RPAR
 	| function_declarator LPAR RPAR
 	;
 
 parameter_list
-	: parameter_declaration {argsCount++;}	
-	| parameter_list COMMA parameter_declaration {argsCount++;}
+	: parameter_declaration //{argsCount++;}	
+	| parameter_list COMMA parameter_declaration //{argsCount++;}
 	;
 
 parameter_declaration
@@ -174,14 +174,14 @@ abstract_declarator
 	;
 
 initializer
-	: expression { $$ = $1; }
-	| LCURLY initializer_list RCURLY  { $$ = toArray($2); }
-	| LCURLY initializer_list COMMA RCURLY  { $$ = toArray($2); }
+	: expression //{ $$ = $1; }
+	| LCURLY initializer_list RCURLY  //{ $$ = toArray($2); }
+	| LCURLY initializer_list COMMA RCURLY  //{ $$ = toArray($2); }
 	;
 
 initializer_list
-	: initializer { $$ = $1; }
-	| initializer_list COMMA initializer { $$ = $1; }
+	: initializer //{ $$ = $1; }
+	| initializer_list COMMA initializer //{ $$ = $1; }
 	;
 
 statement
@@ -193,10 +193,10 @@ statement
 	;
 
 compound_statement
-	: LCURLY RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-	| LCURLY statement_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-	| LCURLY declaration_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-	| LCURLY declaration_list statement_list RCURLY { $$ = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+	: LCURLY RCURLY 
+	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
 	;
 
 declaration_list
@@ -231,16 +231,16 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration
-	| translation_unit external_declaration
+	: external_declaration { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, $1);}
+	| translation_unit external_declaration { add_child(root, $2);}
 	;
 
 external_declaration
-	: function_definition { scopeCount++;}
+	: function_definition { scopeCount++;  $$ = $1;}
 	;
 
 function_definition
-	: type_specifier function_declarator compound_statement { root = new_subtree(FUNCTION_NODE, NO_TYPE, 1, $3);set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
+	: type_specifier function_declarator compound_statement { $$ = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 1, $3); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
 	;
 
 %%

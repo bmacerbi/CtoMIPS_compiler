@@ -1963,38 +1963,50 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
-  case 81: /* compound_statement: LCURLY RCURLY  */
-#line 196 "parser.y"
-                        { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-#line 1970 "parser.c"
-    break;
-
   case 82: /* compound_statement: LCURLY statement_list RCURLY  */
 #line 197 "parser.y"
-                                       { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-#line 1976 "parser.c"
+                                       { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+#line 1970 "parser.c"
     break;
 
   case 83: /* compound_statement: LCURLY declaration_list RCURLY  */
 #line 198 "parser.y"
-                                         { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
-#line 1982 "parser.c"
+                                         { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+#line 1976 "parser.c"
     break;
 
   case 84: /* compound_statement: LCURLY declaration_list statement_list RCURLY  */
 #line 199 "parser.y"
-                                                        { yyval = new_node(VAR_DECL_NODE, 5, INT_TYPE); }
+                                                        { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+#line 1982 "parser.c"
+    break;
+
+  case 98: /* translation_unit: external_declaration  */
+#line 234 "parser.y"
+                               { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, yyvsp[0]);}
 #line 1988 "parser.c"
+    break;
+
+  case 99: /* translation_unit: translation_unit external_declaration  */
+#line 235 "parser.y"
+                                                { add_child(root, yyvsp[0]);}
+#line 1994 "parser.c"
+    break;
+
+  case 100: /* external_declaration: function_definition  */
+#line 239 "parser.y"
+                              { scopeCount++;  yyval = yyvsp[0];}
+#line 2000 "parser.c"
     break;
 
   case 101: /* function_definition: type_specifier function_declarator compound_statement  */
 #line 243 "parser.y"
-                                                                { root = new_subtree(FUNCTION_NODE, NO_TYPE, 1, yyvsp[0]);set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 1994 "parser.c"
+                                                                { yyval = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 1, yyvsp[0]); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
+#line 2006 "parser.c"
     break;
 
 
-#line 1998 "parser.c"
+#line 2010 "parser.c"
 
         default: break;
       }

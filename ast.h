@@ -5,7 +5,9 @@
 
 typedef enum {
     ASSIGN_NODE,
-    BLOCK_NODE,
+    COMPOUND_NODE,
+    STMT_LIST_NODE,
+    VAR_LIST_NODE,
     IF_NODE,
     ELSE_NODE,
     INT_VAL_NODE,
@@ -25,10 +27,11 @@ typedef enum {
     TIMES_NODE,
     PERCENT_NODE,
     PROGRAM_NODE,
+    PARAMS_NODE,
+    ARGS_NODE,
     FUNCTION_NODE,  
     WHILE_NODE,
     VAR_DECL_NODE,
-    VAR_LIST_NODE,
     VAR_USE_NODE,
     I2F_NODE
 }NodeKind;
