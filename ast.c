@@ -81,6 +81,10 @@ Type get_node_type(AST *node) {
     return node->type;
 }
 
+void set_node_type(AST *node, Type t) {
+    node->type = t;
+}
+
 int get_child_count(AST *node) {
     return node->count;
 }

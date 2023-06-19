@@ -27,12 +27,12 @@ AST* newVar(char* str, int line);
 Type checkVar(char* str, int line);
 void newArrayVar();
 void newFunc(char* str, int line);
-Type check_number(Type t);
+AST* check_number(AST* node);
 Type check_assign(Type l, Type r);
-Type check_declarator_assign(Type l, Type r);
+AST* check_declarator_assign(AST* nodeL, AST* nodeR);
 Type check_int(Type l, Type r);
-Type toPrimitive(Type t);
-Type toArray(Type t);
+AST* toPrimitive(AST* node);
+AST* toArray(AST* node);
 
 Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
@@ -69,19 +69,19 @@ extern char *idCopy;
 
 expression
 	: ID //{ $$ = checkVar(idCopy, yylineno); }
-	| FLOAT_VAL //{ $$ = FLOAT_TYPE; }
-	| INT_VAL //{ $$ = INT_TYPE; }
-	| STR_VAL //{ add_string(strTable, yytext); $$ = CHAR_ARRAY_TYPE; }
-	| CHAR_VAL //{ $$ = CHAR_TYPE; }
-	| LPAR expression RPAR //{ $$ = $2; }
-	| expression LBRAC expression RBRAC //{ $$ = toPrimitive($1);}
-	| expression LPAR RPAR //{ $$ = $1; }
-	| expression LPAR argument_expression_list RPAR //{ $$ = $1; }
-	| expression INC //{ $$ = check_number($1); }
-	| expression DEC //{ $$ = check_number($1); }
-	| INC expression //{ $$ = check_number($2); }
-	| DEC expression //{ $$ = check_number($2); }
-	| unary_operator expression %prec UMINUS //{ $$ = check_number($2); }
+	| FLOAT_VAL	{ $$ = $1; }
+	| INT_VAL	{ $$ = $1; }
+	| STR_VAL 	{ $$ = $1; }
+	| CHAR_VAL	{ $$ = $1; }
+	| LPAR expression RPAR { $$ = $2; }
+	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
+	| expression LPAR RPAR { $$ = $1; }
+	| expression LPAR argument_expression_list RPAR { $$ = $1; }
+	| expression INC { $$ = check_number($1); }
+	| expression DEC { $$ = check_number($1); }
+	| INC expression { $$ = check_number($2); }
+	| DEC expression { $$ = check_number($2); }
+	| unary_operator expression %prec UMINUS { $$ = check_number($2); }
 	| expression TIMES expression 		//{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
 	| expression OVER expression 		//{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
 	| expression PERCENT expression		//{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
@@ -128,20 +128,20 @@ declaration
 
 init_declarator
 	: declarator { $$ = $1; }
-	| declarator ASGN initializer { $$ = $1; }//{ $$ = check_declarator_assign(type, $3); }
+	| declarator ASGN initializer { $$ = check_declarator_assign($1, $3); }
 	;
 
 type_specifier
-	: VOID  { type = VOID_TYPE; }
-	| CHAR  { type = CHAR_TYPE; }
-	| INT   { type = INT_TYPE;  }
-	| FLOAT { type = FLOAT_TYPE;  }
+	: VOID  { type = VOID_TYPE;  }
+	| CHAR  { type = CHAR_TYPE;  }
+	| INT   { type = INT_TYPE;   }
+	| FLOAT { type = FLOAT_TYPE; }
 	;
 
 declarator
 	: ID { $$ = newVar(yytext, yylineno); }
-	| declarator LBRAC expression RBRAC { newArrayVar(); type = toArray(type); $$ = $1; }
-	| declarator LBRAC RBRAC { newArrayVar(); type = toArray(type); $$ = $1;}
+	| declarator LBRAC expression RBRAC { newArrayVar(); $$ = toArray($1);}
+	| declarator LBRAC RBRAC { newArrayVar(); $$ = toArray($1);}
 	;
 
 function_declarator
@@ -151,8 +151,8 @@ function_declarator
 	;
 
 parameter_list
-	: parameter_declaration //{argsCount++;}	
-	| parameter_list COMMA parameter_declaration //{argsCount++;}
+	: parameter_declaration {argsCount++;}	
+	| parameter_list COMMA parameter_declaration {argsCount++;}
 	;
 
 parameter_declaration
@@ -175,13 +175,13 @@ abstract_declarator
 
 initializer
 	: expression { $$ = $1; }
-	| LCURLY initializer_list RCURLY  //{ $$ = toArray($2); }
-	| LCURLY initializer_list COMMA RCURLY  //{ $$ = toArray($2); }
+	| LCURLY initializer_list RCURLY  { $$ = toArray($2); }
+	| LCURLY initializer_list COMMA RCURLY  { $$ = toArray($2); }
 	;
 
 initializer_list
-	: initializer //{ $$ = $1; }
-	| initializer_list COMMA initializer //{ $$ = $1; }
+	: initializer { $$ = $1; }
+	| initializer_list COMMA initializer { $$ = $1; }
 	;
 
 statement
@@ -340,13 +340,14 @@ Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type)) {
     return unif;
 }
 
-Type check_number(Type t){
+AST* check_number(AST* node){
+	Type t = get_node_type(node);
 	if(t != INT_TYPE && t != FLOAT_TYPE){
 		printf("SEMANTIC ERROR (%d): not a number.\n", yylineno);
     	exit(EXIT_FAILURE);
 	}
 
-	return t;
+	return node;
 }
 
 Type check_assign(Type l, Type r) {
@@ -362,7 +363,10 @@ Type check_assign(Type l, Type r) {
 	return l;
 }
 
-Type check_declarator_assign(Type l, Type r) {
+AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+
 	if (l == INT_ARRAY_TYPE  && r != INT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == FLOAT_ARRAY_TYPE  && !(r == INT_ARRAY_TYPE || r == FLOAT_ARRAY_TYPE))  assign_array_error(l);
 	if (l == CHAR_ARRAY_TYPE  && r != CHAR_ARRAY_TYPE)  assign_array_error(l);
@@ -372,7 +376,7 @@ Type check_declarator_assign(Type l, Type r) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return l;
+	return nodeL;
 }
 
 Type check_int(Type l, Type r) {
@@ -381,20 +385,29 @@ Type check_int(Type l, Type r) {
 }
 
 
-Type toPrimitive(Type t) {
-	if (t == INT_ARRAY_TYPE) return INT_TYPE;  
-	if (t == FLOAT_ARRAY_TYPE) return FLOAT_TYPE;
-	if (t == CHAR_ARRAY_TYPE) return CHAR_TYPE; 
+AST* toPrimitive(AST* node) {
+	Type t = get_node_type(node);
 
-	printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
-    exit(EXIT_FAILURE);
+	if (t == INT_ARRAY_TYPE) t = INT_TYPE;  
+	else if (t == FLOAT_ARRAY_TYPE) t = FLOAT_TYPE;
+	else if (t == CHAR_ARRAY_TYPE) t = CHAR_TYPE; 
+	else {	
+		printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
+		exit(EXIT_FAILURE);
+	}
+
+	set_node_type(node, t);
+	return node;
 }
 
-Type toArray(Type t) {
-	if (t == INT_TYPE) return INT_ARRAY_TYPE;  
-	if (t == FLOAT_TYPE) return FLOAT_ARRAY_TYPE;
-	if (t == CHAR_TYPE) return CHAR_ARRAY_TYPE; 
+AST* toArray(AST* node) {
+	Type t = get_node_type(node);
 
-	return t;
+	if (t == INT_TYPE) t = INT_ARRAY_TYPE;  
+	if (t == FLOAT_TYPE) t = FLOAT_ARRAY_TYPE;
+	if (t == CHAR_TYPE) t = CHAR_ARRAY_TYPE; 
+
+	set_node_type(node, t);
+	return node;
 }
 

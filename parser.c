@@ -91,12 +91,12 @@ AST* newVar(char* str, int line);
 Type checkVar(char* str, int line);
 void newArrayVar();
 void newFunc(char* str, int line);
-Type check_number(Type t);
+AST* check_number(AST* node);
 Type check_assign(Type l, Type r);
-Type check_declarator_assign(Type l, Type r);
+AST* check_declarator_assign(AST* nodeL, AST* nodeR);
 Type check_int(Type l, Type r);
-Type toPrimitive(Type t);
-Type toArray(Type t);
+AST* toPrimitive(AST* node);
+AST* toArray(AST* node);
 
 Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
@@ -1901,128 +1901,242 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
+  case 3:
+#line 72 "parser.y"
+                        { yyval = yyvsp[0]; }
+#line 1908 "parser.c"
+    break;
+
+  case 4:
+#line 73 "parser.y"
+                        { yyval = yyvsp[0]; }
+#line 1914 "parser.c"
+    break;
+
+  case 5:
+#line 74 "parser.y"
+                        { yyval = yyvsp[0]; }
+#line 1920 "parser.c"
+    break;
+
+  case 6:
+#line 75 "parser.y"
+                        { yyval = yyvsp[0]; }
+#line 1926 "parser.c"
+    break;
+
+  case 7:
+#line 76 "parser.y"
+                               { yyval = yyvsp[-1]; }
+#line 1932 "parser.c"
+    break;
+
+  case 8:
+#line 77 "parser.y"
+                                            { yyval = toPrimitive(yyvsp[-3]);}
+#line 1938 "parser.c"
+    break;
+
+  case 9:
+#line 78 "parser.y"
+                               { yyval = yyvsp[-2]; }
+#line 1944 "parser.c"
+    break;
+
+  case 10:
+#line 79 "parser.y"
+                                                        { yyval = yyvsp[-3]; }
+#line 1950 "parser.c"
+    break;
+
+  case 11:
+#line 80 "parser.y"
+                         { yyval = check_number(yyvsp[-1]); }
+#line 1956 "parser.c"
+    break;
+
+  case 12:
+#line 81 "parser.y"
+                         { yyval = check_number(yyvsp[-1]); }
+#line 1962 "parser.c"
+    break;
+
+  case 13:
+#line 82 "parser.y"
+                         { yyval = check_number(yyvsp[0]); }
+#line 1968 "parser.c"
+    break;
+
+  case 14:
+#line 83 "parser.y"
+                         { yyval = check_number(yyvsp[0]); }
+#line 1974 "parser.c"
+    break;
+
+  case 15:
+#line 84 "parser.y"
+                                                 { yyval = check_number(yyvsp[0]); }
+#line 1980 "parser.c"
+    break;
+
   case 41:
 #line 121 "parser.y"
                                               { yyval = yyvsp[-1]; }
-#line 1908 "parser.c"
+#line 1986 "parser.c"
     break;
 
   case 42:
 #line 130 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 1914 "parser.c"
+#line 1992 "parser.c"
     break;
 
   case 43:
 #line 131 "parser.y"
-                                      { yyval = yyvsp[-2]; }
-#line 1920 "parser.c"
+                                      { yyval = check_declarator_assign(yyvsp[-2], yyvsp[0]); }
+#line 1998 "parser.c"
     break;
 
   case 44:
 #line 135 "parser.y"
-                { type = VOID_TYPE; }
-#line 1926 "parser.c"
+                { type = VOID_TYPE;  }
+#line 2004 "parser.c"
     break;
 
   case 45:
 #line 136 "parser.y"
-                { type = CHAR_TYPE; }
-#line 1932 "parser.c"
+                { type = CHAR_TYPE;  }
+#line 2010 "parser.c"
     break;
 
   case 46:
 #line 137 "parser.y"
-                { type = INT_TYPE;  }
-#line 1938 "parser.c"
+                { type = INT_TYPE;   }
+#line 2016 "parser.c"
     break;
 
   case 47:
 #line 138 "parser.y"
-                { type = FLOAT_TYPE;  }
-#line 1944 "parser.c"
+                { type = FLOAT_TYPE; }
+#line 2022 "parser.c"
     break;
 
   case 48:
 #line 142 "parser.y"
              { yyval = newVar(yytext, yylineno); }
-#line 1950 "parser.c"
+#line 2028 "parser.c"
     break;
 
   case 49:
 #line 143 "parser.y"
-                                            { newArrayVar(); type = toArray(type); yyval = yyvsp[-3]; }
-#line 1956 "parser.c"
+                                            { newArrayVar(); yyval = toArray(yyvsp[-3]);}
+#line 2034 "parser.c"
     break;
 
   case 50:
 #line 144 "parser.y"
-                                 { newArrayVar(); type = toArray(type); yyval = yyvsp[-2];}
-#line 1962 "parser.c"
+                                 { newArrayVar(); yyval = toArray(yyvsp[-2]);}
+#line 2040 "parser.c"
+    break;
+
+  case 54:
+#line 154 "parser.y"
+                                {argsCount++;}
+#line 2046 "parser.c"
+    break;
+
+  case 55:
+#line 155 "parser.y"
+                                                     {argsCount++;}
+#line 2052 "parser.c"
     break;
 
   case 68:
 #line 177 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 1968 "parser.c"
+#line 2058 "parser.c"
+    break;
+
+  case 69:
+#line 178 "parser.y"
+                                          { yyval = toArray(yyvsp[-1]); }
+#line 2064 "parser.c"
+    break;
+
+  case 70:
+#line 179 "parser.y"
+                                                { yyval = toArray(yyvsp[-2]); }
+#line 2070 "parser.c"
+    break;
+
+  case 71:
+#line 183 "parser.y"
+                      { yyval = yyvsp[0]; }
+#line 2076 "parser.c"
+    break;
+
+  case 72:
+#line 184 "parser.y"
+                                             { yyval = yyvsp[-2]; }
+#line 2082 "parser.c"
     break;
 
   case 79:
 #line 197 "parser.y"
                                        { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
-#line 1974 "parser.c"
+#line 2088 "parser.c"
     break;
 
   case 80:
 #line 198 "parser.y"
                                          { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-1]); }
-#line 1980 "parser.c"
+#line 2094 "parser.c"
     break;
 
   case 81:
 #line 199 "parser.y"
                                                         { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-2]); }
-#line 1986 "parser.c"
+#line 2100 "parser.c"
     break;
 
   case 82:
 #line 203 "parser.y"
                                                         { yyval = new_subtree(VAR_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
-#line 1992 "parser.c"
+#line 2106 "parser.c"
     break;
 
   case 83:
 #line 204 "parser.y"
                                         { add_child(yyvsp[-1], yyvsp[0]); yyval = yyvsp[-1]; }
-#line 1998 "parser.c"
+#line 2112 "parser.c"
     break;
 
   case 95:
 #line 234 "parser.y"
                                { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, yyvsp[0]);}
-#line 2004 "parser.c"
+#line 2118 "parser.c"
     break;
 
   case 96:
 #line 235 "parser.y"
                                                 { add_child(root, yyvsp[0]);}
-#line 2010 "parser.c"
+#line 2124 "parser.c"
     break;
 
   case 97:
 #line 239 "parser.y"
                               { scopeCount++;  yyval = yyvsp[0];}
-#line 2016 "parser.c"
+#line 2130 "parser.c"
     break;
 
   case 98:
 #line 243 "parser.y"
                                                                 { yyval = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 1, yyvsp[0]); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 2022 "parser.c"
+#line 2136 "parser.c"
     break;
 
 
-#line 2026 "parser.c"
+#line 2140 "parser.c"
 
         default: break;
       }
@@ -2364,13 +2478,14 @@ Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type)) {
     return unif;
 }
 
-Type check_number(Type t){
+AST* check_number(AST* node){
+	Type t = get_node_type(node);
 	if(t != INT_TYPE && t != FLOAT_TYPE){
 		printf("SEMANTIC ERROR (%d): not a number.\n", yylineno);
     	exit(EXIT_FAILURE);
 	}
 
-	return t;
+	return node;
 }
 
 Type check_assign(Type l, Type r) {
@@ -2386,7 +2501,11 @@ Type check_assign(Type l, Type r) {
 	return l;
 }
 
-Type check_declarator_assign(Type l, Type r) {
+AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+	printf("%s = %s\n", get_text(l), get_text(r));
+
 	if (l == INT_ARRAY_TYPE  && r != INT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == FLOAT_ARRAY_TYPE  && !(r == INT_ARRAY_TYPE || r == FLOAT_ARRAY_TYPE))  assign_array_error(l);
 	if (l == CHAR_ARRAY_TYPE  && r != CHAR_ARRAY_TYPE)  assign_array_error(l);
@@ -2396,7 +2515,7 @@ Type check_declarator_assign(Type l, Type r) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return l;
+	return nodeL;
 }
 
 Type check_int(Type l, Type r) {
@@ -2405,20 +2524,29 @@ Type check_int(Type l, Type r) {
 }
 
 
-Type toPrimitive(Type t) {
-	if (t == INT_ARRAY_TYPE) return INT_TYPE;  
-	if (t == FLOAT_ARRAY_TYPE) return FLOAT_TYPE;
-	if (t == CHAR_ARRAY_TYPE) return CHAR_TYPE; 
+AST* toPrimitive(AST* node) {
+	Type t = get_node_type(node);
 
-	printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
-    exit(EXIT_FAILURE);
+	if (t == INT_ARRAY_TYPE) t = INT_TYPE;  
+	else if (t == FLOAT_ARRAY_TYPE) t = FLOAT_TYPE;
+	else if (t == CHAR_ARRAY_TYPE) t = CHAR_TYPE; 
+	else {	
+		printf("SEMANTIC ERROR (%d): variable has no primitive type.\n", yylineno);
+		exit(EXIT_FAILURE);
+	}
+
+	set_node_type(node, t);
+	return node;
 }
 
-Type toArray(Type t) {
-	if (t == INT_TYPE) return INT_ARRAY_TYPE;  
-	if (t == FLOAT_TYPE) return FLOAT_ARRAY_TYPE;
-	if (t == CHAR_TYPE) return CHAR_ARRAY_TYPE; 
+AST* toArray(AST* node) {
+	Type t = get_node_type(node);
 
-	return t;
+	if (t == INT_TYPE) t = INT_ARRAY_TYPE;  
+	if (t == FLOAT_TYPE) t = FLOAT_ARRAY_TYPE;
+	if (t == CHAR_TYPE) t = CHAR_ARRAY_TYPE; 
+
+	set_node_type(node, t);
+	return node;
 }
 

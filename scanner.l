@@ -17,6 +17,7 @@
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
     char* idCopy;   
+    extern StrTable* strTable;
 %}
 %%
 "//".* {}
@@ -68,10 +69,14 @@ while                   { return WHILE ;}
 "&"                     { return AMPER ;}
 
 [A-Za-z_][A-Za-z0-9_]*  { idCopy = yytext; return ID;}                   
-[0-9]+\.[0-9]+          { return FLOAT_VAL ;}              
-[0-9]+                  { return INT_VAL ;}      
-\"[^"]*\"               { return STR_VAL ;}
-\'[^']*\'                { return CHAR_VAL ;}   
+[0-9]+\.[0-9]+          { yylval = new_node(FLOAT_VAL_NODE,(float) atof(yytext), FLOAT_TYPE);
+                          return FLOAT_VAL ;}              
+[0-9]+                  { yylval = new_node(INT_VAL_NODE, atoi(yytext), INT_TYPE);
+                          return INT_VAL ;}      
+\"[^"]*\"               { yylval = new_node(CHAR_ARRAY_VAL_NODE, add_string(strTable, yytext), CHAR_ARRAY_TYPE);
+                          return STR_VAL ;}
+\'[^']*\'               { yylval = new_node(CHAR_VAL_NODE, atoi(yytext), CHAR_TYPE);
+                          return CHAR_VAL ;}   
 
 [ \t\n]                 {}
 
