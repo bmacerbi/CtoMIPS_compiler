@@ -87,18 +87,18 @@ AST *root;
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
-AST* newVar(char* str, int line);
-Type checkVar(char* str, int line);
+AST* newVar(char* str);
+AST* checkVar(char* str);
 void newArrayVar();
 void newFunc(char* str, int line);
 AST* check_number(AST* node);
-Type check_assign(Type l, Type r);
+AST* check_assign(AST* nodeL, AST* nodeR);
 AST* check_declarator_assign(AST* nodeL, AST* nodeR);
-Type check_int(Type l, Type r);
+AST* check_int(AST* nodeL, AST* nodeR, NodeKind kind);
 AST* toPrimitive(AST* node);
 AST* toArray(AST* node);
 
-Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
+AST* unify_bin_op(AST* nodeL, AST* nodeR, NodeKind kind, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
 
 extern char *yytext;
@@ -1901,242 +1901,368 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
+  case 2:
+#line 71 "parser.y"
+             { yyval = checkVar(idCopy); }
+#line 1908 "parser.c"
+    break;
+
   case 3:
 #line 72 "parser.y"
                         { yyval = yyvsp[0]; }
-#line 1908 "parser.c"
+#line 1914 "parser.c"
     break;
 
   case 4:
 #line 73 "parser.y"
                         { yyval = yyvsp[0]; }
-#line 1914 "parser.c"
+#line 1920 "parser.c"
     break;
 
   case 5:
 #line 74 "parser.y"
                         { yyval = yyvsp[0]; }
-#line 1920 "parser.c"
+#line 1926 "parser.c"
     break;
 
   case 6:
 #line 75 "parser.y"
                         { yyval = yyvsp[0]; }
-#line 1926 "parser.c"
+#line 1932 "parser.c"
     break;
 
   case 7:
 #line 76 "parser.y"
                                { yyval = yyvsp[-1]; }
-#line 1932 "parser.c"
+#line 1938 "parser.c"
     break;
 
   case 8:
 #line 77 "parser.y"
                                             { yyval = toPrimitive(yyvsp[-3]);}
-#line 1938 "parser.c"
+#line 1944 "parser.c"
     break;
 
   case 9:
 #line 78 "parser.y"
                                { yyval = yyvsp[-2]; }
-#line 1944 "parser.c"
+#line 1950 "parser.c"
     break;
 
   case 10:
 #line 79 "parser.y"
                                                         { yyval = yyvsp[-3]; }
-#line 1950 "parser.c"
+#line 1956 "parser.c"
     break;
 
   case 11:
 #line 80 "parser.y"
                          { yyval = check_number(yyvsp[-1]); }
-#line 1956 "parser.c"
+#line 1962 "parser.c"
     break;
 
   case 12:
 #line 81 "parser.y"
                          { yyval = check_number(yyvsp[-1]); }
-#line 1962 "parser.c"
+#line 1968 "parser.c"
     break;
 
   case 13:
 #line 82 "parser.y"
                          { yyval = check_number(yyvsp[0]); }
-#line 1968 "parser.c"
+#line 1974 "parser.c"
     break;
 
   case 14:
 #line 83 "parser.y"
                          { yyval = check_number(yyvsp[0]); }
-#line 1974 "parser.c"
+#line 1980 "parser.c"
     break;
 
   case 15:
 #line 84 "parser.y"
                                                  { yyval = check_number(yyvsp[0]); }
-#line 1980 "parser.c"
+#line 1986 "parser.c"
+    break;
+
+  case 16:
+#line 85 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], TIMES_NODE, "*", unify_arith); }
+#line 1992 "parser.c"
+    break;
+
+  case 17:
+#line 86 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], OVER_NODE, "/", unify_arith); }
+#line 1998 "parser.c"
+    break;
+
+  case 18:
+#line 87 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], PERCENT_NODE, "%%", unify_arith); }
+#line 2004 "parser.c"
+    break;
+
+  case 19:
+#line 88 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], PLUS_NODE, "+", unify_arith); }
+#line 2010 "parser.c"
+    break;
+
+  case 20:
+#line 89 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], MINUS_NODE, "-", unify_arith); }
+#line 2016 "parser.c"
+    break;
+
+  case 21:
+#line 90 "parser.y"
+                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], LT_NODE, "<", unify_comp); }
+#line 2022 "parser.c"
+    break;
+
+  case 22:
+#line 91 "parser.y"
+                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], GT_NODE, ">", unify_comp); }
+#line 2028 "parser.c"
+    break;
+
+  case 23:
+#line 92 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], LT_EQ_NODE, "<=", unify_comp); }
+#line 2034 "parser.c"
+    break;
+
+  case 24:
+#line 93 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], GT_EQ_NODE, ">=", unify_comp); }
+#line 2040 "parser.c"
+    break;
+
+  case 25:
+#line 94 "parser.y"
+                                                        { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], EQ_NODE, "==", unify_comp); }
+#line 2046 "parser.c"
+    break;
+
+  case 26:
+#line 95 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], N_EQ_NODE, "!=", unify_comp); }
+#line 2052 "parser.c"
+    break;
+
+  case 27:
+#line 96 "parser.y"
+                                                { yyval = check_int(yyvsp[-2], yyvsp[0], L_AND_NODE); }
+#line 2058 "parser.c"
+    break;
+
+  case 28:
+#line 97 "parser.y"
+                                                { yyval = check_int(yyvsp[-2], yyvsp[0], L_OR_NODE); }
+#line 2064 "parser.c"
+    break;
+
+  case 29:
+#line 98 "parser.y"
+                                            { yyval = check_assign(yyvsp[-2], yyvsp[0]); }
+#line 2070 "parser.c"
+    break;
+
+  case 30:
+#line 99 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], T_ASGN, "*", unify_arith); }
+#line 2076 "parser.c"
+    break;
+
+  case 31:
+#line 100 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], O_ASGN, "/", unify_arith); }
+#line 2082 "parser.c"
+    break;
+
+  case 32:
+#line 101 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], MOD_ASGN, "%%", unify_arith); }
+#line 2088 "parser.c"
+    break;
+
+  case 33:
+#line 102 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], PL_ASGN, "+", unify_arith); }
+#line 2094 "parser.c"
+    break;
+
+  case 34:
+#line 103 "parser.y"
+                                                { yyval = unify_bin_op(yyvsp[-2], yyvsp[0], M_ASGN, "-", unify_arith); }
+#line 2100 "parser.c"
     break;
 
   case 41:
 #line 121 "parser.y"
                                               { yyval = yyvsp[-1]; }
-#line 1986 "parser.c"
+#line 2106 "parser.c"
     break;
 
   case 42:
 #line 130 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 1992 "parser.c"
+#line 2112 "parser.c"
     break;
 
   case 43:
 #line 131 "parser.y"
                                       { yyval = check_declarator_assign(yyvsp[-2], yyvsp[0]); }
-#line 1998 "parser.c"
+#line 2118 "parser.c"
     break;
 
   case 44:
 #line 135 "parser.y"
                 { type = VOID_TYPE;  }
-#line 2004 "parser.c"
+#line 2124 "parser.c"
     break;
 
   case 45:
 #line 136 "parser.y"
                 { type = CHAR_TYPE;  }
-#line 2010 "parser.c"
+#line 2130 "parser.c"
     break;
 
   case 46:
 #line 137 "parser.y"
                 { type = INT_TYPE;   }
-#line 2016 "parser.c"
+#line 2136 "parser.c"
     break;
 
   case 47:
 #line 138 "parser.y"
                 { type = FLOAT_TYPE; }
-#line 2022 "parser.c"
+#line 2142 "parser.c"
     break;
 
   case 48:
 #line 142 "parser.y"
-             { yyval = newVar(yytext, yylineno); }
-#line 2028 "parser.c"
+             { yyval = newVar(yytext); }
+#line 2148 "parser.c"
     break;
 
   case 49:
 #line 143 "parser.y"
                                             { newArrayVar(); yyval = toArray(yyvsp[-3]);}
-#line 2034 "parser.c"
+#line 2154 "parser.c"
     break;
 
   case 50:
 #line 144 "parser.y"
                                  { newArrayVar(); yyval = toArray(yyvsp[-2]);}
-#line 2040 "parser.c"
+#line 2160 "parser.c"
+    break;
+
+  case 51:
+#line 148 "parser.y"
+             { newFunc(yytext, yylineno); }
+#line 2166 "parser.c"
     break;
 
   case 54:
 #line 154 "parser.y"
                                 {argsCount++;}
-#line 2046 "parser.c"
+#line 2172 "parser.c"
     break;
 
   case 55:
 #line 155 "parser.y"
                                                      {argsCount++;}
-#line 2052 "parser.c"
+#line 2178 "parser.c"
     break;
 
   case 68:
 #line 177 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 2058 "parser.c"
+#line 2184 "parser.c"
     break;
 
   case 69:
 #line 178 "parser.y"
                                           { yyval = toArray(yyvsp[-1]); }
-#line 2064 "parser.c"
+#line 2190 "parser.c"
     break;
 
   case 70:
 #line 179 "parser.y"
                                                 { yyval = toArray(yyvsp[-2]); }
-#line 2070 "parser.c"
+#line 2196 "parser.c"
     break;
 
   case 71:
 #line 183 "parser.y"
                       { yyval = yyvsp[0]; }
-#line 2076 "parser.c"
+#line 2202 "parser.c"
     break;
 
   case 72:
 #line 184 "parser.y"
                                              { yyval = yyvsp[-2]; }
-#line 2082 "parser.c"
+#line 2208 "parser.c"
     break;
 
   case 79:
 #line 197 "parser.y"
                                        { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
-#line 2088 "parser.c"
+#line 2214 "parser.c"
     break;
 
   case 80:
 #line 198 "parser.y"
                                          { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-1]); }
-#line 2094 "parser.c"
+#line 2220 "parser.c"
     break;
 
   case 81:
 #line 199 "parser.y"
                                                         { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-2]); }
-#line 2100 "parser.c"
+#line 2226 "parser.c"
     break;
 
   case 82:
 #line 203 "parser.y"
                                                         { yyval = new_subtree(VAR_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
-#line 2106 "parser.c"
+#line 2232 "parser.c"
     break;
 
   case 83:
 #line 204 "parser.y"
                                         { add_child(yyvsp[-1], yyvsp[0]); yyval = yyvsp[-1]; }
-#line 2112 "parser.c"
+#line 2238 "parser.c"
     break;
 
   case 95:
 #line 234 "parser.y"
                                { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, yyvsp[0]);}
-#line 2118 "parser.c"
+#line 2244 "parser.c"
     break;
 
   case 96:
 #line 235 "parser.y"
                                                 { add_child(root, yyvsp[0]);}
-#line 2124 "parser.c"
+#line 2250 "parser.c"
     break;
 
   case 97:
 #line 239 "parser.y"
                               { scopeCount++;  yyval = yyvsp[0];}
-#line 2130 "parser.c"
+#line 2256 "parser.c"
     break;
 
   case 98:
 #line 243 "parser.y"
                                                                 { yyval = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 1, yyvsp[0]); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 2136 "parser.c"
+#line 2262 "parser.c"
     break;
 
 
-#line 2140 "parser.c"
+#line 2266 "parser.c"
 
         default: break;
       }
@@ -2408,39 +2534,38 @@ int main() {
 }
 
 
-AST* newVar(char* str, int line){
+AST* newVar(char* str){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
-	int index = -1;
-    //int index = lookup_var(vt, str);
+    int index = lookup_var(vt, str);
 
 	if(index != -1){
-		printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(vt, index));
+		printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", yylineno, str, get_line(vt, index));
 		exit(EXIT_FAILURE);
 	}
 
-	//add_func_var(funcTable, str, line, type, scopeCount);
-	return new_node(VAR_DECL_NODE, index, type);
+	add_func_var(funcTable, str, yylineno, type, scopeCount);
+	return new_node(VAR_DECL_NODE, lookup_var(vt, str), type);
 }
 
 void newArrayVar(){
-	// set_func_last_var_type(funcTable, scopeCount);
+	set_func_last_var_type(funcTable, scopeCount);
 }
 
 
-Type checkVar(char* str, int line){
+AST* checkVar(char* str){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
     int indexVar = lookup_var(vt, str);
 	int indexFunc = lookup_func(funcTable, str);
 
 	if ( indexVar == -1 && indexFunc == -1) {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", line, str);
+        printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", yylineno, str);
 		exit(EXIT_FAILURE);
     }
 
 	if(indexFunc != -1){
-		return get_type_func(funcTable, indexFunc);
+		return new_node(FUNC_USE_NODE, indexFunc, get_type_func(funcTable, indexFunc));
 	} else {
-		return get_type(vt,indexVar);
+		return new_node(VAR_USE_NODE, indexVar, get_type(vt,indexVar));
 	}
 }
 
@@ -2470,12 +2595,14 @@ void assign_array_error(Type t) {
     exit(EXIT_FAILURE);
 }
 
-Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type)) {
+AST* unify_bin_op(AST* nodeL, AST* nodeR, NodeKind kind, const char* op, Type (*unify)(Type,Type)) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
     Type unif = unify(l, r);
     if (unif == NO_TYPE) {
         type_error(op, l, r);
     }
-    return unif;
+    return new_subtree(kind, unif, 2, nodeL, nodeR);
 }
 
 AST* check_number(AST* node){
@@ -2488,7 +2615,10 @@ AST* check_number(AST* node){
 	return node;
 }
 
-Type check_assign(Type l, Type r) {
+AST* check_assign(AST* nodeL, AST* nodeR) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+
 	if (l == INT_ARRAY_TYPE  || r == INT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == FLOAT_ARRAY_TYPE  || r == FLOAT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == CHAR_ARRAY_TYPE  || r == CHAR_ARRAY_TYPE)  assign_array_error(l);
@@ -2498,13 +2628,12 @@ Type check_assign(Type l, Type r) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return l;
+	return new_subtree(ASSIGN_NODE, NO_TYPE, 2, nodeL, nodeR);
 }
 
 AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
 	Type l = get_node_type(nodeL);
 	Type r = get_node_type(nodeR);
-	printf("%s = %s\n", get_text(l), get_text(r));
 
 	if (l == INT_ARRAY_TYPE  && r != INT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == FLOAT_ARRAY_TYPE  && !(r == INT_ARRAY_TYPE || r == FLOAT_ARRAY_TYPE))  assign_array_error(l);
@@ -2515,12 +2644,16 @@ AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return nodeL;
+	return new_subtree(ASSIGN_NODE, NO_TYPE, 2, nodeL, nodeR);
 }
 
-Type check_int(Type l, Type r) {
+AST* check_int(AST* nodeL, AST* nodeR, NodeKind kind) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+
 	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
-	return INT_TYPE;
+
+	return new_subtree(kind, INT_TYPE, 2, nodeL, nodeR);
 }
 
 

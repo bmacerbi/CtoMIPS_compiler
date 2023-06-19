@@ -124,6 +124,14 @@ char* kind2str(NodeKind kind) {
         case PLUS_NODE:            return "+";
         case TIMES_NODE:           return "*";
         case PERCENT_NODE:         return "%";
+        case N_EQ_NODE:            return "!=";
+        case T_ASGN_NODE:          return "*=";
+        case O_ASGN_NODE:          return "/=";
+        case MOD_ASGN_NODE:        return "%=";
+        case PL_ASGN_NODE:         return "+=";
+        case M_ASGN_NODE:          return "-=";
+        case L_AND_NODE:           return "&&";
+        case L_OR_NODE:            return "||";
         case PROGRAM_NODE:         return "program";
         case COMPOUND_NODE:        return "compound";
         case STMT_LIST_NODE:       return "stmt_list";
@@ -132,6 +140,7 @@ char* kind2str(NodeKind kind) {
         case VAR_DECL_NODE:        return "var_decl";
         case VAR_LIST_NODE:        return "var_list";
         case VAR_USE_NODE:         return "var_use";
+        case FUNC_USE_NODE:        return "func_use";
         case I2F_NODE:             return "I2F";
         default:                   return "ERROR!!";
     }

@@ -26,6 +26,14 @@ typedef enum {
     PLUS_NODE,
     TIMES_NODE,
     PERCENT_NODE,
+    N_EQ_NODE,
+    T_ASGN_NODE,
+    O_ASGN_NODE,
+    MOD_ASGN_NODE,
+    PL_ASGN_NODE,
+    M_ASGN_NODE,
+    L_AND_NODE,
+    L_OR_NODE,
     PROGRAM_NODE,
     PARAMS_NODE,
     ARGS_NODE,
@@ -33,6 +41,7 @@ typedef enum {
     WHILE_NODE,
     VAR_DECL_NODE,
     VAR_USE_NODE,
+    FUNC_USE_NODE,
     I2F_NODE
 }NodeKind;
 

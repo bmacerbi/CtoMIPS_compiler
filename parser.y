@@ -23,18 +23,18 @@ AST *root;
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
-AST* newVar(char* str, int line);
-Type checkVar(char* str, int line);
+AST* newVar(char* str);
+AST* checkVar(char* str);
 void newArrayVar();
 void newFunc(char* str, int line);
 AST* check_number(AST* node);
-Type check_assign(Type l, Type r);
+AST* check_assign(AST* nodeL, AST* nodeR);
 AST* check_declarator_assign(AST* nodeL, AST* nodeR);
-Type check_int(Type l, Type r);
+AST* check_int(AST* nodeL, AST* nodeR, NodeKind kind);
 AST* toPrimitive(AST* node);
 AST* toArray(AST* node);
 
-Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type));
+AST* unify_bin_op(AST* nodeL, AST* nodeR, NodeKind kind, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
 
 extern char *yytext;
@@ -68,7 +68,7 @@ extern char *idCopy;
 %%
 
 expression
-	: ID //{ $$ = checkVar(idCopy, yylineno); }
+	: ID { $$ = checkVar(idCopy); }
 	| FLOAT_VAL	{ $$ = $1; }
 	| INT_VAL	{ $$ = $1; }
 	| STR_VAL 	{ $$ = $1; }
@@ -82,25 +82,25 @@ expression
 	| INC expression { $$ = check_number($2); }
 	| DEC expression { $$ = check_number($2); }
 	| unary_operator expression %prec UMINUS { $$ = check_number($2); }
-	| expression TIMES expression 		//{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
-	| expression OVER expression 		//{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
-	| expression PERCENT expression		//{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
-	| expression PLUS expression 		//{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
-	| expression MINUS expression		//{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
-	| expression LT expression 			//{ $$ = unify_bin_op($1, $3, "<", unify_comp); }
-	| expression GT expression 			//{ $$ = unify_bin_op($1, $3, ">", unify_comp); }	
-	| expression LT_EQ expression 		//{ $$ = unify_bin_op($1, $3, "<=", unify_comp); }			
-	| expression GT_EQ expression 		//{ $$ = unify_bin_op($1, $3, ">=", unify_comp); }	
-	| expression EQ expression			//{ $$ = unify_bin_op($1, $3, "==", unify_comp); }		
-	| expression N_EQ expression 		//{ $$ = unify_bin_op($1, $3, "!=", unify_comp); }			
-	| expression L_AND expression 		//{ $$ = check_int($1, $3); }
-	| expression L_OR expression 		//{ $$ = check_int($1, $3); }
-	| expression ASGN expression        //{ $$ = check_assign($1, $3); }
-	| expression T_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "*", unify_arith); }
-	| expression O_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "/", unify_arith); }
-	| expression MOD_ASGN expression 	//{ $$ = unify_bin_op($1, $3, "%%", unify_arith); } 
-	| expression PL_ASGN expression		//{ $$ = unify_bin_op($1, $3, "+", unify_arith); }
-	| expression M_ASGN expression 		//{ $$ = unify_bin_op($1, $3, "-", unify_arith); }
+	| expression TIMES expression 		{ $$ = unify_bin_op($1, $3, TIMES_NODE, "*", unify_arith); }
+	| expression OVER expression 		{ $$ = unify_bin_op($1, $3, OVER_NODE, "/", unify_arith); }
+	| expression PERCENT expression		{ $$ = unify_bin_op($1, $3, PERCENT_NODE, "%%", unify_arith); } 
+	| expression PLUS expression 		{ $$ = unify_bin_op($1, $3, PLUS_NODE, "+", unify_arith); }
+	| expression MINUS expression		{ $$ = unify_bin_op($1, $3, MINUS_NODE, "-", unify_arith); }
+	| expression LT expression 			{ $$ = unify_bin_op($1, $3, LT_NODE, "<", unify_comp); }
+	| expression GT expression 			{ $$ = unify_bin_op($1, $3, GT_NODE, ">", unify_comp); }	
+	| expression LT_EQ expression 		{ $$ = unify_bin_op($1, $3, LT_EQ_NODE, "<=", unify_comp); }			
+	| expression GT_EQ expression 		{ $$ = unify_bin_op($1, $3, GT_EQ_NODE, ">=", unify_comp); }	
+	| expression EQ expression			{ $$ = unify_bin_op($1, $3, EQ_NODE, "==", unify_comp); }		
+	| expression N_EQ expression 		{ $$ = unify_bin_op($1, $3, N_EQ_NODE, "!=", unify_comp); }			
+	| expression L_AND expression 		{ $$ = check_int($1, $3, L_AND_NODE); }
+	| expression L_OR expression 		{ $$ = check_int($1, $3, L_OR_NODE); }
+	| expression ASGN expression        { $$ = check_assign($1, $3); }
+	| expression T_ASGN expression 		{ $$ = unify_bin_op($1, $3, T_ASGN, "*", unify_arith); }
+	| expression O_ASGN expression 		{ $$ = unify_bin_op($1, $3, O_ASGN, "/", unify_arith); }
+	| expression MOD_ASGN expression 	{ $$ = unify_bin_op($1, $3, MOD_ASGN, "%%", unify_arith); } 
+	| expression PL_ASGN expression		{ $$ = unify_bin_op($1, $3, PL_ASGN, "+", unify_arith); }
+	| expression M_ASGN expression 		{ $$ = unify_bin_op($1, $3, M_ASGN, "-", unify_arith); }
 	;
 
 
@@ -139,13 +139,13 @@ type_specifier
 	;
 
 declarator
-	: ID { $$ = newVar(yytext, yylineno); }
+	: ID { $$ = newVar(yytext); }
 	| declarator LBRAC expression RBRAC { newArrayVar(); $$ = toArray($1);}
 	| declarator LBRAC RBRAC { newArrayVar(); $$ = toArray($1);}
 	;
 
 function_declarator
-	: ID //{ newFunc(yytext, yylineno); }
+	: ID { newFunc(yytext, yylineno); }
 	| function_declarator LPAR parameter_list RPAR
 	| function_declarator LPAR RPAR
 	;
@@ -270,39 +270,38 @@ int main() {
 }
 
 
-AST* newVar(char* str, int line){
+AST* newVar(char* str){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
-	int index = -1;
-    //int index = lookup_var(vt, str);
+    int index = lookup_var(vt, str);
 
 	if(index != -1){
-		printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(vt, index));
+		printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", yylineno, str, get_line(vt, index));
 		exit(EXIT_FAILURE);
 	}
 
-	//add_func_var(funcTable, str, line, type, scopeCount);
-	return new_node(VAR_DECL_NODE, index, type);
+	add_func_var(funcTable, str, yylineno, type, scopeCount);
+	return new_node(VAR_DECL_NODE, lookup_var(vt, str), type);
 }
 
 void newArrayVar(){
-	// set_func_last_var_type(funcTable, scopeCount);
+	set_func_last_var_type(funcTable, scopeCount);
 }
 
 
-Type checkVar(char* str, int line){
+AST* checkVar(char* str){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
     int indexVar = lookup_var(vt, str);
 	int indexFunc = lookup_func(funcTable, str);
 
 	if ( indexVar == -1 && indexFunc == -1) {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", line, str);
+        printf("SEMANTIC ERROR (%d): variable ’%s’ was never declared.\n", yylineno, str);
 		exit(EXIT_FAILURE);
     }
 
 	if(indexFunc != -1){
-		return get_type_func(funcTable, indexFunc);
+		return new_node(FUNC_USE_NODE, indexFunc, get_type_func(funcTable, indexFunc));
 	} else {
-		return get_type(vt,indexVar);
+		return new_node(VAR_USE_NODE, indexVar, get_type(vt,indexVar));
 	}
 }
 
@@ -332,12 +331,14 @@ void assign_array_error(Type t) {
     exit(EXIT_FAILURE);
 }
 
-Type unify_bin_op(Type l, Type r, const char* op, Type (*unify)(Type,Type)) {
+AST* unify_bin_op(AST* nodeL, AST* nodeR, NodeKind kind, const char* op, Type (*unify)(Type,Type)) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
     Type unif = unify(l, r);
     if (unif == NO_TYPE) {
         type_error(op, l, r);
     }
-    return unif;
+    return new_subtree(kind, unif, 2, nodeL, nodeR);
 }
 
 AST* check_number(AST* node){
@@ -350,7 +351,10 @@ AST* check_number(AST* node){
 	return node;
 }
 
-Type check_assign(Type l, Type r) {
+AST* check_assign(AST* nodeL, AST* nodeR) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+
 	if (l == INT_ARRAY_TYPE  || r == INT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == FLOAT_ARRAY_TYPE  || r == FLOAT_ARRAY_TYPE)  assign_array_error(l);
 	if (l == CHAR_ARRAY_TYPE  || r == CHAR_ARRAY_TYPE)  assign_array_error(l);
@@ -360,7 +364,7 @@ Type check_assign(Type l, Type r) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return l;
+	return new_subtree(ASSIGN_NODE, NO_TYPE, 2, nodeL, nodeR);
 }
 
 AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
@@ -376,12 +380,16 @@ AST* check_declarator_assign(AST* nodeL, AST* nodeR) {
     if (l == CHAR_TYPE  && r != CHAR_TYPE)  type_error("=", l, r);
     if (l == INT_TYPE  && r != INT_TYPE)  type_error("=", l, r);
     
-	return nodeL;
+	return new_subtree(ASSIGN_NODE, NO_TYPE, 2, nodeL, nodeR);
 }
 
-Type check_int(Type l, Type r) {
+AST* check_int(AST* nodeL, AST* nodeR, NodeKind kind) {
+	Type l = get_node_type(nodeL);
+	Type r = get_node_type(nodeR);
+
 	if (l != INT_TYPE  || r != INT_TYPE) type_error("not int", l, r);
-	return INT_TYPE;
+
+	return new_subtree(kind, INT_TYPE, 2, nodeL, nodeR);
 }
 
 
