@@ -23,7 +23,7 @@ AST *root;
 int yylex(void);
 int yylex_destroy(void);
 void yyerror(char const *s);
-void newVar(char* str, int line);
+AST* newVar(char* str, int line);
 Type checkVar(char* str, int line);
 void newArrayVar();
 void newFunc(char* str, int line);
@@ -118,30 +118,30 @@ unary_operator
 
 declaration
 	// : type_specifier SEMI
-	: type_specifier init_declarator_list SEMI
+	: type_specifier init_declarator SEMI { $$ = $2; }
 	;
 
-init_declarator_list
-	: init_declarator
-	| init_declarator_list COMMA init_declarator
-	;
+// init_declarator_list
+// 	: init_declarator
+// 	| init_declarator_list COMMA init_declarator
+//	;
 
 init_declarator
-	: declarator
-	| declarator ASGN initializer //{ $$ = check_declarator_assign(type, $3); }
+	: declarator { $$ = $1; }
+	| declarator ASGN initializer { $$ = $1; }//{ $$ = check_declarator_assign(type, $3); }
 	;
 
 type_specifier
-	: VOID  //{ type = VOID_TYPE; }
-	| CHAR  //{ type = CHAR_TYPE; }
-	| INT   //{ type = INT_TYPE;  }
-	| FLOAT //{ type = FLOAT_TYPE;  }
+	: VOID  { type = VOID_TYPE; }
+	| CHAR  { type = CHAR_TYPE; }
+	| INT   { type = INT_TYPE;  }
+	| FLOAT { type = FLOAT_TYPE;  }
 	;
 
 declarator
-	: ID //{ newVar(yytext, yylineno); }
-	| declarator LBRAC expression RBRAC //{ newArrayVar(); type = toArray(type); }
-	| declarator LBRAC RBRAC //{ newArrayVar(); type = toArray(type); }
+	: ID { $$ = newVar(yytext, yylineno); }
+	| declarator LBRAC expression RBRAC { newArrayVar(); type = toArray(type); $$ = $1; }
+	| declarator LBRAC RBRAC { newArrayVar(); type = toArray(type); $$ = $1;}
 	;
 
 function_declarator
@@ -174,7 +174,7 @@ abstract_declarator
 	;
 
 initializer
-	: expression //{ $$ = $1; }
+	: expression { $$ = $1; }
 	| LCURLY initializer_list RCURLY  //{ $$ = toArray($2); }
 	| LCURLY initializer_list COMMA RCURLY  //{ $$ = toArray($2); }
 	;
@@ -195,13 +195,13 @@ statement
 compound_statement
 	: LCURLY RCURLY 
 	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
-	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
-	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
 	;
 
 declaration_list
-	: declaration
-	| declaration_list declaration
+	: declaration					{ $$ = new_subtree(VAR_LIST_NODE, NO_TYPE, 1, $1); }
+	| declaration_list declaration	{ add_child($1, $2); $$ = $1; }
 	;
 
 statement_list
@@ -270,22 +270,22 @@ int main() {
 }
 
 
-void newVar(char* str, int line){
+AST* newVar(char* str, int line){
 	VarTable* vt = get_var_table_func(funcTable,scopeCount);
-    int index = lookup_var(vt, str);
+	int index = -1;
+    //int index = lookup_var(vt, str);
 
-    if ( index == -1 ) {
-        add_func_var(funcTable, str, line, type, scopeCount);
-    } 
-	else {
-        printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(vt, index));
+	if(index != -1){
+		printf("SEMANTIC ERROR (%d): variable ’%s’ already declared at line %d.\n", line, str, get_line(vt, index));
 		exit(EXIT_FAILURE);
-    }
-	
+	}
+
+	//add_func_var(funcTable, str, line, type, scopeCount);
+	return new_node(VAR_DECL_NODE, index, type);
 }
 
 void newArrayVar(){
-	set_func_last_var_type(funcTable, scopeCount);
+	// set_func_last_var_type(funcTable, scopeCount);
 }
 
 
