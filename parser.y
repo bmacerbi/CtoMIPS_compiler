@@ -69,10 +69,10 @@ extern char *idCopy;
 
 expression
 	: ID { $$ = checkVar(idCopy); }
-	| FLOAT_VAL	{ $$ = $1; printf("float=%f\n", get_float_data($1)); }
-	| INT_VAL	{ $$ = $1; printf("int=%d\n", get_data($1)); }
-	| STR_VAL 	{ $$ = $1; printf("str=%s\n", get_string(strTable, get_data($1))); }
-	| CHAR_VAL	{ $$ = $1; printf("char=%c\n", get_char_data($1)); }
+	| FLOAT_VAL	{ $$ = $1; }
+	| INT_VAL	{ $$ = $1; }
+	| STR_VAL 	{ $$ = $1; }
+	| CHAR_VAL	{ $$ = $1; }
 	| LPAR expression RPAR { $$ = $2; }
 	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
 	| expression LPAR RPAR { $$ = $1; }
@@ -145,19 +145,19 @@ declarator
 	;
 
 function_declarator
-	: ID { newFunc(yytext, yylineno); }
-	| function_declarator LPAR parameter_list RPAR
-	| function_declarator LPAR RPAR
+	: ID { newFunc(yytext, yylineno); $$ = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
+	| function_declarator LPAR parameter_list RPAR { $$ = $1; }
+	| function_declarator LPAR RPAR { $$ = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
 	;
 
 parameter_list
-	: parameter_declaration {argsCount++;}	
-	| parameter_list COMMA parameter_declaration {argsCount++;}
+	: parameter_declaration {argsCount++; $$ = new_subtree(PARAM_LIST_NODE, NO_TYPE, 1, $1); }
+	| parameter_list COMMA parameter_declaration {argsCount++; add_child($1, $3); $$ = $1; }
 	;
 
 parameter_declaration
-	: type_specifier declarator
-	| type_specifier
+	: type_specifier declarator { $$ = $2; }
+	| type_specifier 
 	//| type_specifier abstract_declarator
 	;
 
@@ -185,18 +185,18 @@ initializer_list
 	;
 
 statement
-	: compound_statement 	{ $$ = $1; }
-	| expression_statement 	{ $$ = $1; }
-	| selection_statement 	{ $$ = $1; }
-	| iteration_statement 	{ $$ = $1; }
-	| jump_statement 		{ $$ = $1; }
+	: compound_statement 	//{ $$ = $1; }
+	| expression_statement 	//{ $$ = $1; }
+	| selection_statement 	//{ $$ = $1; }
+	| iteration_statement 	//{ $$ = $1; }
+	| jump_statement 		//{ $$ = $1; }
 	;
 
 compound_statement
 	: LCURLY RCURLY 
-	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
+	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
 	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
-	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 2, $2, $3); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
 	;
 
 declaration_list
@@ -205,8 +205,8 @@ declaration_list
 	;
 
 statement_list
-	: statement                     { $$ = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, $1); }
-	| statement_list statement      { add_child($1, $2); $$ = $1; }
+	: statement                     //{ $$ = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, $1); }
+	| statement_list statement      //{ add_child($1, $2); $$ = $1; }
 	;
 
 expression_statement
@@ -240,7 +240,7 @@ external_declaration
 	;
 
 function_definition
-	: type_specifier function_declarator compound_statement { $$ = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 1, $3); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
+	: type_specifier function_declarator compound_statement { $$ = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 2, $2, $3); set_data($$, scopeCount); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
 	;
 
 %%

@@ -37,7 +37,9 @@ typedef enum {
     PROGRAM_NODE,
     PARAMS_NODE,
     ARGS_NODE,
-    FUNCTION_NODE,  
+    FUNCTION_NODE, 
+    PARAM_LIST_NODE,
+    ARG_LIST_NODE,
     WHILE_NODE,
     VAR_DECL_NODE,
     VAR_USE_NODE,
@@ -59,6 +61,7 @@ AST* new_subtree(NodeKind kind, Type type, int child_count, ...);
 NodeKind get_kind(AST *node);
 char* kind2str(NodeKind kind);
 
+void set_data(AST *node, int data);
 int get_data(AST *node);
 void set_float_data(AST *node, float data);
 float get_float_data(AST *node);

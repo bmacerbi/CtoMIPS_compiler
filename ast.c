@@ -68,6 +68,10 @@ NodeKind get_kind(AST *node) {
     return node->kind;
 }
 
+void set_data(AST *node, int data) {
+    node->data.as_int = data;
+}
+
 int get_data(AST *node) {
     return node->data.as_int;
 }
@@ -147,6 +151,8 @@ char* kind2str(NodeKind kind) {
         case COMPOUND_NODE:        return "compound";
         case STMT_LIST_NODE:       return "stmt_list";
         case FUNCTION_NODE:        return "function";
+        case PARAM_LIST_NODE:      return "param_list";
+        case ARG_LIST_NODE:        return "arg_list";
         case WHILE_NODE:           return "while";
         case VAR_DECL_NODE:        return "var_decl";
         case VAR_LIST_NODE:        return "var_list";
