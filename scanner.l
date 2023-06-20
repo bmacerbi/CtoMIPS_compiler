@@ -16,6 +16,7 @@
 
     void printToken(char *token, char *msg);
     void lexicalError(char *token);
+    void removeQuotes(char* str);
     char* idCopy;   
     extern StrTable* strTable;
 %}
@@ -74,7 +75,8 @@ while                   { return WHILE ;}
                           return FLOAT_VAL ;}              
 [0-9]+                  { yylval = new_node(INT_VAL_NODE, atoi(yytext), INT_TYPE);
                           return INT_VAL ;}      
-\"[^"]*\"               { yylval = new_node(CHAR_ARRAY_VAL_NODE, add_string(strTable, yytext), CHAR_ARRAY_TYPE);
+\"[^"]*\"               { removeQuotes(yytext);
+                          yylval = new_node(CHAR_ARRAY_VAL_NODE, add_string(strTable, yytext), CHAR_ARRAY_TYPE);
                           return STR_VAL ;}
 \'[^']*\'               { yylval = new_node(CHAR_VAL_NODE, 0, CHAR_TYPE);
                           set_char_data(yylval, yytext[1]);
@@ -89,4 +91,15 @@ while                   { return WHILE ;}
 void lexicalError(char *token){
     printf("LEXICAL ERROR (%d): Unknown symbol %s\n", yylineno, token);
     exit(1);
+}
+
+void removeQuotes(char* str) {
+    int len = strlen(str);
+    
+    if (len >= 2 && str[0] == '"' && str[len - 1] == '"') {
+        for (int i = 0; i < len - 2; i++) {
+            str[i] = str[i + 1];
+        }
+        str[len - 2] = '\0';
+    }
 }
