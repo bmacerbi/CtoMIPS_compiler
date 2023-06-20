@@ -1,7 +1,7 @@
 PARSE SUCCESSFUL!
 
 Strings table:
-Entry 0 -- "Leonardo!!"
+Entry 0 -- Leonardo!!
 
 Functions table:
 Entry 0 -- name: main, line: 1, argumentsCount: 0,  returnType: int
