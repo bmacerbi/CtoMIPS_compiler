@@ -1,6 +1,8 @@
 void insertionSort(int arr, int n2)
 {
-    int i, key, j;
+    int i;
+    int key;
+    int j;
     
 }
 

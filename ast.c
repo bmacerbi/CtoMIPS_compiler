@@ -115,8 +115,9 @@ void free_tree(AST *tree) {
 // Dot output.
 
 int nr;
+int scope;
 
-extern FunctionTable *ft;
+extern FunctionTable *funcTable;
 
 char* kind2str(NodeKind kind) {
     switch(kind) {
@@ -185,12 +186,14 @@ int has_data(NodeKind kind) {
 int print_node_dot(AST *node) {
     int my_nr = nr++;
 
+    if ( node->kind == FUNCTION_NODE ) scope = get_data(node);
+
     fprintf(stderr, "node%d[label=\"", my_nr);
     if (node->type != NO_TYPE) {
         fprintf(stderr, "(%s) ", get_text(node->type));
     }
     if (node->kind == VAR_DECL_NODE || node->kind == VAR_USE_NODE) {
-        // fprintf(stderr, "%s@", get_name(vt, node->data.as_int));
+        fprintf(stderr, "%s@", get_name(get_var_table_func(funcTable, scope), node->data.as_int));
     } else {
         fprintf(stderr, "%s", kind2str(node->kind));
     }

@@ -11,4 +11,4 @@ gcc: scanner.c parser.c
 	gcc -Wall -o compiler scanner.c parser.c tables.c types.c ast.c
 
 clear:
-	@rm -f *.o *.output scanner.c parser.h parser.c types.c ast.c compiler
+	@rm -f *.o *.output scanner.c parser.h parser.c compiler

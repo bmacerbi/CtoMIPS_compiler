@@ -1,5 +1,8 @@
 void insertionSort(int arr[], int n){
-    int i = 1, key, j;
+    
+    int i;
+    int key;
+    int j;
     while(i < n) {
         key = arr[i];
         j = i - 1;

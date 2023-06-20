@@ -121,14 +121,8 @@ unary_operator
 	;
 
 declaration
-	// : type_specifier SEMI
 	: type_specifier init_declarator SEMI { $$ = $2; }
 	;
-
-// init_declarator_list
-// 	: init_declarator
-// 	| init_declarator_list COMMA init_declarator
-//	;
 
 init_declarator
 	: declarator { $$ = $1; }
@@ -162,20 +156,7 @@ parameter_list
 parameter_declaration
 	: type_specifier declarator { $$ = $2; }
 	| type_specifier 
-	//| type_specifier abstract_declarator
 	;
-
-// abstract_declarator
-// 	: LPAR abstract_declarator RPAR
-// 	| LBRAC RBRAC
-// 	| LBRAC expression RBRAC
-// 	| abstract_declarator LBRAC RBRAC
-// 	| abstract_declarator LBRAC expression RBRAC
-// 	| LPAR RPAR
-// 	| LPAR parameter_list RPAR
-// 	| abstract_declarator LPAR RPAR
-// 	| abstract_declarator LPAR parameter_list RPAR
-// 	;
 
 initializer
 	: expression { $$ = $1; }
