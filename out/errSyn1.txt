@@ -1,1 +1,1 @@
-SYNTAX ERROR (3): syntax error, unexpected TIMES, expecting ID or SEMI
+SYNTAX ERROR (3): syntax error, unexpected TIMES, expecting ID

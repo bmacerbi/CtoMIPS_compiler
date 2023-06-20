@@ -33,6 +33,10 @@ AST* check_declarator_assign(AST* nodeL, AST* nodeR);
 AST* check_int(AST* nodeL, AST* nodeR, NodeKind kind);
 AST* toPrimitive(AST* node);
 AST* toArray(AST* node);
+AST* check_if_then(AST *e, AST *b);
+AST* check_if_then_else(AST *e, AST *b1, AST *b2);
+void check_bool_expr(const char* cmd, Type t);
+AST* check_while(AST *e, AST *b);
 
 AST* unify_bin_op(AST* nodeL, AST* nodeR, NodeKind kind, const char* op, Type (*unify)(Type,Type));
 void type_error(const char* op, Type t1, Type t2);
@@ -185,18 +189,18 @@ initializer_list
 	;
 
 statement
-	: compound_statement 	//{ $$ = $1; }
-	| expression_statement 	//{ $$ = $1; }
-	| selection_statement 	//{ $$ = $1; }
-	| iteration_statement 	//{ $$ = $1; }
-	| jump_statement 		//{ $$ = $1; }
+	: compound_statement 	{ $$ = $1; }
+	| expression_statement 	{ $$ = $1; }
+	| selection_statement 	{ $$ = $1; }
+	| iteration_statement 	{ $$ = $1; }
+	| jump_statement 		{ $$ = $1; }
 	;
 
 compound_statement
 	: LCURLY RCURLY 
-	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
 	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
-	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 2, $2, $3); }
 	;
 
 declaration_list
@@ -205,29 +209,29 @@ declaration_list
 	;
 
 statement_list
-	: statement                     //{ $$ = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, $1); }
-	| statement_list statement      //{ add_child($1, $2); $$ = $1; }
+	: statement                     { $$ = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, $1); }
+	| statement_list statement      { add_child($1, $2); $$ = $1; }
 	;
 
 expression_statement
 	: SEMI
-	| expression SEMI
+	| expression SEMI { $$ = $1; }
 	;
 
 selection_statement
-	: IF LPAR expression RPAR compound_statement
-	| IF LPAR expression RPAR compound_statement ELSE compound_statement
+	: IF LPAR expression RPAR compound_statement { $$ = check_if_then($3, $5); }
+	| IF LPAR expression RPAR compound_statement ELSE compound_statement { $$ = check_if_then_else($3, $5, $7); }
 	;
 
 iteration_statement
-	: WHILE LPAR expression RPAR statement
+	: WHILE LPAR expression RPAR statement { $$ = check_while($3, $5); }
 	;
 
 jump_statement
-	: CONTINUE SEMI
-	| BREAK SEMI
-	| RETURN SEMI
-	| RETURN expression SEMI
+	: CONTINUE SEMI 			{ $$ = new_subtree(CONTINUE_NODE, NO_TYPE, 0); }
+	| BREAK SEMI 				{ $$ = new_subtree(BREAK_NODE, NO_TYPE, 0); }
+	| RETURN SEMI 				{ $$ = new_subtree(RETURN_NODE, NO_TYPE, 0); }
+	| RETURN expression SEMI 	{ $$ = new_subtree(RETURN_NODE, NO_TYPE, 1, $2);} 
 	;
 
 translation_unit
@@ -417,5 +421,28 @@ AST* toArray(AST* node) {
 
 	set_node_type(node, t);
 	return node;
+}
+
+AST* check_if_then(AST *e, AST *b) {
+    check_bool_expr("if", get_node_type(e));
+    return new_subtree(IF_NODE, NO_TYPE, 2, e, b);
+}
+
+AST* check_if_then_else(AST *e, AST *b1, AST *b2) {
+    check_bool_expr("if", get_node_type(e));
+    return new_subtree(IF_NODE, NO_TYPE, 3, e, b1, b2);
+}
+
+AST* check_while(AST *e, AST *b) {
+    check_bool_expr("while", get_node_type(e));
+    return new_subtree(WHILE_NODE, NO_TYPE, 2, b, e);
+}
+
+void check_bool_expr(const char* cmd, Type t) {
+    if (t != INT_TYPE) {
+        printf("SEMANTIC ERROR (%d): conditional expression in '%s' is '%s' instead of '%s'.\n",
+           yylineno, cmd, get_text(t), get_text(INT_TYPE));
+    exit(EXIT_FAILURE);
+    }
 }
 

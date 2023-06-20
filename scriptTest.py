@@ -5,7 +5,7 @@ def compile_program():
     # Compilação do programa
     subprocess.run(["bison", "-v", "parser.y"])
     subprocess.run(["flex", "scanner.l"])
-    subprocess.run(["gcc", "-Wall", "-o", "compiler", "scanner.c", "parser.c", "tables.c", "types.c"])
+    subprocess.run(["gcc", "-Wall", "-o", "compiler", "scanner.c", "parser.c", "tables.c", "types.c", "ast.c"])
 
 def run_tests():
     # Leitura dos arquivos de entrada

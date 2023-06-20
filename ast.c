@@ -154,6 +154,9 @@ char* kind2str(NodeKind kind) {
         case PARAM_LIST_NODE:      return "param_list";
         case ARG_LIST_NODE:        return "arg_list";
         case WHILE_NODE:           return "while";
+        case RETURN_NODE:          return "return"; 
+        case CONTINUE_NODE:        return "continue"; 
+        case BREAK_NODE:           return "break"; 
         case VAR_DECL_NODE:        return "var_decl";
         case VAR_LIST_NODE:        return "var_list";
         case VAR_USE_NODE:         return "var_use";
