@@ -7,6 +7,8 @@
 #include "tables.h"
 #include "types.h"
 
+extern StrTable *strTable;
+
 #define CHILDREN_LIMIT 20 // Don't try this at home, kids... :P
 
 struct node {
@@ -14,6 +16,7 @@ struct node {
     union {
         int   as_int;
         float as_float;
+        char  as_char;
     } data;
     Type type;
     int count;
@@ -75,6 +78,14 @@ void set_float_data(AST *node, float data) {
 
 float get_float_data(AST *node) {
     return node->data.as_float;
+}
+
+void set_char_data(AST *node, char data){
+    node->data.as_char = data;
+}
+
+char get_char_data(AST *node){
+    return node->data.as_char;
 }
 
 Type get_node_type(AST *node) {
@@ -178,7 +189,9 @@ int print_node_dot(AST *node) {
         if (node->kind == FLOAT_VAL_NODE) {
             fprintf(stderr, "%.2f", node->data.as_float);
         } else if (node->kind == CHAR_ARRAY_VAL_NODE) {
-            fprintf(stderr, "@%d", node->data.as_int);
+            fprintf(stderr, "%s", get_string(strTable, node->data.as_int));
+        } else if (node->kind == CHAR_VAL_NODE) {
+            fprintf(stderr, "@%d", node->data.as_char);
         } else {
             fprintf(stderr, "%d", node->data.as_int);
         }

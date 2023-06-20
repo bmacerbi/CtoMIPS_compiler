@@ -69,10 +69,10 @@ extern char *idCopy;
 
 expression
 	: ID { $$ = checkVar(idCopy); }
-	| FLOAT_VAL	{ $$ = $1; }
-	| INT_VAL	{ $$ = $1; }
-	| STR_VAL 	{ $$ = $1; }
-	| CHAR_VAL	{ $$ = $1; }
+	| FLOAT_VAL	{ $$ = $1; printf("float=%f\n", get_float_data($1)); }
+	| INT_VAL	{ $$ = $1; printf("int=%d\n", get_data($1)); }
+	| STR_VAL 	{ $$ = $1; printf("str=%s\n", get_string(strTable, get_data($1))); }
+	| CHAR_VAL	{ $$ = $1; printf("char=%c\n", get_char_data($1)); }
 	| LPAR expression RPAR { $$ = $2; }
 	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
 	| expression LPAR RPAR { $$ = $1; }
@@ -96,11 +96,11 @@ expression
 	| expression L_AND expression 		{ $$ = check_int($1, $3, L_AND_NODE); }
 	| expression L_OR expression 		{ $$ = check_int($1, $3, L_OR_NODE); }
 	| expression ASGN expression        { $$ = check_assign($1, $3); }
-	| expression T_ASGN expression 		{ $$ = unify_bin_op($1, $3, T_ASGN, "*", unify_arith); }
-	| expression O_ASGN expression 		{ $$ = unify_bin_op($1, $3, O_ASGN, "/", unify_arith); }
-	| expression MOD_ASGN expression 	{ $$ = unify_bin_op($1, $3, MOD_ASGN, "%%", unify_arith); } 
-	| expression PL_ASGN expression		{ $$ = unify_bin_op($1, $3, PL_ASGN, "+", unify_arith); }
-	| expression M_ASGN expression 		{ $$ = unify_bin_op($1, $3, M_ASGN, "-", unify_arith); }
+	| expression T_ASGN expression 		{ $$ = unify_bin_op($1, $3, T_ASGN_NODE, "*", unify_arith); }
+	| expression O_ASGN expression 		{ $$ = unify_bin_op($1, $3, O_ASGN_NODE, "/", unify_arith); }
+	| expression MOD_ASGN expression 	{ $$ = unify_bin_op($1, $3, MOD_ASGN_NODE, "%%", unify_arith); } 
+	| expression PL_ASGN expression		{ $$ = unify_bin_op($1, $3, PL_ASGN_NODE, "+", unify_arith); }
+	| expression M_ASGN expression 		{ $$ = unify_bin_op($1, $3, M_ASGN_NODE, "-", unify_arith); }
 	;
 
 
@@ -157,21 +157,21 @@ parameter_list
 
 parameter_declaration
 	: type_specifier declarator
-	| type_specifier abstract_declarator
 	| type_specifier
+	//| type_specifier abstract_declarator
 	;
 
-abstract_declarator
-	: LPAR abstract_declarator RPAR
-	| LBRAC RBRAC
-	| LBRAC expression RBRAC
-	| abstract_declarator LBRAC RBRAC
-	| abstract_declarator LBRAC expression RBRAC
-	| LPAR RPAR
-	| LPAR parameter_list RPAR
-	| abstract_declarator LPAR RPAR
-	| abstract_declarator LPAR parameter_list RPAR
-	;
+// abstract_declarator
+// 	: LPAR abstract_declarator RPAR
+// 	| LBRAC RBRAC
+// 	| LBRAC expression RBRAC
+// 	| abstract_declarator LBRAC RBRAC
+// 	| abstract_declarator LBRAC expression RBRAC
+// 	| LPAR RPAR
+// 	| LPAR parameter_list RPAR
+// 	| abstract_declarator LPAR RPAR
+// 	| abstract_declarator LPAR parameter_list RPAR
+// 	;
 
 initializer
 	: expression { $$ = $1; }
@@ -185,18 +185,18 @@ initializer_list
 	;
 
 statement
-	: compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
-	| jump_statement
+	: compound_statement 	{ $$ = $1; }
+	| expression_statement 	{ $$ = $1; }
+	| selection_statement 	{ $$ = $1; }
+	| iteration_statement 	{ $$ = $1; }
+	| jump_statement 		{ $$ = $1; }
 	;
 
 compound_statement
 	: LCURLY RCURLY 
-	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 0); }
+	| LCURLY statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
 	| LCURLY declaration_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
-	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 1, $2); }
+	| LCURLY declaration_list statement_list RCURLY { $$ = new_subtree(COMPOUND_NODE, NO_TYPE, 2, $2, $3); }
 	;
 
 declaration_list
@@ -205,8 +205,8 @@ declaration_list
 	;
 
 statement_list
-	: statement
-	| statement_list statement
+	: statement                     { $$ = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, $1); }
+	| statement_list statement      { add_child($1, $2); $$ = $1; }
 	;
 
 expression_statement

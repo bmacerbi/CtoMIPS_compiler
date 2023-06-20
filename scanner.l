@@ -69,13 +69,15 @@ while                   { return WHILE ;}
 "&"                     { return AMPER ;}
 
 [A-Za-z_][A-Za-z0-9_]*  { idCopy = yytext; return ID;}                   
-[0-9]+\.[0-9]+          { yylval = new_node(FLOAT_VAL_NODE,(float) atof(yytext), FLOAT_TYPE);
+[0-9]+\.[0-9]+          { yylval = new_node(FLOAT_VAL_NODE, 0, FLOAT_TYPE);
+                          set_float_data(yylval, atof(yytext));
                           return FLOAT_VAL ;}              
 [0-9]+                  { yylval = new_node(INT_VAL_NODE, atoi(yytext), INT_TYPE);
                           return INT_VAL ;}      
 \"[^"]*\"               { yylval = new_node(CHAR_ARRAY_VAL_NODE, add_string(strTable, yytext), CHAR_ARRAY_TYPE);
                           return STR_VAL ;}
-\'[^']*\'               { yylval = new_node(CHAR_VAL_NODE, atoi(yytext), CHAR_TYPE);
+\'[^']*\'               { yylval = new_node(CHAR_VAL_NODE, 0, CHAR_TYPE);
+                          set_char_data(yylval, yytext[1]);
                           return CHAR_VAL ;}   
 
 [ \t\n]                 {}

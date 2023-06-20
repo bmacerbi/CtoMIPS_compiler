@@ -62,6 +62,8 @@ char* kind2str(NodeKind kind);
 int get_data(AST *node);
 void set_float_data(AST *node, float data);
 float get_float_data(AST *node);
+void set_char_data(AST *node, char data);
+char get_char_data(AST *node);
 
 Type get_node_type(AST *node);
 void set_node_type(AST *node, Type t);

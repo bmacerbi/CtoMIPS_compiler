@@ -1076,46 +1076,48 @@ YY_RULE_SETUP
 case 47:
 YY_RULE_SETUP
 #line 72 "scanner.l"
-{ yylval = new_node(FLOAT_VAL_NODE,(float) atof(yytext), FLOAT_TYPE);
+{ yylval = new_node(FLOAT_VAL_NODE, 0, FLOAT_TYPE);
+                          set_float_data(yylval, atof(yytext));
                           return FLOAT_VAL ;}              
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 74 "scanner.l"
+#line 75 "scanner.l"
 { yylval = new_node(INT_VAL_NODE, atoi(yytext), INT_TYPE);
                           return INT_VAL ;}      
 	YY_BREAK
 case 49:
 /* rule 49 can match eol */
 YY_RULE_SETUP
-#line 76 "scanner.l"
+#line 77 "scanner.l"
 { yylval = new_node(CHAR_ARRAY_VAL_NODE, add_string(strTable, yytext), CHAR_ARRAY_TYPE);
                           return STR_VAL ;}
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 78 "scanner.l"
-{ yylval = new_node(CHAR_VAL_NODE, atoi(yytext), CHAR_TYPE);
+#line 79 "scanner.l"
+{ yylval = new_node(CHAR_VAL_NODE, 0, CHAR_TYPE);
+                          set_char_data(yylval, yytext[1]);
                           return CHAR_VAL ;}   
 	YY_BREAK
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 81 "scanner.l"
+#line 83 "scanner.l"
 {}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 83 "scanner.l"
+#line 85 "scanner.l"
 { lexicalError(yytext) ;} 
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 85 "scanner.l"
+#line 87 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1119 "scanner.c"
+#line 1121 "scanner.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2091,7 +2093,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 85 "scanner.l"
+#line 87 "scanner.l"
 
 
 void lexicalError(char *token){
