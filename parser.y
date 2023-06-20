@@ -146,7 +146,7 @@ declarator
 
 function_declarator
 	: ID { newFunc(yytext, yylineno); $$ = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
-	| function_declarator LPAR parameter_list RPAR { $$ = $1; }
+	| function_declarator LPAR parameter_list RPAR { $$ = $3; }
 	| function_declarator LPAR RPAR { $$ = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
 	;
 
