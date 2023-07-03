@@ -10,6 +10,7 @@
 #include "tables.h"
 #include "ast.h"
 #include "parser.h"
+#include "interpreter.h"
 
 StrTable* strTable;
 VarTable* varTable;
@@ -242,10 +243,11 @@ int main() {
 
     yyparse();
     printf("PARSE SUCCESSFUL!\n");
-	print_str_table(strTable);
-	print_func_table(funcTable);
+	// print_str_table(strTable);
+	// print_func_table(funcTable);
 
-	print_dot(root);
+	// print_dot(root);
+	run_ast(root);
 
 	free_str_table(strTable);
 	free_func_table(funcTable);
