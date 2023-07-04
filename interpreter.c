@@ -171,296 +171,85 @@ void write_str() {
 
 void run_program(AST *ast) {
     trace("program");
-    // rec_run_ast(get_child(ast, 0)); // run var_list
-    // rec_run_ast(get_child(ast, 1)); // run block
+    
+    rec_run_ast(get_child(ast, get_child_count(ast) - 1)); // chamanda a ultima funcao MAIN
+
+    // O program chamaria a main apenas por enquanto, nao sei como que ficaria chamada de outras funcoes
 }
 
-// // TODO
-// void run_assign(AST *ast) {
-//     AST *left_child = get_child(ast, 0);
-//     AST *right_child = get_child(ast, 1);
+void run_function(AST *ast) {
+    trace("function");
+    rec_run_ast(get_child(ast, 0)); // run compound
+    rec_run_ast(get_child(ast, 1)); // run param_list
+}
 
-//     int addr = get_data(left_child);
+void run_compound(AST *ast) {
+    trace("compound");
 
-//     rec_run_ast(right_child);
+    for(int i = 0; i < get_child_count(ast); i++){ //var_list e stmt_list
+        rec_run_ast(get_child(ast, i));
+    }
+}
 
-//     Type type = get_node_type(left_child);
-//     if(type == INT_TYPE){
-//         int i = popi();
-//         storei(addr, i);
-//     } else {
-//         float f = popf();
-//         storef(addr, f);
-//     }
-// }
+void run_param_list(AST *ast) {
+    //desempilhar os valores de argumentos e salvar na memoria dos parametros
+    //soh deve ser feito quando tiver chamada de funcao pronta
+    trace("param_list");
 
-// // TODO
-// void run_block(AST *ast) {
-//     trace("block");
-//     AST *child;
-//     for (int i = 0; i < get_child_count(ast); i++){
-//         child = get_child(ast, i);
-//         rec_run_ast(child);
-//     }
-// }
+}
 
-// // TODO
-// void run_bool_val(AST *ast) {
-//     trace("bool_val");
-//     int val = get_data(ast);
-//     pushi(val);
-// }
+void run_var_list(AST *ast) {
+    trace("var_list");
 
-// // TODO
-// void run_eq(AST *ast) {
+    for(int i = 0; i < get_child_count(ast); i++){
+        rec_run_ast(get_child(ast, i));
+    }
+}
 
-// }
+void run_stmt_list(AST *ast) {
+    trace("stmt_list");
 
-// // TODO
-// void run_if(AST *ast) {
+}
 
-// }
+void run_var_decl(AST *ast) {
+    trace("var_decl");
+    // Nothing to do, memory was already cleared upon initialization.
+}
 
-// // TODO
-// void run_int_val(AST *ast) {
-//     trace("int_val");
-//     int val = get_data(ast);
-//     pushi(val);
-// }
+void run_assign(AST *ast) {
+    trace("assign");
+    AST *left_child = get_child(ast, 0);
+    AST *right_child = get_child(ast, 1);
 
-// // TODO
-// void run_lt(AST *ast) {
+    int idx = get_data(left_child);
 
-// }
+    rec_run_ast(right_child);
 
-// // TODO
-// void run_minus(AST *ast) {
-//     trace("minus");
+    Type type = get_node_type(left_child);
+    if(type == INT_TYPE){
+        storei(idx, popi());
+    } else if(type == FLOAT_TYPE){
+        storef(idx, popf());
+    }
+}
 
-//     AST *left_child = get_child(ast, 0);
-//     AST *right_child = get_child(ast, 1);
+void run_int_val(AST *ast) {
+    trace("int_val");
+    pushi(get_data(ast));
+}
 
-//     rec_run_ast(left_child);
-//     rec_run_ast(right_child); 
-
-//     switch(get_node_type(left_child)){
-//         case INT_TYPE:
-//             int a = popi();
-//             int b = popi();
-//             pushi(b - a);
-//             break;
-//         case REAL_TYPE:
-//             float c = popf();
-//             float d = popf();
-//             pushf(d - c);
-//             break;
-//     }
-// }
-
-// // TODO
-// void run_over(AST *ast) {
-//     trace("over");
-
-//     AST *left_child = get_child(ast, 0);
-//     AST *right_child = get_child(ast, 1);
-
-//     rec_run_ast(left_child);
-//     rec_run_ast(right_child); 
-
-//     switch(get_node_type(left_child)){
-//         case INT_TYPE:
-//             int a = popi();
-//             int b = popi();
-//             pushi(b / a);
-//             break;
-//         case REAL_TYPE:
-//             float c = popf();
-//             float d = popf();
-//             pushf(d / c);
-//             break;
-//     }
-// }
-
-// // TODO
-// void run_plus(AST *ast) {
-//     trace("plus");
-
-//     AST *left_child = get_child(ast, 0);
-//     AST *right_child = get_child(ast, 1);
-
-//     rec_run_ast(left_child);
-//     rec_run_ast(right_child); 
-
-//     switch(get_node_type(left_child)){
-//         case INT_TYPE:
-//             int a = popi();
-//             int b = popi();
-//             pushi(b + a);
-//             break;
-//         case REAL_TYPE:
-//             float c = popf();
-//             float d = popf();
-//             pushf(d + c);
-//             break;
-//     }
-// }
-
-// // TODO
-// void run_read(AST *ast) {
-//     trace("read");
-//     AST* child = get_child(ast, 0);
-//     int idx = get_data(child);
-
-//     switch(get_node_type(child)){
-//         case INT_TYPE:
-//             read_int(idx);
-//             break;
-//         case REAL_TYPE:
-//             read_real(idx);
-//             break;
-//         case BOOL_TYPE:
-//             read_bool(idx);
-//             break;   
-//         case STR_TYPE:
-//             read_str(idx);
-//             break;  
-//     }
-// }
-
-// // TODO
-// void run_real_val(AST *ast) {
-//     trace("real_val");
-//     float val = get_float_data(ast);
-//     pushf(val);
-// }
-
-// // TODO
-// void run_repeat(AST *ast) {
-
-// }
-
-// void run_str_val(AST *ast) {
-//     trace("str_val");
-//     pushi(get_data(ast));
-// }
-
-// // TODO
-// void run_times(AST *ast) {
-//     trace("times");
-
-//     AST *left_child = get_child(ast, 0);
-//     AST *right_child = get_child(ast, 1);
-
-//     rec_run_ast(left_child);
-//     rec_run_ast(right_child); 
-
-//     switch(get_node_type(left_child)){
-//         case INT_TYPE:
-//             int a = popi();
-//             int b = popi();
-//             pushi(b * a);
-//             break;
-//         case REAL_TYPE:
-//             float c = popf();
-//             float d = popf();
-//             pushf(d * c);
-//             break;
-//     }
-// }
-
-// void run_var_decl(AST *ast) {
-//     trace("var_decl");
-//     // Nothing to do, memory was already cleared upon initialization.
-// }
-
-// void run_var_list(AST *ast) {
-//     trace("var_list");
-//     // Nothing to do, memory was already cleared upon initialization.
-// }
-
-// // TODO
-// void run_var_use(AST *ast) {
-//     trace("var_use");
-//     int idx = get_data(ast);
-
-//     switch(get_node_type(ast)){
-//         case INT_TYPE:
-//             int intVal = loadi(idx);
-//             pushi(intVal);
-//             break;
-//         case REAL_TYPE:
-//             float floatVal = loadf(idx);
-//             pushf(floatVal);
-//             break;
-//     }
-// }
-
-// // TODO
-// void run_write(AST *ast) {
-//     trace("write");
-//     AST* child = get_child(ast, 0);
-
-//     rec_run_ast(get_child(ast, 0));
-
-//     switch(get_node_type(child)){
-//         case INT_TYPE:
-//             write_int();
-//             break;
-//         case REAL_TYPE:
-//             write_real();
-//             break;
-//         case BOOL_TYPE:
-//             write_bool();
-//             break;
-//         case STR_TYPE:
-//             write_str();
-//             break;     
-//     }
-// }
-
-// // TODO
-// void run_b2i(AST* ast) {
-
-// }
-
-// // TODO
-// void run_b2r(AST* ast) {
-
-// }
-
-// void run_b2s(AST* ast) {
-//     rec_run_ast(get_child(ast, 0));
-//     clear_str_buf();
-//     popi() == 0 ? sprintf(str_buf, "false") : sprintf(str_buf, "true");
-//     pushi(add_string(st, str_buf));
-// }
-
-// // TODO
-// void run_i2r(AST* ast) {
-
-// }
-
-// void run_i2s(AST* ast) {
-//     rec_run_ast(get_child(ast, 0));
-//     clear_str_buf();
-//     sprintf(str_buf, "%d", popi());
-//     pushi(add_string(st, str_buf));
-// }
-
-// void run_r2s(AST* ast) {
-//     rec_run_ast(get_child(ast, 0));
-//     clear_str_buf();
-//     sprintf(str_buf, "%f", popf());
-//     pushi(add_string(st, str_buf));
-// }
+void run_float_val(AST *ast) {
+    trace("float_val");
+    pushf(get_float_data(ast));
+}
 
 void rec_run_ast(AST *ast) {
     switch(get_kind(ast)) {
 
-        // case ASSIGN_NODE:          run_assign(ast);             break;
+        case ASSIGN_NODE:          run_assign(ast);             break;
         // case IF_NODE:              run_if(ast);                 break;
-        // case INT_VAL_NODE:         run_int_val(ast);            break; 
-        // case FLOAT_VAL_NODE:       run_float_val(ast);          break; 
+        case INT_VAL_NODE:         run_int_val(ast);            break; 
+        case FLOAT_VAL_NODE:       run_float_val(ast);          break; 
         // case CHAR_VAL_NODE:        run_char_val(ast);           break; 
         // case INT_ARRAY_VAL_NODE:   run_int_array_val(ast);      break; 
         // case FLOAT_ARRAY_VAL_NODE: run_float_array_val(ast);    break; 
@@ -484,17 +273,17 @@ void rec_run_ast(AST *ast) {
         // case L_AND_NODE:           run_l_and(ast);              break; 
         // case L_OR_NODE:            run_l_or(ast);               break; 
         case PROGRAM_NODE:         run_program(ast);            break;
-        // case COMPOUND_NODE:        run_compound(ast);           break;
-        // case STMT_LIST_NODE:       run_stmt_list(ast);          break;
-        // case FUNCTION_NODE:        run_function(ast);           break;
-        // case PARAM_LIST_NODE:      run_param_list(ast);         break;
+        case COMPOUND_NODE:        run_compound(ast);           break;
+        case STMT_LIST_NODE:       run_stmt_list(ast);          break;
+        case FUNCTION_NODE:        run_function(ast);           break;
+        case PARAM_LIST_NODE:      run_param_list(ast);         break;
         // case ARG_LIST_NODE:        run_arg_list(ast);           break;
         // case WHILE_NODE:           run_while(ast);              break;
         // case RETURN_NODE:          run_return(ast);             break;
         // case CONTINUE_NODE:        run_continue(ast);           break;
         // case BREAK_NODE:           run_break(ast);              break;
-        // case VAR_DECL_NODE:        run_var_decl(ast);           break; 
-        // case VAR_LIST_NODE:        run_var_list(ast);           break; 
+        case VAR_DECL_NODE:        run_var_decl(ast);           break; 
+        case VAR_LIST_NODE:        run_var_list(ast);           break; 
         // case VAR_USE_NODE:         run_var_use(ast);            break; 
         // case FUNC_USE_NODE:        run_func_use(ast);           break; 
         // case I2F_NODE:             run_i2(ast);                 break; 
