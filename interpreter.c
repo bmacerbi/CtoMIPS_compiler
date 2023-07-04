@@ -167,6 +167,67 @@ void write_str() {
     printf(str_buf); // Weird language semantics, if printing a string, no new line.
 }
 
+#define run_bin_op()                \
+    AST *lexpr = get_child(ast, 0); \
+    AST *rexpr = get_child(ast, 1); \
+    rec_run_ast(lexpr);             \
+    rec_run_ast(rexpr)
+
+void run_cmp(AST *ast, int (*int_cmp)(int,int), int (*real_cmp)(float,float)) {
+    run_bin_op();
+
+    if (get_node_type(rexpr) == INT_TYPE) {
+        int r = popi();
+        int l = popi();
+        pushi(int_cmp(l, r));
+    } 
+    else { // Result is REAL_TYPE.
+        float r = popf();
+        float l = popf();
+        pushi(real_cmp(l,r));
+    }
+}
+
+int int_eq(int l, int r) {
+    return l == r;
+}
+
+int float_eq(float l, float r) {
+    return l == r;
+}
+
+int int_lt(int l, int r) {
+    return l < r;
+}
+
+int float_lt(float l, float r) {
+    return l < r;
+}
+
+int int_gt(int l, int r) {
+    return l > r;
+}
+
+int float_gt(float l, float r) {
+    return l > r;
+}
+
+int int_lte(int l, int r) {
+    return l <= r;
+}
+
+int float_lte(float l, float r) {
+    return l <= r;
+}
+
+int int_gte(int l, int r) {
+    return l >= r;
+}
+
+int float_gte(float l, float r) {
+    return l >= r;
+}
+
 // ----------------------------------------------------------------------------
 
 void run_program(AST *ast) {
@@ -233,6 +294,17 @@ void run_assign(AST *ast) {
     }
 }
 
+void run_if(AST *ast) {
+    trace("if");
+    rec_run_ast(get_child(ast, 0));
+    int test = popi();
+    if (test == 1) {
+        rec_run_ast(get_child(ast, 1));
+    } else if (test == 0 && get_child_count(ast) == 3) {
+        rec_run_ast(get_child(ast, 2));
+    }
+}
+
 void run_int_val(AST *ast) {
     trace("int_val");
     pushi(get_data(ast));
@@ -243,27 +315,175 @@ void run_float_val(AST *ast) {
     pushf(get_float_data(ast));
 }
 
+void run_char_val(AST *ast) {
+    trace("char_val");
+    pushf(get_char_data(ast));
+}
+
+void run_eq(AST *ast) {
+    trace("eq");
+    run_cmp(ast, int_eq, float_eq);
+}
+
+void run_lt(AST *ast) {
+    trace("lt");
+    run_cmp(ast, int_lt, float_lt);
+}
+
+void run_gt(AST *ast) {
+    trace("gt");
+    run_cmp(ast, int_lt, float_lt);
+}
+
+void run_lte(AST *ast) {
+    trace("lte");
+    run_cmp(ast, int_lte, float_lte);
+}
+
+void run_gte(AST *ast) {
+    trace("gte");
+    run_cmp(ast, int_gte, float_gte);
+}
+
+void run_var_use(AST *ast) {
+    trace("var_use");
+    int var_idx = get_data(ast);
+    if (get_node_type(ast) == FLOAT_TYPE) {
+        pushf(loadf(var_idx));
+    } else {
+        pushi(loadi(var_idx));
+    }
+}
+
+void run_other_arith(AST *ast, int (*int_op)(int,int), float (*real_op)(float,float)) {
+    run_bin_op();
+    if (get_node_type(ast) == INT_TYPE) {
+        int r = popi();
+        int l = popi();
+        pushi(int_op(l,r));
+    } else { // Result must be FLOAT_TYPE.
+        float r = popf();
+        float l = popf();
+        pushf(real_op(l,r));
+    }
+}
+
+int int_minus(int l, int r) {
+    return l - r;
+}
+
+float float_minus(float l, float r) {
+    return l - r;
+}
+
+int int_over(int l, int r) {
+    return l / r;
+}
+
+float float_over(float l, float r) {
+    return l / r;
+}
+
+int int_times(int l, int r) {
+    return l * r;
+}
+
+float float_times(float l, float r) {
+    return l * r;
+}
+
+int int_percent(int l, int r) {
+    return l % r;
+}
+
+float float_percent(float l, float r) {
+    return l % r;
+}
+
+void run_minus(AST *ast) {
+    trace("minus");
+    run_other_arith(ast, int_minus, float_minus);
+}
+
+void run_over(AST *ast) {
+    trace("over");
+    run_other_arith(ast, int_over, float_over);
+}
+
+void run_times(AST *ast) {
+    trace("times");
+    run_other_arith(ast, int_times, float_times);
+}
+
+void run_percent(AST *ast) {
+    trace("percent");
+    run_other_arith(ast, int_percent, float_percent);
+}
+
+void plus_int(AST *ast) {
+    run_bin_op();
+    int r = popi();
+    int l = popi();
+    pushi(l + r);
+}
+
+void plus_real(AST *ast) {
+    run_bin_op();
+    float r = popf();
+    float l = popf();
+    pushf(l + r);
+}
+
+void run_plus(AST *ast) {
+    trace("plus");
+    Type plus_type = get_node_type(ast);
+    switch(plus_type) {
+        case INT_TYPE:  plus_int(ast);     break;
+        case FLOAT_TYPE: plus_real(ast);    break;
+        case NO_TYPE:
+        default:
+            fprintf(stderr, "Invalid type: %s!\n", get_text(plus_type));
+            exit(EXIT_FAILURE);
+    }
+}
+
+// void run_int_array_val(AST *ast) {
+//     trace("int_array_val");
+//     pushf(get_float_data(ast));
+// }
+
+// void run_float_array_val(AST *ast) {
+//     trace("float_array_val");
+//     pushf(get_float_data(ast));
+// }
+
+// void run_char_array_val(AST *ast) {
+//     trace("char_array_val");
+//     pushf(get_float_data(ast));
+// }
+
 void rec_run_ast(AST *ast) {
+
     switch(get_kind(ast)) {
 
         case ASSIGN_NODE:          run_assign(ast);             break;
-        // case IF_NODE:              run_if(ast);                 break;
+        case IF_NODE:              run_if(ast);                 break;
         case INT_VAL_NODE:         run_int_val(ast);            break; 
         case FLOAT_VAL_NODE:       run_float_val(ast);          break; 
-        // case CHAR_VAL_NODE:        run_char_val(ast);           break; 
+        case CHAR_VAL_NODE:        run_char_val(ast);           break; 
         // case INT_ARRAY_VAL_NODE:   run_int_array_val(ast);      break; 
         // case FLOAT_ARRAY_VAL_NODE: run_float_array_val(ast);    break; 
         // case CHAR_ARRAY_VAL_NODE:  run_char_array_val(ast);     break; 
-        // case LT_NODE:              run_lt(ast);                 break; 
-        // case GT_NODE:              run_gt(ast);                 break; 
-        // case LT_EQ_NODE:           run_lt_eq(ast);              break; 
-        // case GT_EQ_NODE:           run_gt_eq(ast);              break; 
-        // case EQ_NODE:              run_eq(ast);                 break; 
-        // case MINUS_NODE:           run_minus(ast);              break; 
-        // case OVER_NODE:            run_over(ast);               break; 
-        // case PLUS_NODE:            run_plus(ast);               break; 
-        // case TIMES_NODE:           run_times(ast);              break; 
-        // case PERCENT_NODE:         run_percent(ast);            break; 
+        case LT_NODE:              run_lt(ast);                 break; 
+        case GT_NODE:              run_gt(ast);                 break; 
+        case LT_EQ_NODE:           run_lte(ast);              break; 
+        case GT_EQ_NODE:           run_gte(ast);              break; 
+        case EQ_NODE:              run_eq(ast);                 break; 
+        case MINUS_NODE:           run_minus(ast);              break; 
+        case OVER_NODE:            run_over(ast);               break; 
+        case PLUS_NODE:            run_plus(ast);               break; 
+        case TIMES_NODE:           run_times(ast);              break; 
+        case PERCENT_NODE:         run_percent(ast);            break; 
         // case N_EQ_NODE:            run_n_eq(ast);               break; 
         // case T_ASGN_NODE:          run_t_asgn(ast);             break; 
         // case O_ASGN_NODE:          run_o_asgn(ast);             break; 
@@ -284,7 +504,7 @@ void rec_run_ast(AST *ast) {
         // case BREAK_NODE:           run_break(ast);              break;
         case VAR_DECL_NODE:        run_var_decl(ast);           break; 
         case VAR_LIST_NODE:        run_var_list(ast);           break; 
-        // case VAR_USE_NODE:         run_var_use(ast);            break; 
+        case VAR_USE_NODE:         run_var_use(ast);            break; 
         // case FUNC_USE_NODE:        run_func_use(ast);           break; 
         // case I2F_NODE:             run_i2(ast);                 break; 
 

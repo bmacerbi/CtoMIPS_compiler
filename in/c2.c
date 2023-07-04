@@ -5,5 +5,5 @@ int main() {
     float num4 = -0.5;
     num2 = 123;
 
-    return 0;
+
 }

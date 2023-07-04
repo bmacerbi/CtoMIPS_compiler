@@ -251,7 +251,7 @@ Nonterminals, with rules where they appear
 
 State 0
 
-    0 $accept: . translation_unit $end
+    0 $accept: • translation_unit $end
 
     CHAR   shift, and go to state 1
     INT    shift, and go to state 2
@@ -266,35 +266,35 @@ State 0
 
 State 1
 
-   44 type_specifier: CHAR .
+   44 type_specifier: CHAR •
 
     $default  reduce using rule 44 (type_specifier)
 
 
 State 2
 
-   45 type_specifier: INT .
+   45 type_specifier: INT •
 
     $default  reduce using rule 45 (type_specifier)
 
 
 State 3
 
-   46 type_specifier: FLOAT .
+   46 type_specifier: FLOAT •
 
     $default  reduce using rule 46 (type_specifier)
 
 
 State 4
 
-   43 type_specifier: VOID .
+   43 type_specifier: VOID •
 
     $default  reduce using rule 43 (type_specifier)
 
 
 State 5
 
-   87 function_definition: type_specifier . function_declarator compound_statement
+   87 function_definition: type_specifier • function_declarator compound_statement
 
     ID  shift, and go to state 9
 
@@ -303,8 +303,8 @@ State 5
 
 State 6
 
-    0 $accept: translation_unit . $end
-   85 translation_unit: translation_unit . external_declaration
+    0 $accept: translation_unit • $end
+   85 translation_unit: translation_unit • external_declaration
 
     $end   shift, and go to state 11
     CHAR   shift, and go to state 1
@@ -319,30 +319,30 @@ State 6
 
 State 7
 
-   84 translation_unit: external_declaration .
+   84 translation_unit: external_declaration •
 
     $default  reduce using rule 84 (translation_unit)
 
 
 State 8
 
-   86 external_declaration: function_definition .
+   86 external_declaration: function_definition •
 
     $default  reduce using rule 86 (external_declaration)
 
 
 State 9
 
-   50 function_declarator: ID .
+   50 function_declarator: ID •
 
     $default  reduce using rule 50 (function_declarator)
 
 
 State 10
 
-   51 function_declarator: function_declarator . LPAR parameter_list RPAR
-   52                    | function_declarator . LPAR RPAR
-   87 function_definition: type_specifier function_declarator . compound_statement
+   51 function_declarator: function_declarator • LPAR parameter_list RPAR
+   52                    | function_declarator • LPAR RPAR
+   87 function_definition: type_specifier function_declarator • compound_statement
 
     LPAR    shift, and go to state 13
     LCURLY  shift, and go to state 14
@@ -352,22 +352,22 @@ State 10
 
 State 11
 
-    0 $accept: translation_unit $end .
+    0 $accept: translation_unit $end •
 
     $default  accept
 
 
 State 12
 
-   85 translation_unit: translation_unit external_declaration .
+   85 translation_unit: translation_unit external_declaration •
 
     $default  reduce using rule 85 (translation_unit)
 
 
 State 13
 
-   51 function_declarator: function_declarator LPAR . parameter_list RPAR
-   52                    | function_declarator LPAR . RPAR
+   51 function_declarator: function_declarator LPAR • parameter_list RPAR
+   52                    | function_declarator LPAR • RPAR
 
     CHAR   shift, and go to state 1
     INT    shift, and go to state 2
@@ -382,10 +382,10 @@ State 13
 
 State 14
 
-   67 compound_statement: LCURLY . RCURLY
-   68                   | LCURLY . statement_list RCURLY
-   69                   | LCURLY . declaration_list RCURLY
-   70                   | LCURLY . declaration_list statement_list RCURLY
+   67 compound_statement: LCURLY • RCURLY
+   68                   | LCURLY • statement_list RCURLY
+   69                   | LCURLY • declaration_list RCURLY
+   70                   | LCURLY • declaration_list statement_list RCURLY
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -428,22 +428,22 @@ State 14
 
 State 15
 
-   87 function_definition: type_specifier function_declarator compound_statement .
+   87 function_definition: type_specifier function_declarator compound_statement •
 
     $default  reduce using rule 87 (function_definition)
 
 
 State 16
 
-   52 function_declarator: function_declarator LPAR RPAR .
+   52 function_declarator: function_declarator LPAR RPAR •
 
     $default  reduce using rule 52 (function_declarator)
 
 
 State 17
 
-   55 parameter_declaration: type_specifier . declarator
-   56                      | type_specifier .
+   55 parameter_declaration: type_specifier • declarator
+   56                      | type_specifier •
 
     ID  shift, and go to state 51
 
@@ -454,8 +454,8 @@ State 17
 
 State 18
 
-   51 function_declarator: function_declarator LPAR parameter_list . RPAR
-   54 parameter_list: parameter_list . COMMA parameter_declaration
+   51 function_declarator: function_declarator LPAR parameter_list • RPAR
+   54 parameter_list: parameter_list • COMMA parameter_declaration
 
     RPAR   shift, and go to state 53
     COMMA  shift, and go to state 54
@@ -463,14 +463,14 @@ State 18
 
 State 19
 
-   53 parameter_list: parameter_declaration .
+   53 parameter_list: parameter_declaration •
 
     $default  reduce using rule 53 (parameter_list)
 
 
 State 20
 
-   12 expression: INC . expression
+   12 expression: INC • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -491,7 +491,7 @@ State 20
 
 State 21
 
-   13 expression: DEC . expression
+   13 expression: DEC • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -512,44 +512,44 @@ State 21
 
 State 22
 
-   39 unary_operator: L_NOT .
+   39 unary_operator: L_NOT •
 
     $default  reduce using rule 39 (unary_operator)
 
 
 State 23
 
-   77 selection_statement: IF . LPAR expression RPAR compound_statement
-   78                    | IF . LPAR expression RPAR compound_statement ELSE compound_statement
+   77 selection_statement: IF • LPAR expression RPAR compound_statement
+   78                    | IF • LPAR expression RPAR compound_statement ELSE compound_statement
 
     LPAR  shift, and go to state 57
 
 
 State 24
 
-   79 iteration_statement: WHILE . LPAR expression RPAR statement
+   79 iteration_statement: WHILE • LPAR expression RPAR statement
 
     LPAR  shift, and go to state 58
 
 
 State 25
 
-   80 jump_statement: CONTINUE . SEMI
+   80 jump_statement: CONTINUE • SEMI
 
     SEMI  shift, and go to state 59
 
 
 State 26
 
-   81 jump_statement: BREAK . SEMI
+   81 jump_statement: BREAK • SEMI
 
     SEMI  shift, and go to state 60
 
 
 State 27
 
-   82 jump_statement: RETURN . SEMI
-   83               | RETURN . expression SEMI
+   82 jump_statement: RETURN • SEMI
+   83               | RETURN • expression SEMI
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -571,56 +571,56 @@ State 27
 
 State 28
 
-    1 expression: ID .
+    1 expression: ID •
 
     $default  reduce using rule 1 (expression)
 
 
 State 29
 
-    2 expression: FLOAT_VAL .
+    2 expression: FLOAT_VAL •
 
     $default  reduce using rule 2 (expression)
 
 
 State 30
 
-    3 expression: INT_VAL .
+    3 expression: INT_VAL •
 
     $default  reduce using rule 3 (expression)
 
 
 State 31
 
-    4 expression: STR_VAL .
+    4 expression: STR_VAL •
 
     $default  reduce using rule 4 (expression)
 
 
 State 32
 
-    5 expression: CHAR_VAL .
+    5 expression: CHAR_VAL •
 
     $default  reduce using rule 5 (expression)
 
 
 State 33
 
-   37 unary_operator: PLUS .
+   37 unary_operator: PLUS •
 
     $default  reduce using rule 37 (unary_operator)
 
 
 State 34
 
-   38 unary_operator: MINUS .
+   38 unary_operator: MINUS •
 
     $default  reduce using rule 38 (unary_operator)
 
 
 State 35
 
-    6 expression: LPAR . expression RPAR
+    6 expression: LPAR • expression RPAR
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -641,52 +641,52 @@ State 35
 
 State 36
 
-   67 compound_statement: LCURLY RCURLY .
+   67 compound_statement: LCURLY RCURLY •
 
     $default  reduce using rule 67 (compound_statement)
 
 
 State 37
 
-   75 expression_statement: SEMI .
+   75 expression_statement: SEMI •
 
     $default  reduce using rule 75 (expression_statement)
 
 
 State 38
 
-   36 unary_operator: AMPER .
+   36 unary_operator: AMPER •
 
     $default  reduce using rule 36 (unary_operator)
 
 
 State 39
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   76 expression_statement: expression . SEMI
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   76 expression_statement: expression • SEMI
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -716,7 +716,7 @@ State 39
 
 State 40
 
-   14 expression: unary_operator . expression
+   14 expression: unary_operator • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -737,14 +737,14 @@ State 40
 
 State 41
 
-   71 declaration_list: declaration .
+   71 declaration_list: declaration •
 
     $default  reduce using rule 71 (declaration_list)
 
 
 State 42
 
-   40 declaration: type_specifier . init_declarator SEMI
+   40 declaration: type_specifier • init_declarator SEMI
 
     ID  shift, and go to state 51
 
@@ -754,23 +754,23 @@ State 42
 
 State 43
 
-   73 statement_list: statement .
+   73 statement_list: statement •
 
     $default  reduce using rule 73 (statement_list)
 
 
 State 44
 
-   62 statement: compound_statement .
+   62 statement: compound_statement •
 
     $default  reduce using rule 62 (statement)
 
 
 State 45
 
-   69 compound_statement: LCURLY declaration_list . RCURLY
-   70                   | LCURLY declaration_list . statement_list RCURLY
-   72 declaration_list: declaration_list . declaration
+   69 compound_statement: LCURLY declaration_list • RCURLY
+   70                   | LCURLY declaration_list • statement_list RCURLY
+   72 declaration_list: declaration_list • declaration
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -812,8 +812,8 @@ State 45
 
 State 46
 
-   68 compound_statement: LCURLY statement_list . RCURLY
-   74 statement_list: statement_list . statement
+   68 compound_statement: LCURLY statement_list • RCURLY
+   74 statement_list: statement_list • statement
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -848,44 +848,44 @@ State 46
 
 State 47
 
-   63 statement: expression_statement .
+   63 statement: expression_statement •
 
     $default  reduce using rule 63 (statement)
 
 
 State 48
 
-   64 statement: selection_statement .
+   64 statement: selection_statement •
 
     $default  reduce using rule 64 (statement)
 
 
 State 49
 
-   65 statement: iteration_statement .
+   65 statement: iteration_statement •
 
     $default  reduce using rule 65 (statement)
 
 
 State 50
 
-   66 statement: jump_statement .
+   66 statement: jump_statement •
 
     $default  reduce using rule 66 (statement)
 
 
 State 51
 
-   47 declarator: ID .
+   47 declarator: ID •
 
     $default  reduce using rule 47 (declarator)
 
 
 State 52
 
-   48 declarator: declarator . LBRAC expression RBRAC
-   49           | declarator . LBRAC RBRAC
-   55 parameter_declaration: type_specifier declarator .
+   48 declarator: declarator • LBRAC expression RBRAC
+   49           | declarator • LBRAC RBRAC
+   55 parameter_declaration: type_specifier declarator •
 
     LBRAC  shift, and go to state 96
 
@@ -894,14 +894,14 @@ State 52
 
 State 53
 
-   51 function_declarator: function_declarator LPAR parameter_list RPAR .
+   51 function_declarator: function_declarator LPAR parameter_list RPAR •
 
     $default  reduce using rule 51 (function_declarator)
 
 
 State 54
 
-   54 parameter_list: parameter_list COMMA . parameter_declaration
+   54 parameter_list: parameter_list COMMA • parameter_declaration
 
     CHAR   shift, and go to state 1
     INT    shift, and go to state 2
@@ -914,31 +914,31 @@ State 54
 
 State 55
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   12           | INC expression .
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   12           | INC expression •
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -953,31 +953,31 @@ State 55
 
 State 56
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   13           | DEC expression .
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   13           | DEC expression •
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -992,8 +992,8 @@ State 56
 
 State 57
 
-   77 selection_statement: IF LPAR . expression RPAR compound_statement
-   78                    | IF LPAR . expression RPAR compound_statement ELSE compound_statement
+   77 selection_statement: IF LPAR • expression RPAR compound_statement
+   78                    | IF LPAR • expression RPAR compound_statement ELSE compound_statement
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1014,7 +1014,7 @@ State 57
 
 State 58
 
-   79 iteration_statement: WHILE LPAR . expression RPAR statement
+   79 iteration_statement: WHILE LPAR • expression RPAR statement
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1035,52 +1035,52 @@ State 58
 
 State 59
 
-   80 jump_statement: CONTINUE SEMI .
+   80 jump_statement: CONTINUE SEMI •
 
     $default  reduce using rule 80 (jump_statement)
 
 
 State 60
 
-   81 jump_statement: BREAK SEMI .
+   81 jump_statement: BREAK SEMI •
 
     $default  reduce using rule 81 (jump_statement)
 
 
 State 61
 
-   82 jump_statement: RETURN SEMI .
+   82 jump_statement: RETURN SEMI •
 
     $default  reduce using rule 82 (jump_statement)
 
 
 State 62
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   83 jump_statement: RETURN expression . SEMI
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   83 jump_statement: RETURN expression • SEMI
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -1110,31 +1110,31 @@ State 62
 
 State 63
 
-    6 expression: LPAR expression . RPAR
-    7           | expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    6 expression: LPAR expression • RPAR
+    7           | expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -1164,21 +1164,21 @@ State 63
 
 State 64
 
-   10 expression: expression INC .
+   10 expression: expression INC •
 
     $default  reduce using rule 10 (expression)
 
 
 State 65
 
-   11 expression: expression DEC .
+   11 expression: expression DEC •
 
     $default  reduce using rule 11 (expression)
 
 
 State 66
 
-   22 expression: expression LT_EQ . expression
+   22 expression: expression LT_EQ • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1199,7 +1199,7 @@ State 66
 
 State 67
 
-   23 expression: expression GT_EQ . expression
+   23 expression: expression GT_EQ • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1220,7 +1220,7 @@ State 67
 
 State 68
 
-   20 expression: expression LT . expression
+   20 expression: expression LT • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1241,7 +1241,7 @@ State 68
 
 State 69
 
-   21 expression: expression GT . expression
+   21 expression: expression GT • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1262,7 +1262,7 @@ State 69
 
 State 70
 
-   24 expression: expression EQ . expression
+   24 expression: expression EQ • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1283,7 +1283,7 @@ State 70
 
 State 71
 
-   25 expression: expression N_EQ . expression
+   25 expression: expression N_EQ • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1304,7 +1304,7 @@ State 71
 
 State 72
 
-   26 expression: expression L_AND . expression
+   26 expression: expression L_AND • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1325,7 +1325,7 @@ State 72
 
 State 73
 
-   27 expression: expression L_OR . expression
+   27 expression: expression L_OR • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1346,7 +1346,7 @@ State 73
 
 State 74
 
-   28 expression: expression ASGN . expression
+   28 expression: expression ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1367,7 +1367,7 @@ State 74
 
 State 75
 
-   29 expression: expression T_ASGN . expression
+   29 expression: expression T_ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1388,7 +1388,7 @@ State 75
 
 State 76
 
-   30 expression: expression O_ASGN . expression
+   30 expression: expression O_ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1409,7 +1409,7 @@ State 76
 
 State 77
 
-   31 expression: expression MOD_ASGN . expression
+   31 expression: expression MOD_ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1430,7 +1430,7 @@ State 77
 
 State 78
 
-   32 expression: expression PL_ASGN . expression
+   32 expression: expression PL_ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1451,7 +1451,7 @@ State 78
 
 State 79
 
-   33 expression: expression M_ASGN . expression
+   33 expression: expression M_ASGN • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1472,7 +1472,7 @@ State 79
 
 State 80
 
-   18 expression: expression PLUS . expression
+   18 expression: expression PLUS • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1493,7 +1493,7 @@ State 80
 
 State 81
 
-   19 expression: expression MINUS . expression
+   19 expression: expression MINUS • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1514,7 +1514,7 @@ State 81
 
 State 82
 
-   15 expression: expression TIMES . expression
+   15 expression: expression TIMES • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1535,7 +1535,7 @@ State 82
 
 State 83
 
-   16 expression: expression OVER . expression
+   16 expression: expression OVER • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1556,7 +1556,7 @@ State 83
 
 State 84
 
-   17 expression: expression PERCENT . expression
+   17 expression: expression PERCENT • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1577,8 +1577,8 @@ State 84
 
 State 85
 
-    8 expression: expression LPAR . RPAR
-    9           | expression LPAR . argument_expression_list RPAR
+    8 expression: expression LPAR • RPAR
+    9           | expression LPAR • argument_expression_list RPAR
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1601,7 +1601,7 @@ State 85
 
 State 86
 
-    7 expression: expression LBRAC . expression RBRAC
+    7 expression: expression LBRAC • expression RBRAC
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1622,55 +1622,55 @@ State 86
 
 State 87
 
-   76 expression_statement: expression SEMI .
+   76 expression_statement: expression SEMI •
 
     $default  reduce using rule 76 (expression_statement)
 
 
 State 88
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   14           | unary_operator expression .
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   14           | unary_operator expression •
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     $default  reduce using rule 14 (expression)
 
 
 State 89
 
-   40 declaration: type_specifier init_declarator . SEMI
+   40 declaration: type_specifier init_declarator • SEMI
 
     SEMI  shift, and go to state 125
 
 
 State 90
 
-   41 init_declarator: declarator .
-   42                | declarator . ASGN initializer
-   48 declarator: declarator . LBRAC expression RBRAC
-   49           | declarator . LBRAC RBRAC
+   41 init_declarator: declarator •
+   42                | declarator • ASGN initializer
+   48 declarator: declarator • LBRAC expression RBRAC
+   49           | declarator • LBRAC RBRAC
 
     ASGN   shift, and go to state 126
     LBRAC  shift, and go to state 96
@@ -1680,22 +1680,22 @@ State 90
 
 State 91
 
-   69 compound_statement: LCURLY declaration_list RCURLY .
+   69 compound_statement: LCURLY declaration_list RCURLY •
 
     $default  reduce using rule 69 (compound_statement)
 
 
 State 92
 
-   72 declaration_list: declaration_list declaration .
+   72 declaration_list: declaration_list declaration •
 
     $default  reduce using rule 72 (declaration_list)
 
 
 State 93
 
-   70 compound_statement: LCURLY declaration_list statement_list . RCURLY
-   74 statement_list: statement_list . statement
+   70 compound_statement: LCURLY declaration_list statement_list • RCURLY
+   74 statement_list: statement_list • statement
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1730,22 +1730,22 @@ State 93
 
 State 94
 
-   68 compound_statement: LCURLY statement_list RCURLY .
+   68 compound_statement: LCURLY statement_list RCURLY •
 
     $default  reduce using rule 68 (compound_statement)
 
 
 State 95
 
-   74 statement_list: statement_list statement .
+   74 statement_list: statement_list statement •
 
     $default  reduce using rule 74 (statement_list)
 
 
 State 96
 
-   48 declarator: declarator LBRAC . expression RBRAC
-   49           | declarator LBRAC . RBRAC
+   48 declarator: declarator LBRAC • expression RBRAC
+   49           | declarator LBRAC • RBRAC
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -1767,39 +1767,39 @@ State 96
 
 State 97
 
-   54 parameter_list: parameter_list COMMA parameter_declaration .
+   54 parameter_list: parameter_list COMMA parameter_declaration •
 
     $default  reduce using rule 54 (parameter_list)
 
 
 State 98
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   77 selection_statement: IF LPAR expression . RPAR compound_statement
-   78                    | IF LPAR expression . RPAR compound_statement ELSE compound_statement
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   77 selection_statement: IF LPAR expression • RPAR compound_statement
+   78                    | IF LPAR expression • RPAR compound_statement ELSE compound_statement
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -1829,31 +1829,31 @@ State 98
 
 State 99
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   79 iteration_statement: WHILE LPAR expression . RPAR statement
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   79 iteration_statement: WHILE LPAR expression • RPAR statement
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -1883,45 +1883,45 @@ State 99
 
 State 100
 
-   83 jump_statement: RETURN expression SEMI .
+   83 jump_statement: RETURN expression SEMI •
 
     $default  reduce using rule 83 (jump_statement)
 
 
 State 101
 
-    6 expression: LPAR expression RPAR .
+    6 expression: LPAR expression RPAR •
 
     $default  reduce using rule 6 (expression)
 
 
 State 102
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   22           | expression LT_EQ expression .
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   22           | expression LT_EQ expression •
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -1938,31 +1938,31 @@ State 102
 
 State 103
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   23           | expression GT_EQ expression .
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   23           | expression GT_EQ expression •
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -1979,31 +1979,31 @@ State 103
 
 State 104
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   20           | expression LT expression .
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   20           | expression LT expression •
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2020,31 +2020,31 @@ State 104
 
 State 105
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   21           | expression GT expression .
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   21           | expression GT expression •
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2061,31 +2061,31 @@ State 105
 
 State 106
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   24           | expression EQ expression .
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   24           | expression EQ expression •
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2106,31 +2106,31 @@ State 106
 
 State 107
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   25           | expression N_EQ expression .
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   25           | expression N_EQ expression •
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2151,31 +2151,31 @@ State 107
 
 State 108
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   26           | expression L_AND expression .
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   26           | expression L_AND expression •
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2198,31 +2198,31 @@ State 108
 
 State 109
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   27           | expression L_OR expression .
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   27           | expression L_OR expression •
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2246,31 +2246,31 @@ State 109
 
 State 110
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   28           | expression ASGN expression .
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   28           | expression ASGN expression •
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2301,31 +2301,31 @@ State 110
 
 State 111
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   29           | expression T_ASGN expression .
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   29           | expression T_ASGN expression •
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2356,31 +2356,31 @@ State 111
 
 State 112
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   30           | expression O_ASGN expression .
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   30           | expression O_ASGN expression •
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2411,31 +2411,31 @@ State 112
 
 State 113
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   31           | expression MOD_ASGN expression .
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   31           | expression MOD_ASGN expression •
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2466,31 +2466,31 @@ State 113
 
 State 114
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   32           | expression PL_ASGN expression .
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   32           | expression PL_ASGN expression •
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2521,31 +2521,31 @@ State 114
 
 State 115
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   33           | expression M_ASGN expression .
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   33           | expression M_ASGN expression •
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2576,31 +2576,31 @@ State 115
 
 State 116
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   18           | expression PLUS expression .
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   18           | expression PLUS expression •
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2615,31 +2615,31 @@ State 116
 
 State 117
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   19           | expression MINUS expression .
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   19           | expression MINUS expression •
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC      shift, and go to state 64
     DEC      shift, and go to state 65
@@ -2654,31 +2654,31 @@ State 117
 
 State 118
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   15           | expression TIMES expression .
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   15           | expression TIMES expression •
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     LPAR   shift, and go to state 85
     LBRAC  shift, and go to state 86
@@ -2688,31 +2688,31 @@ State 118
 
 State 119
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   16           | expression OVER expression .
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   16           | expression OVER expression •
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     LPAR   shift, and go to state 85
     LBRAC  shift, and go to state 86
@@ -2722,31 +2722,31 @@ State 119
 
 State 120
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   17           | expression PERCENT expression .
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   17           | expression PERCENT expression •
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     LPAR   shift, and go to state 85
     LBRAC  shift, and go to state 86
@@ -2756,38 +2756,38 @@ State 120
 
 State 121
 
-    8 expression: expression LPAR RPAR .
+    8 expression: expression LPAR RPAR •
 
     $default  reduce using rule 8 (expression)
 
 
 State 122
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   34 argument_expression_list: expression .
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   34 argument_expression_list: expression •
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2818,8 +2818,8 @@ State 122
 
 State 123
 
-    9 expression: expression LPAR argument_expression_list . RPAR
-   35 argument_expression_list: argument_expression_list . COMMA expression
+    9 expression: expression LPAR argument_expression_list • RPAR
+   35 argument_expression_list: argument_expression_list • COMMA expression
 
     RPAR   shift, and go to state 132
     COMMA  shift, and go to state 133
@@ -2827,31 +2827,31 @@ State 123
 
 State 124
 
-    7 expression: expression . LBRAC expression RBRAC
-    7           | expression LBRAC expression . RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
+    7 expression: expression • LBRAC expression RBRAC
+    7           | expression LBRAC expression • RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2881,14 +2881,14 @@ State 124
 
 State 125
 
-   40 declaration: type_specifier init_declarator SEMI .
+   40 declaration: type_specifier init_declarator SEMI •
 
     $default  reduce using rule 40 (declaration)
 
 
 State 126
 
-   42 init_declarator: declarator ASGN . initializer
+   42 init_declarator: declarator ASGN • initializer
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -2911,45 +2911,45 @@ State 126
 
 State 127
 
-   70 compound_statement: LCURLY declaration_list statement_list RCURLY .
+   70 compound_statement: LCURLY declaration_list statement_list RCURLY •
 
     $default  reduce using rule 70 (compound_statement)
 
 
 State 128
 
-   49 declarator: declarator LBRAC RBRAC .
+   49 declarator: declarator LBRAC RBRAC •
 
     $default  reduce using rule 49 (declarator)
 
 
 State 129
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   48 declarator: declarator LBRAC expression . RBRAC
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   48 declarator: declarator LBRAC expression • RBRAC
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -2979,8 +2979,8 @@ State 129
 
 State 130
 
-   77 selection_statement: IF LPAR expression RPAR . compound_statement
-   78                    | IF LPAR expression RPAR . compound_statement ELSE compound_statement
+   77 selection_statement: IF LPAR expression RPAR • compound_statement
+   78                    | IF LPAR expression RPAR • compound_statement ELSE compound_statement
 
     LCURLY  shift, and go to state 14
 
@@ -2989,7 +2989,7 @@ State 130
 
 State 131
 
-   79 iteration_statement: WHILE LPAR expression RPAR . statement
+   79 iteration_statement: WHILE LPAR expression RPAR • statement
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -3023,14 +3023,14 @@ State 131
 
 State 132
 
-    9 expression: expression LPAR argument_expression_list RPAR .
+    9 expression: expression LPAR argument_expression_list RPAR •
 
     $default  reduce using rule 9 (expression)
 
 
 State 133
 
-   35 argument_expression_list: argument_expression_list COMMA . expression
+   35 argument_expression_list: argument_expression_list COMMA • expression
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -3051,15 +3051,15 @@ State 133
 
 State 134
 
-    7 expression: expression LBRAC expression RBRAC .
+    7 expression: expression LBRAC expression RBRAC •
 
     $default  reduce using rule 7 (expression)
 
 
 State 135
 
-   58 initializer: LCURLY . initializer_list RCURLY
-   59            | LCURLY . initializer_list COMMA RCURLY
+   58 initializer: LCURLY • initializer_list RCURLY
+   59            | LCURLY • initializer_list COMMA RCURLY
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -3083,31 +3083,31 @@ State 135
 
 State 136
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   57 initializer: expression .
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   57 initializer: expression •
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -3138,22 +3138,22 @@ State 136
 
 State 137
 
-   42 init_declarator: declarator ASGN initializer .
+   42 init_declarator: declarator ASGN initializer •
 
     $default  reduce using rule 42 (init_declarator)
 
 
 State 138
 
-   48 declarator: declarator LBRAC expression RBRAC .
+   48 declarator: declarator LBRAC expression RBRAC •
 
     $default  reduce using rule 48 (declarator)
 
 
 State 139
 
-   77 selection_statement: IF LPAR expression RPAR compound_statement .
-   78                    | IF LPAR expression RPAR compound_statement . ELSE compound_statement
+   77 selection_statement: IF LPAR expression RPAR compound_statement •
+   78                    | IF LPAR expression RPAR compound_statement • ELSE compound_statement
 
     ELSE  shift, and go to state 144
 
@@ -3162,38 +3162,38 @@ State 139
 
 State 140
 
-   79 iteration_statement: WHILE LPAR expression RPAR statement .
+   79 iteration_statement: WHILE LPAR expression RPAR statement •
 
     $default  reduce using rule 79 (iteration_statement)
 
 
 State 141
 
-    7 expression: expression . LBRAC expression RBRAC
-    8           | expression . LPAR RPAR
-    9           | expression . LPAR argument_expression_list RPAR
-   10           | expression . INC
-   11           | expression . DEC
-   15           | expression . TIMES expression
-   16           | expression . OVER expression
-   17           | expression . PERCENT expression
-   18           | expression . PLUS expression
-   19           | expression . MINUS expression
-   20           | expression . LT expression
-   21           | expression . GT expression
-   22           | expression . LT_EQ expression
-   23           | expression . GT_EQ expression
-   24           | expression . EQ expression
-   25           | expression . N_EQ expression
-   26           | expression . L_AND expression
-   27           | expression . L_OR expression
-   28           | expression . ASGN expression
-   29           | expression . T_ASGN expression
-   30           | expression . O_ASGN expression
-   31           | expression . MOD_ASGN expression
-   32           | expression . PL_ASGN expression
-   33           | expression . M_ASGN expression
-   35 argument_expression_list: argument_expression_list COMMA expression .
+    7 expression: expression • LBRAC expression RBRAC
+    8           | expression • LPAR RPAR
+    9           | expression • LPAR argument_expression_list RPAR
+   10           | expression • INC
+   11           | expression • DEC
+   15           | expression • TIMES expression
+   16           | expression • OVER expression
+   17           | expression • PERCENT expression
+   18           | expression • PLUS expression
+   19           | expression • MINUS expression
+   20           | expression • LT expression
+   21           | expression • GT expression
+   22           | expression • LT_EQ expression
+   23           | expression • GT_EQ expression
+   24           | expression • EQ expression
+   25           | expression • N_EQ expression
+   26           | expression • L_AND expression
+   27           | expression • L_OR expression
+   28           | expression • ASGN expression
+   29           | expression • T_ASGN expression
+   30           | expression • O_ASGN expression
+   31           | expression • MOD_ASGN expression
+   32           | expression • PL_ASGN expression
+   33           | expression • M_ASGN expression
+   35 argument_expression_list: argument_expression_list COMMA expression •
 
     INC       shift, and go to state 64
     DEC       shift, and go to state 65
@@ -3224,16 +3224,16 @@ State 141
 
 State 142
 
-   60 initializer_list: initializer .
+   60 initializer_list: initializer •
 
     $default  reduce using rule 60 (initializer_list)
 
 
 State 143
 
-   58 initializer: LCURLY initializer_list . RCURLY
-   59            | LCURLY initializer_list . COMMA RCURLY
-   61 initializer_list: initializer_list . COMMA initializer
+   58 initializer: LCURLY initializer_list • RCURLY
+   59            | LCURLY initializer_list • COMMA RCURLY
+   61 initializer_list: initializer_list • COMMA initializer
 
     RCURLY  shift, and go to state 145
     COMMA   shift, and go to state 146
@@ -3241,7 +3241,7 @@ State 143
 
 State 144
 
-   78 selection_statement: IF LPAR expression RPAR compound_statement ELSE . compound_statement
+   78 selection_statement: IF LPAR expression RPAR compound_statement ELSE • compound_statement
 
     LCURLY  shift, and go to state 14
 
@@ -3250,15 +3250,15 @@ State 144
 
 State 145
 
-   58 initializer: LCURLY initializer_list RCURLY .
+   58 initializer: LCURLY initializer_list RCURLY •
 
     $default  reduce using rule 58 (initializer)
 
 
 State 146
 
-   59 initializer: LCURLY initializer_list COMMA . RCURLY
-   61 initializer_list: initializer_list COMMA . initializer
+   59 initializer: LCURLY initializer_list COMMA • RCURLY
+   61 initializer_list: initializer_list COMMA • initializer
 
     INC        shift, and go to state 20
     DEC        shift, and go to state 21
@@ -3282,20 +3282,20 @@ State 146
 
 State 147
 
-   78 selection_statement: IF LPAR expression RPAR compound_statement ELSE compound_statement .
+   78 selection_statement: IF LPAR expression RPAR compound_statement ELSE compound_statement •
 
     $default  reduce using rule 78 (selection_statement)
 
 
 State 148
 
-   59 initializer: LCURLY initializer_list COMMA RCURLY .
+   59 initializer: LCURLY initializer_list COMMA RCURLY •
 
     $default  reduce using rule 59 (initializer)
 
 
 State 149
 
-   61 initializer_list: initializer_list COMMA initializer .
+   61 initializer_list: initializer_list COMMA initializer •
 
     $default  reduce using rule 61 (initializer_list)
