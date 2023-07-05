@@ -4,5 +4,7 @@ int main() {
     
     z = 2;
 
+    scanf(z);
+
     return 0;
 }
