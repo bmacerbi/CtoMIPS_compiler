@@ -11,5 +11,6 @@ int main() {
     int y = 20;
     int z = add(x, y);
     z = sub(x, y);
+    printf(z);
     return 0;
 }

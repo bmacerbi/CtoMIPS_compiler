@@ -5,8 +5,12 @@ int main(){
 
     float c = 6.0/3.0;
 
+    char d = 'd';
+    
+    a += 2;
     printf(a);
     printf(b);
     printf(c);
+    printf(d);
     return 0;
 }

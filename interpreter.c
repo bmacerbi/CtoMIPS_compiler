@@ -238,6 +238,14 @@ int float_eq(float l, float r) {
     return l == r;
 }
 
+int int_n_eq(int l, int r) {
+    return l != r;
+}
+
+int float_n_eq(float l, float r) {
+    return l != r;
+}
+
 int int_lt(int l, int r) {
     return l < r;
 }
@@ -268,6 +276,22 @@ int int_gte(int l, int r) {
 
 int float_gte(float l, float r) {
     return l >= r;
+}
+
+int int_l_and(int l, int r) {
+    return l && r;
+}
+
+int float_l_and(float l, float r) {
+    return l && r;
+}
+
+int int_l_or(int l, int r) {
+    return l || r;
+}
+
+int float_l_or(float l, float r) {
+    return l || r;
 }
 
 void run_other_arith(AST *ast, int (*int_op)(int,int), float (*real_op)(float,float)) {
@@ -334,6 +358,20 @@ void run_plus(AST *ast) {
     }
 }
 
+void store(AST *ast) {
+    int var_idx = get_data(ast);
+    Type var_type = get_node_type(ast);
+
+    switch(var_type) {
+        case INT_TYPE:  storei(var_idx, popi());     break;
+        case FLOAT_TYPE: storef(var_idx, popf());    break;
+        case NO_TYPE:
+        default:
+            fprintf(stderr, "Invalid type: %s!\n", get_text(var_type));
+            exit(EXIT_FAILURE);
+    }
+}
+
 // ----------------------------------------------------------------------------
 
 void run_program(AST *ast) {
@@ -351,7 +389,6 @@ void run_program(AST *ast) {
 
     rec_run_ast(get_child(ast, childCount)); // chamanda a ultima funcao MAIN
     popFrame();
-    // O program chamaria a main apenas por enquanto, nao sei como que ficaria chamada de outras funcoes
 }
 
 void run_function(AST *ast) {
@@ -369,10 +406,21 @@ void run_compound(AST *ast) {
 }
 
 void run_param_list(AST *ast) {
-    //desempilhar os valores de argumentos e salvar na memoria dos parametros
-    //soh deve ser feito quando tiver chamada de funcao pronta
     trace("param_list");
+    Type type;
+    int idx;
+    AST* child;
 
+    for(int i = get_child_count(ast) - 1; i >= 0; i--){
+        child = get_child(ast, i);
+        idx = get_data(child);
+        type = get_node_type(child);
+        if(type == INT_TYPE || type == CHAR_TYPE){
+            storei(idx, popi());
+        } else if(type == FLOAT_TYPE){
+            storef(idx, popf());
+        }
+    }
 }
 
 void run_var_list(AST *ast) {
@@ -406,7 +454,7 @@ void run_assign(AST *ast) {
     rec_run_ast(right_child);
 
     Type type = get_node_type(left_child);
-    if(type == INT_TYPE){
+    if(type == INT_TYPE || type == CHAR_TYPE){
         storei(idx, popi());
     } else if(type == FLOAT_TYPE){
         storef(idx, popf());
@@ -440,6 +488,7 @@ void run_write(AST *ast, Type type) {
     switch(type) {
         case INT_TYPE:  write_int();    break;
         case FLOAT_TYPE: write_real();   break;
+        case CHAR_TYPE:  write_int();    break;
         case NO_TYPE:
         default:
             fprintf(stderr, "Invalid type: %s!\n", get_text(type));
@@ -452,10 +501,28 @@ void run_func_use(AST *ast) {
     int scope = get_data(ast);
     AST* args = get_child(ast, 0);
     AST* child;
+    Type returnType;
+    int intAux;
+    float floatAux;
 
     if(scope != 1 && scope != 0) {
-        rec_run_ast(functionList[scope]);
-    } else {
+        pushFrame();
+
+        rec_run_ast(args); // arg list
+        rec_run_ast(functionList[scope]); //function
+        returnType = get_node_type(functionList[scope]);
+
+        if(returnType == INT_TYPE || returnType == CHAR_TYPE){
+            intAux = popi();
+            popFrame();
+            pushi(intAux);
+        } else if(returnType == FLOAT_TYPE){
+            floatAux = popf();
+            popFrame();
+            pushf(floatAux);
+        } else { popFrame(); }
+
+    } else { // scanf and printf
         for(int i = 0; i<get_child_count(args); i++){
             child = get_child(args, i);
             rec_run_ast(child);
@@ -463,6 +530,17 @@ void run_func_use(AST *ast) {
         }
     }
 }
+
+void run_arg_list(AST *ast) {
+    trace("arg_list");
+    AST* child;
+
+    for(int i = 0; i < get_child_count(ast); i++){
+        child = get_child(ast, i);
+        rec_run_ast(child);
+    }
+}
+
 
 void run_int_val(AST *ast) {
     trace("int_val");
@@ -484,6 +562,11 @@ void run_eq(AST *ast) {
     run_cmp(ast, int_eq, float_eq);
 }
 
+void run_n_eq(AST *ast) {
+    trace("n_eq");
+    run_cmp(ast, int_n_eq, float_n_eq);
+}
+
 void run_lt(AST *ast) {
     trace("lt");
     run_cmp(ast, int_lt, float_lt);
@@ -502,6 +585,16 @@ void run_lte(AST *ast) {
 void run_gte(AST *ast) {
     trace("gte");
     run_cmp(ast, int_gte, float_gte);
+}
+
+void run_l_and(AST *ast) {
+    trace("l_and");
+    run_cmp(ast, int_l_and, float_l_and);
+}
+
+void run_l_or(AST *ast) {
+    trace("l_or");
+    run_cmp(ast, int_l_or, float_l_or);
 }
 
 void run_var_use(AST *ast) {
@@ -537,6 +630,32 @@ void run_i2f(AST *ast) {
 
 void run_return(AST *ast) {
     trace("return");
+
+    rec_run_ast(get_child(ast, 0));
+}
+
+void run_t_asgn(AST *ast) {
+    trace("t_asgn");
+    run_times(ast);
+    store(get_child(ast, 0));
+}
+
+void run_o_asgn(AST *ast) {
+    trace("o_asgn");
+    run_over(ast);
+    store(get_child(ast, 0));
+}
+
+void run_pl_asgn(AST *ast) {
+    trace("pl_asgn");
+    run_plus(ast);
+    store(get_child(ast, 0));
+}
+
+void run_m_asgn(AST *ast) {
+    trace("m_asgn");
+    run_minus(ast);
+    store(get_child(ast, 0));
 }
 
 void rec_run_ast(AST *ast) {
@@ -561,20 +680,20 @@ void rec_run_ast(AST *ast) {
         case PLUS_NODE:            run_plus(ast);               break; 
         case TIMES_NODE:           run_times(ast);              break; 
         // case PERCENT_NODE:         run_percent(ast);            break; 
-        // case N_EQ_NODE:            run_n_eq(ast);               break; 
-        // case T_ASGN_NODE:          run_t_asgn(ast);             break; 
-        // case O_ASGN_NODE:          run_o_asgn(ast);             break; 
+        case N_EQ_NODE:            run_n_eq(ast);               break; 
+        case T_ASGN_NODE:          run_t_asgn(ast);             break; 
+        case O_ASGN_NODE:          run_o_asgn(ast);             break; 
         // case MOD_ASGN_NODE:        run_mod_asgn(ast);           break; 
-        // case PL_ASGN_NODE:         run_pl_asgn(ast);            break; 
-        // case M_ASGN_NODE:          run_m_asgn(ast);             break; 
-        // case L_AND_NODE:           run_l_and(ast);              break; 
-        // case L_OR_NODE:            run_l_or(ast);               break; 
+        case PL_ASGN_NODE:         run_pl_asgn(ast);            break; 
+        case M_ASGN_NODE:          run_m_asgn(ast);             break; 
+        case L_AND_NODE:           run_l_and(ast);              break; 
+        case L_OR_NODE:            run_l_or(ast);               break; 
         case PROGRAM_NODE:         run_program(ast);            break;
         case COMPOUND_NODE:        run_compound(ast);           break;
         case STMT_LIST_NODE:       run_stmt_list(ast);          break;
         case FUNCTION_NODE:        run_function(ast);           break;
         case PARAM_LIST_NODE:      run_param_list(ast);         break;
-        // case ARG_LIST_NODE:        run_arg_list(ast);           break;
+        case ARG_LIST_NODE:        run_arg_list(ast);           break;
         case WHILE_NODE:           run_while(ast);              break;
         case RETURN_NODE:          run_return(ast);             break;
         // case CONTINUE_NODE:        run_continue(ast);           break;
