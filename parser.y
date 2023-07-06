@@ -81,7 +81,7 @@ expression
 	| LPAR expression RPAR { $$ = $2; }
 	| expression LBRAC expression RBRAC { $$ = toPrimitive($1);}
 	| expression LPAR RPAR { $$ = $1; }
-	| expression LPAR argument_expression_list RPAR { $$ = $1; }
+	| expression LPAR argument_expression_list RPAR { add_child($1, $3); $$ = $1; }
 	| expression INC { $$ = check_number($1); }
 	| expression DEC { $$ = check_number($1); }
 	| INC expression { $$ = check_number($2); }
@@ -110,8 +110,8 @@ expression
 
 
 argument_expression_list
-	: expression
-	| argument_expression_list COMMA expression
+	: expression 								{ $$ = new_subtree(ARG_LIST_NODE, NO_TYPE, 1, $1); }
+	| argument_expression_list COMMA expression { add_child($1, $3); $$ = $1; }
 	;
 
 unary_operator
@@ -217,7 +217,7 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, $1);}
+	: external_declaration { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, $1); add_child(root, new_node(FUNCTION_NODE, 0, NO_TYPE)); add_child(root, new_node(FUNCTION_NODE, 1, NO_TYPE));}
 	| translation_unit external_declaration { add_child(root, $2);}
 	;
 
@@ -241,8 +241,12 @@ int main() {
 	strTable = create_str_table();
 	funcTable = create_func_table();
 
+	newFunc("scanf", 0);
+	newFunc("printf", 0);
+	scopeCount = 2;
+
     yyparse();
-    printf("PARSE SUCCESSFUL!\n");
+    // printf("PARSE SUCCESSFUL!\n");
 	// print_str_table(strTable);
 	// print_func_table(funcTable);
 

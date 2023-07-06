@@ -342,12 +342,14 @@ void run_program(AST *ast) {
 
     for(int i = 0; i < get_child_count(ast); i++){
         child = get_child(ast, i);
-        printf("**%d**\n", get_data(child));
         functionList[get_data(child)] = child;
     }
     
     pushFrame();
-    rec_run_ast(get_child(ast, get_child_count(ast) - 1)); // chamanda a ultima funcao MAIN
+    int childCount = get_child_count(ast) - 1;
+    if(childCount == 2) childCount = 0;
+
+    rec_run_ast(get_child(ast, childCount)); // chamanda a ultima funcao MAIN
     popFrame();
     // O program chamaria a main apenas por enquanto, nao sei como que ficaria chamada de outras funcoes
 }
@@ -383,9 +385,10 @@ void run_var_list(AST *ast) {
 
 void run_stmt_list(AST *ast) {
     trace("stmt_list");
-    rec_run_ast(get_child(ast, 0));
 
-    // ALTWERARASRFASDJKHFLDIKJFDHSFLJKHSD
+    for(int i = 0; i < get_child_count(ast); i++){
+        rec_run_ast(get_child(ast, i));
+    }
 }
 
 void run_var_decl(AST *ast) {
@@ -432,10 +435,33 @@ void run_while(AST *ast) {
     }
 }
 
+void run_write(AST *ast, Type type) {
+    trace("write");
+    switch(type) {
+        case INT_TYPE:  write_int();    break;
+        case FLOAT_TYPE: write_real();   break;
+        case NO_TYPE:
+        default:
+            fprintf(stderr, "Invalid type: %s!\n", get_text(type));
+            exit(EXIT_FAILURE);
+    }
+}
+
 void run_func_use(AST *ast) {
     trace("func_use");
     int scope = get_data(ast);
-    rec_run_ast(functionList[scope]);
+    AST* args = get_child(ast, 0);
+    AST* child;
+
+    if(scope != 1 && scope != 0) {
+        rec_run_ast(functionList[scope]);
+    } else {
+        for(int i = 0; i<get_child_count(args); i++){
+            child = get_child(args, i);
+            rec_run_ast(child);
+            run_write(args, get_node_type(child));
+        }
+    }
 }
 
 void run_int_val(AST *ast) {
@@ -509,6 +535,10 @@ void run_i2f(AST *ast) {
     pushf((float) popi());
 }
 
+void run_return(AST *ast) {
+    trace("return");
+}
+
 void rec_run_ast(AST *ast) {
 
     switch(get_kind(ast)) {
@@ -546,7 +576,7 @@ void rec_run_ast(AST *ast) {
         case PARAM_LIST_NODE:      run_param_list(ast);         break;
         // case ARG_LIST_NODE:        run_arg_list(ast);           break;
         case WHILE_NODE:           run_while(ast);              break;
-        // case RETURN_NODE:          run_return(ast);             break;
+        case RETURN_NODE:          run_return(ast);             break;
         // case CONTINUE_NODE:        run_continue(ast);           break;
         // case BREAK_NODE:           run_break(ast);              break;
         case VAR_DECL_NODE:        run_var_decl(ast);           break; 

@@ -1915,7 +1915,7 @@ yyreduce:
 
   case 10:
 #line 84 "parser.y"
-                                                        { yyval = yyvsp[-3]; }
+                                                        { add_child(yyvsp[-3], yyvsp[-1]); yyval = yyvsp[-3]; }
 #line 1920 "parser.c"
     break;
 
@@ -2063,278 +2063,290 @@ yyreduce:
 #line 2064 "parser.c"
     break;
 
+  case 35:
+#line 113 "parser.y"
+                                                                                { yyval = new_subtree(ARG_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
+#line 2070 "parser.c"
+    break;
+
+  case 36:
+#line 114 "parser.y"
+                                                    { add_child(yyvsp[-2], yyvsp[0]); yyval = yyvsp[-2]; }
+#line 2076 "parser.c"
+    break;
+
   case 41:
 #line 125 "parser.y"
                                               { yyval = yyvsp[-1]; }
-#line 2070 "parser.c"
+#line 2082 "parser.c"
     break;
 
   case 42:
 #line 129 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 2076 "parser.c"
+#line 2088 "parser.c"
     break;
 
   case 43:
 #line 130 "parser.y"
                                       { yyval = check_declarator_assign(yyvsp[-2], yyvsp[0]); }
-#line 2082 "parser.c"
+#line 2094 "parser.c"
     break;
 
   case 44:
 #line 134 "parser.y"
                 { type = VOID_TYPE;  }
-#line 2088 "parser.c"
+#line 2100 "parser.c"
     break;
 
   case 45:
 #line 135 "parser.y"
                 { type = CHAR_TYPE;  }
-#line 2094 "parser.c"
+#line 2106 "parser.c"
     break;
 
   case 46:
 #line 136 "parser.y"
                 { type = INT_TYPE;   }
-#line 2100 "parser.c"
+#line 2112 "parser.c"
     break;
 
   case 47:
 #line 137 "parser.y"
                 { type = FLOAT_TYPE; }
-#line 2106 "parser.c"
+#line 2118 "parser.c"
     break;
 
   case 48:
 #line 141 "parser.y"
              { yyval = newVar(yytext); }
-#line 2112 "parser.c"
+#line 2124 "parser.c"
     break;
 
   case 49:
 #line 142 "parser.y"
                                             { newArrayVar(); yyval = toArray(yyvsp[-3]);}
-#line 2118 "parser.c"
+#line 2130 "parser.c"
     break;
 
   case 50:
 #line 143 "parser.y"
                                  { newArrayVar(); yyval = toArray(yyvsp[-2]);}
-#line 2124 "parser.c"
+#line 2136 "parser.c"
     break;
 
   case 51:
 #line 147 "parser.y"
              { newFunc(yytext, yylineno); yyval = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
-#line 2130 "parser.c"
+#line 2142 "parser.c"
     break;
 
   case 52:
 #line 148 "parser.y"
                                                        { yyval = yyvsp[-1]; }
-#line 2136 "parser.c"
+#line 2148 "parser.c"
     break;
 
   case 53:
 #line 149 "parser.y"
                                         { yyval = new_node(PARAM_LIST_NODE, 0, NO_TYPE); }
-#line 2142 "parser.c"
+#line 2154 "parser.c"
     break;
 
   case 54:
 #line 153 "parser.y"
                                 {argsCount++; yyval = new_subtree(PARAM_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
-#line 2148 "parser.c"
+#line 2160 "parser.c"
     break;
 
   case 55:
 #line 154 "parser.y"
                                                      {argsCount++; add_child(yyvsp[-2], yyvsp[0]); yyval = yyvsp[-2]; }
-#line 2154 "parser.c"
+#line 2166 "parser.c"
     break;
 
   case 56:
 #line 158 "parser.y"
                                     { yyval = yyvsp[0]; }
-#line 2160 "parser.c"
+#line 2172 "parser.c"
     break;
 
   case 58:
 #line 163 "parser.y"
                      { yyval = yyvsp[0]; }
-#line 2166 "parser.c"
+#line 2178 "parser.c"
     break;
 
   case 59:
 #line 164 "parser.y"
                                           { yyval = toArray(yyvsp[-1]); }
-#line 2172 "parser.c"
+#line 2184 "parser.c"
     break;
 
   case 60:
 #line 165 "parser.y"
                                                 { yyval = toArray(yyvsp[-2]); }
-#line 2178 "parser.c"
+#line 2190 "parser.c"
     break;
 
   case 61:
 #line 169 "parser.y"
                       { yyval = yyvsp[0]; }
-#line 2184 "parser.c"
+#line 2196 "parser.c"
     break;
 
   case 62:
 #line 170 "parser.y"
                                              { yyval = yyvsp[-2]; }
-#line 2190 "parser.c"
+#line 2202 "parser.c"
     break;
 
   case 63:
 #line 174 "parser.y"
                                 { yyval = yyvsp[0]; }
-#line 2196 "parser.c"
+#line 2208 "parser.c"
     break;
 
   case 64:
 #line 175 "parser.y"
                                 { yyval = yyvsp[0]; }
-#line 2202 "parser.c"
+#line 2214 "parser.c"
     break;
 
   case 65:
 #line 176 "parser.y"
                                 { yyval = yyvsp[0]; }
-#line 2208 "parser.c"
+#line 2220 "parser.c"
     break;
 
   case 66:
 #line 177 "parser.y"
                                 { yyval = yyvsp[0]; }
-#line 2214 "parser.c"
+#line 2226 "parser.c"
     break;
 
   case 67:
 #line 178 "parser.y"
                                         { yyval = yyvsp[0]; }
-#line 2220 "parser.c"
+#line 2232 "parser.c"
     break;
 
   case 69:
 #line 183 "parser.y"
                                        { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-1]); }
-#line 2226 "parser.c"
+#line 2238 "parser.c"
     break;
 
   case 70:
 #line 184 "parser.y"
                                          { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 1, yyvsp[-1]); }
-#line 2232 "parser.c"
+#line 2244 "parser.c"
     break;
 
   case 71:
 #line 185 "parser.y"
                                                         { yyval = new_subtree(COMPOUND_NODE, NO_TYPE, 2, yyvsp[-2], yyvsp[-1]); }
-#line 2238 "parser.c"
+#line 2250 "parser.c"
     break;
 
   case 72:
 #line 189 "parser.y"
                                                         { yyval = new_subtree(VAR_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
-#line 2244 "parser.c"
+#line 2256 "parser.c"
     break;
 
   case 73:
 #line 190 "parser.y"
                                         { add_child(yyvsp[-1], yyvsp[0]); yyval = yyvsp[-1]; }
-#line 2250 "parser.c"
+#line 2262 "parser.c"
     break;
 
   case 74:
 #line 194 "parser.y"
                                         { yyval = new_subtree(STMT_LIST_NODE, NO_TYPE, 1, yyvsp[0]); }
-#line 2256 "parser.c"
+#line 2268 "parser.c"
     break;
 
   case 75:
 #line 195 "parser.y"
                                         { add_child(yyvsp[-1], yyvsp[0]); yyval = yyvsp[-1]; }
-#line 2262 "parser.c"
+#line 2274 "parser.c"
     break;
 
   case 77:
 #line 200 "parser.y"
                           { yyval = yyvsp[-1]; }
-#line 2268 "parser.c"
+#line 2280 "parser.c"
     break;
 
   case 78:
 #line 204 "parser.y"
                                                      { yyval = check_if_then(yyvsp[-2], yyvsp[0]); }
-#line 2274 "parser.c"
+#line 2286 "parser.c"
     break;
 
   case 79:
 #line 205 "parser.y"
                                                                              { yyval = check_if_then_else(yyvsp[-4], yyvsp[-2], yyvsp[0]); }
-#line 2280 "parser.c"
+#line 2292 "parser.c"
     break;
 
   case 80:
 #line 209 "parser.y"
                                                { yyval = check_while(yyvsp[-2], yyvsp[0]); }
-#line 2286 "parser.c"
+#line 2298 "parser.c"
     break;
 
   case 81:
 #line 213 "parser.y"
                                                 { yyval = new_subtree(CONTINUE_NODE, NO_TYPE, 0); }
-#line 2292 "parser.c"
+#line 2304 "parser.c"
     break;
 
   case 82:
 #line 214 "parser.y"
                                                 { yyval = new_subtree(BREAK_NODE, NO_TYPE, 0); }
-#line 2298 "parser.c"
+#line 2310 "parser.c"
     break;
 
   case 83:
 #line 215 "parser.y"
                                                 { yyval = new_subtree(RETURN_NODE, NO_TYPE, 0); }
-#line 2304 "parser.c"
+#line 2316 "parser.c"
     break;
 
   case 84:
 #line 216 "parser.y"
                                         { yyval = new_subtree(RETURN_NODE, NO_TYPE, 1, yyvsp[-1]);}
-#line 2310 "parser.c"
+#line 2322 "parser.c"
     break;
 
   case 85:
 #line 220 "parser.y"
-                               { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, yyvsp[0]);}
-#line 2316 "parser.c"
+                               { root = new_subtree(PROGRAM_NODE, NO_TYPE, 1, yyvsp[0]); add_child(root, new_node(FUNCTION_NODE, 0, NO_TYPE)); add_child(root, new_node(FUNCTION_NODE, 1, NO_TYPE));}
+#line 2328 "parser.c"
     break;
 
   case 86:
 #line 221 "parser.y"
                                                 { add_child(root, yyvsp[0]);}
-#line 2322 "parser.c"
+#line 2334 "parser.c"
     break;
 
   case 87:
 #line 225 "parser.y"
                               { scopeCount++;  yyval = yyvsp[0];}
-#line 2328 "parser.c"
+#line 2340 "parser.c"
     break;
 
   case 88:
 #line 229 "parser.y"
                                                                 { yyval = new_subtree(FUNCTION_NODE, get_type_func(funcTable,scopeCount), 2, yyvsp[-1], yyvsp[0]); set_data(yyval, scopeCount); set_args_count_func(funcTable, scopeCount, argsCount); argsCount = 0;}
-#line 2334 "parser.c"
+#line 2346 "parser.c"
     break;
 
 
-#line 2338 "parser.c"
+#line 2350 "parser.c"
 
         default: break;
       }
@@ -2591,8 +2603,12 @@ int main() {
 	strTable = create_str_table();
 	funcTable = create_func_table();
 
+	newFunc("scanf", 0);
+	newFunc("printf", 0);
+	scopeCount = 2;
+
     yyparse();
-    printf("PARSE SUCCESSFUL!\n");
+    // printf("PARSE SUCCESSFUL!\n");
 	// print_str_table(strTable);
 	// print_func_table(funcTable);
 
