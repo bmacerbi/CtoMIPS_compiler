@@ -25,10 +25,12 @@ typedef union {
 void init_stack();
 void init_mem();
 
+
 typedef struct {
     Word stack[STACK_SIZE];
     int sp; // stack pointer
     Word mem[MEM_SIZE];
+    struct FrameStack* parent;
 } FrameStack;
 
 #define FRAME_STACK_SIZE 100
@@ -39,6 +41,11 @@ int frameStackPtr; // frame stack pointer
 void pushFrame() {
     if (frameStackPtr < FRAME_STACK_SIZE - 1) {
         frameStackPtr++;
+        if(frameStackPtr > 1){
+            frameStack[frameStackPtr].parent = &frameStack[frameStackPtr - 1];
+        } else {
+            frameStack[frameStackPtr].parent = NULL;
+        }
         frameStack[frameStackPtr].sp = -1; // Initialize stack pointer for the new frame
         init_stack(); // Initialize the stack of the new frame
         init_mem(); // Initialize the memory of the new frame
@@ -65,38 +72,50 @@ FrameStack* getCurrentFrame() {
 
 // Data stack -----------------------------------------------------------------
 
-#define stack (getCurrentFrame()->stack)
-#define sp (getCurrentFrame()->sp)
+#define dataStack (getCurrentFrame()->stack)
+#define dataSp (getCurrentFrame()->sp)
 
 // All these ops should have a boundary check, buuuut... X_X
 
 void pushi(int x) {
-    stack[++sp].as_int = x;
+    dataStack[++dataSp].as_int = x;
 }
 
 int popi() {
-    return stack[sp--].as_int;
+    return dataStack[dataSp--].as_int;
+}
+
+int popiLast() {
+    FrameStack* currentFrame = getCurrentFrame();
+    FrameStack* parent = currentFrame->parent;
+    return parent->stack[parent->sp--].as_int;
 }
 
 void pushf(float x) {
-    stack[++sp].as_float = x;
+    dataStack[++dataSp].as_float = x;
 }
 
 float popf() {
-    return stack[sp--].as_float;
+    return dataStack[dataSp--].as_float;
+}
+
+float popfLast() {
+    FrameStack* currentFrame = getCurrentFrame();
+    FrameStack* parent = currentFrame->parent;
+    return parent->stack[parent->sp--].as_float;
 }
 
 void init_stack() {
     for (int i = 0; i < STACK_SIZE; i++) {
-        stack[i].as_int = 0;
+        dataStack[i].as_int = 0;
     }
-    sp = -1;
+    dataSp = -1;
 }
 
 void print_stack() {
     printf("*** STACK: ");
-    for (int i = 0; i <= sp; i++) {
-        printf("%d ", stack[i].as_int);
+    for (int i = 0; i <= dataSp; i++) {
+        printf("%d ", dataStack[i].as_int);
     }
     printf("\n");
 }
@@ -132,11 +151,11 @@ void init_mem() {
 // ----------------------------------------------------------------------------
 
 // #define TRACE
-// #ifdef TRACE
+#ifdef TRACE
 #define trace(msg) printf("TRACE: %s\n", msg)
-// #else
-// #define trace(msg)
-// #endif
+#else
+#define trace(msg)
+#endif
 
 #define MAX_STR_SIZE 128
 static char str_buf[MAX_STR_SIZE];
@@ -393,8 +412,8 @@ void run_program(AST *ast) {
 
 void run_function(AST *ast) {
     trace("function");
-    rec_run_ast(get_child(ast, 0)); // run compound
-    rec_run_ast(get_child(ast, 1)); // run param_list
+    rec_run_ast(get_child(ast, 0)); // run param_list
+    rec_run_ast(get_child(ast, 1)); // run compound 
 }
 
 void run_compound(AST *ast) {
@@ -416,9 +435,9 @@ void run_param_list(AST *ast) {
         idx = get_data(child);
         type = get_node_type(child);
         if(type == INT_TYPE || type == CHAR_TYPE){
-            storei(idx, popi());
+            storei(idx, popiLast());
         } else if(type == FLOAT_TYPE){
-            storef(idx, popf());
+            storef(idx, popfLast());
         }
     }
 }
@@ -489,6 +508,21 @@ void run_write(AST *ast, Type type) {
         case INT_TYPE:  write_int();    break;
         case FLOAT_TYPE: write_real();   break;
         case CHAR_TYPE:  write_int();    break;
+        case CHAR_ARRAY_TYPE:  write_str();    break;
+        case NO_TYPE:
+        default:
+            fprintf(stderr, "Invalid type: %s!\n", get_text(type));
+            exit(EXIT_FAILURE);
+    }
+}
+
+void run_read(AST *ast, Type type) {
+    trace("read");
+    int var_idx = get_data(ast);
+    switch(type) {
+        case INT_TYPE:  read_int(var_idx);     break;
+        case FLOAT_TYPE: read_real(var_idx);    break;
+        case CHAR_TYPE: read_int(var_idx);    break;
         case NO_TYPE:
         default:
             fprintf(stderr, "Invalid type: %s!\n", get_text(type));
@@ -506,9 +540,10 @@ void run_func_use(AST *ast) {
     float floatAux;
 
     if(scope != 1 && scope != 0) {
+        rec_run_ast(args);
         pushFrame();
 
-        rec_run_ast(args); // arg list
+         // arg list
         rec_run_ast(functionList[scope]); //function
         returnType = get_node_type(functionList[scope]);
 
@@ -523,10 +558,17 @@ void run_func_use(AST *ast) {
         } else { popFrame(); }
 
     } else { // scanf and printf
-        for(int i = 0; i<get_child_count(args); i++){
-            child = get_child(args, i);
-            rec_run_ast(child);
-            run_write(args, get_node_type(child));
+        if(scope == 1){
+            for(int i = 0; i<get_child_count(args); i++){
+                child = get_child(args, i);
+                rec_run_ast(child);
+                run_write(args, get_node_type(child));
+            }
+        } else {
+            for(int i = 0; i<get_child_count(args); i++){
+                child = get_child(args, i);
+                run_read(args, get_node_type(child));
+            }
         }
     }
 }
@@ -555,6 +597,11 @@ void run_float_val(AST *ast) {
 void run_char_val(AST *ast) {
     trace("char_val");
     pushi(get_char_data(ast));
+}
+
+void run_char_array_val(AST *ast) {
+    trace("char_array_val");
+    pushi(get_data(ast));
 }
 
 void run_eq(AST *ast) {
@@ -669,7 +716,7 @@ void rec_run_ast(AST *ast) {
         case CHAR_VAL_NODE:        run_char_val(ast);           break; 
         // case INT_ARRAY_VAL_NODE:   run_int_array_val(ast);      break; 
         // case FLOAT_ARRAY_VAL_NODE: run_float_array_val(ast);    break; 
-        // case CHAR_ARRAY_VAL_NODE:  run_char_array_val(ast);     break; 
+        case CHAR_ARRAY_VAL_NODE:  run_char_array_val(ast);     break; 
         case LT_NODE:              run_lt(ast);                 break; 
         case GT_NODE:              run_gt(ast);                 break; 
         case LT_EQ_NODE:           run_lte(ast);                break; 
@@ -679,11 +726,9 @@ void rec_run_ast(AST *ast) {
         case OVER_NODE:            run_over(ast);               break; 
         case PLUS_NODE:            run_plus(ast);               break; 
         case TIMES_NODE:           run_times(ast);              break; 
-        // case PERCENT_NODE:         run_percent(ast);            break; 
         case N_EQ_NODE:            run_n_eq(ast);               break; 
         case T_ASGN_NODE:          run_t_asgn(ast);             break; 
         case O_ASGN_NODE:          run_o_asgn(ast);             break; 
-        // case MOD_ASGN_NODE:        run_mod_asgn(ast);           break; 
         case PL_ASGN_NODE:         run_pl_asgn(ast);            break; 
         case M_ASGN_NODE:          run_m_asgn(ast);             break; 
         case L_AND_NODE:           run_l_and(ast);              break; 
@@ -696,8 +741,6 @@ void rec_run_ast(AST *ast) {
         case ARG_LIST_NODE:        run_arg_list(ast);           break;
         case WHILE_NODE:           run_while(ast);              break;
         case RETURN_NODE:          run_return(ast);             break;
-        // case CONTINUE_NODE:        run_continue(ast);           break;
-        // case BREAK_NODE:           run_break(ast);              break;
         case VAR_DECL_NODE:        run_var_decl(ast);           break; 
         case VAR_LIST_NODE:        run_var_list(ast);           break; 
         case VAR_USE_NODE:         run_var_use(ast);            break; 

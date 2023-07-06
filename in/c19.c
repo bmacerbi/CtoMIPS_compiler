@@ -6,11 +6,12 @@ int main(){
     float c = 6.0/3.0;
 
     char d = 'd';
+
+    int f;
     
     a += 2;
-    printf(a);
-    printf(b);
-    printf(c);
-    printf(d);
+    printf(a,b,c,d);
+    scanf(f);
+    printf(f);
     return 0;
 }
